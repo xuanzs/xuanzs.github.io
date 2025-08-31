@@ -1,100 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log In</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .btns {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    .btns button {
+      padding: 10px 60px;
+      border: 0;
+      outline: none;
+      font-size: 20px;
+      border-radius: 30px;
+      background-color: rgb(188, 188, 188);
+    }
+
+    .btns button:hover {
+      cursor: pointer;
+      background-color: gray;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      visibility: hidden;
+      z-index: 5;
+    }
+
+    .overlay.show {
+      visibility: visible;
+    }
+
+    .guestPopup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: #c0c0c0;
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
+    .open-popup {
+      visibility: visible;
+    }
+
+    .popupBtns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .popupBtns button {
+      padding: 5px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    
-    <div class="table1">
-        <h1>Table 1</h1>
-        <div class="table">  
-            <table id="t1">
-                <tbody>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            <div class="right1">
-                <div class="r1">
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                </div>
-                <div class="r2">
-                    <button>6</button>
-                    <button>7</button>
-                    <button>8</button>
-                    <button>9</button>
-                    <button>10</button>
-                </div>
-                <div class="r3">
-                    <button>11</button>
-                    <button>12</button>
-                    <button>13</button>
-                    <button>14</button>
-                    <button>15</button>
-                </div>
-                <div class="r4">
-                    <button>16</button>
-                    <button>17</button>
-                    <button>18</button>
-                    <button>19</button>
-                    <button>20</button>
-                </div>
-                <div class="r5">
-                    <button>21</button>
-                    <button>22</button>
-                    <button>23</button>
-                    <button>24</button>
-                    <button>25</button>
-                </div>
-            </div>
-            <div class="bottom">
-                <button class="Clear">Clear All</button>
-                <button class="Delete">Delete</button>
-                <button class="Submit">Submit</button>
-            </div>
+  <!-- Overlay Background -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Button Options -->
+  <div class="btns">
+    <button onclick="alert('Admin clicked')">Admin</button>
+    <button onclick="alert('GM clicked')">GM</button>
+    <button onclick="openPopup()">Guest</button>
+  </div>
+
+  <!-- Guest Popup -->
+  <div class="guestPopup" id="popup">
+    <label for="teams">Choose your team:</label>
+    <select name="team" id="teams">
+      <option value="">Select</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+    </select>
+    <div class="popupBtns">
+      <button onclick="closePopup()">Cancel</button>
+      <button onclick="submitTeam()">OK</button>
     </div>
-    
-    <script src="script.js"></script>
+  </div>
+
+  <script>
+    const popup = document.getElementById("popup");
+    const overlay = document.getElementById("overlay");
+
+    function openPopup() {
+      popup.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closePopup() {
+      popup.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function submitTeam() {
+      const team = document.getElementById("teams").value;
+      if (!team) {
+        alert("Please select a team.");
+        return;
+      }
+
+      // Example: Redirect or handle logic
+      alert("Selected team: " + team);
+      location.href = `guest.html?team=${team}`;
+
+      closePopup();
+    }
+  </script>
 </body>
 </html>
