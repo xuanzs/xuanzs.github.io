@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.querySelector('.right').style.display = 'none';
                 document.querySelector('.bottom').style.display = 'none';
+                enablePageZoom();
             }
         }).catch((error) => {
             console.error("Error fetching document:", error);
@@ -146,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(() => {
             alert("Submitted successfully!");
+            enablePageZoom();
         })
         .catch((error) => {
             console.error("Error writing to Firebase:", error);
@@ -153,3 +155,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+function enablePageZoom() {
+  document.body.classList.add('zoomed');
+}
+
