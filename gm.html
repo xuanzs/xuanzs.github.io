@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        .left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-left: 10%;
+            padding-right: 20%;
+            gap: 100px;
+        }
+
+        .left button {
+            cursor: pointer;
+            padding: 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rows {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .bottom {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        select {
+            width: 70px;
+            height: 30px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .right button {
+            font-size: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            cursor: pointer;
+            margin: 10px;
+            width: 70%;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+        }
+        .right button:hover {
+            transition: 0.3s;
+            background: rgb(172, 172, 172);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Station 1</h1>
+            <button onclick="vacant()">Vacant</button>
+            <button onclick="occupied()">Occupied</button>
+        </div>
+        <div class="right">
+            <div class="rows">
+                <!-- Row 4 -->
+                <div class="row">
+                    <h3>Row 4</h3>
+                    <div class="r4">
+                        <div class="top">
+                            <h5>Team:</h5>
+                            <select name="p1" id="p1">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p2" id="p2">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p3" id="p3">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p4" id="p4">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p5" id="p5">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                        </div>
+                        <div class="bottom">
+                            <h5>Baby:</h5>
+                            <select name="s1" id="s1">
+                                <option value=""></option>
+                                <option value="4">4</option>
+                            </select>
+                            <select name="s2" id="s2">
+                                <option value=""></option>
+                                <option value="4">4</option>
+                            </select>
+                            <select name="s3" id="s3">
+                                <option value=""></option>
+                                <option value="4">4</option>
+                            </select>
+                            <select name="s4" id="s4">
+                                <option value=""></option>
+                                <option value="4">4</option>
+                            </select>
+                            <select name="s5" id="s5">
+                                <option value=""></option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="row">
+                    <h3>Row 3</h3>
+                    <div class="r3">
+                        <div class="top">
+                            <h5>Team:</h5>
+                            <select name="p1" id="p1">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p2" id="p2">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p3" id="p3">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p4" id="p4">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p5" id="p5">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                        </div>
+                        <div class="bottom">
+                            <h5>Baby:</h5>
+                            <select name="s1" id="s1">
+                                <option value=""></option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s2" id="s2">
+                                <option value=""></option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s3" id="s3">
+                                <option value=""></option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s4" id="s4">
+                                <option value=""></option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s5" id="s5">
+                                <option value=""></option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="row">
+                    <h3>Row 2</h3>
+                    <div class="r2">
+                        <div class="top">
+                            <h5>Team:</h5>
+                            <select name="p1" id="p1">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p2" id="p2">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p3" id="p3">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p4" id="p4">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p5" id="p5">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                        </div>
+                        <div class="bottom">
+                            <h5>Baby:</h5>
+                            <select name="s1" id="s1">
+                                <option value=""></option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s2" id="s2">
+                                <option value=""></option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s3" id="s3">
+                                <option value=""></option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s4" id="s4">
+                                <option value=""></option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s5" id="s5">
+                                <option value=""></option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1 -->
+                <div class="row">
+                    <h3>Row 1</h3>
+                    <div class="r1">
+                        <div class="top">
+                            <h5>Team:</h5>
+                            <select name="p1" id="p1">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p2" id="p2">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p3" id="p3">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p4" id="p4">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                            <select name="p5" id="p5">
+                                <option value=""></option>
+                                <option value="1">Team 1</option>
+                                <option value="2">Team 2</option>
+                            </select>
+                        </div>
+                        <div class="bottom">
+                            <h5>Baby:</h5>
+                            <select name="s1" id="s1">
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s2" id="s2">
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s3" id="s3">
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s4" id="s4">
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            <select name="s5" id="s5">
+                                <option value=""></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="submitBtn()">Submit</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const element = document.querySelector('.container');
+        let alarm = new Audio('alarm.mp3');
+
+        function vacant() {
+            element.style.backgroundColor = 'green';
+        }
+
+        vacant();
+
+        function occupied() {
+            element.style.backgroundColor = 'red';
+            // alarm.play();
+        }
+
+        function disabledSelects() {
+            const r4Selects = document.querySelectorAll('.r4 select');
+            const r3Selects = document.querySelectorAll('.r3 select');
+            const r2Selects = document.querySelectorAll('.r2 select');
+            const r1Selects = document.querySelectorAll('.r1 select');
+            const r1P1 = document.querySelector('.r1 .top #p1');
+            const r1S1 = document.querySelector('.r1 .bottom #s1');
+
+            r4Selects.forEach(select => {
+                select.disabled = true;
+            });
+            r3Selects.forEach(select => {
+                select.disabled = true;
+            });
+            r2Selects.forEach(select => {
+                select.disabled = true;
+            });
+            r1Selects.forEach(select => {
+                select.disabled = true;
+            });
+            r1P1.disabled = false;
+            r1S1.disabled = false;
+        }
+
+        disabledSelects();
+
+        function ableSelects(row) {
+            let currentSelects;
+
+            if (row === 1) {
+                currentSelects = document.querySelectorAll('.r1 select');
+            } else if (row === 2) {
+                currentSelects = document.querySelectorAll('.r2 select');
+            } else if (row === 3) {
+                currentSelects = document.querySelectorAll('.r3 select');
+            } else if (row === 4) {
+                currentSelects = document.querySelectorAll('.r4 select');
+            }
+            
+            currentSelects.forEach(select => {
+                select.disabled = false;
+            })
+            
+        }
+
+        function submitBtn() {
+            const rowData = [];
+
+            for (let i = 1; i <= 3; i++) {
+                for (let j = 1; j<= 5; j++) {
+                    let p = document.querySelector(`.r${i} .top #p${j}`);
+                    let s = document.querySelector(`.r${i} .bottom #s${j}`);
+                    let nextP = document.querySelector(`.r${i} .top #p${j+1}`);
+                    let nextS = document.querySelector(`.r${i} .bottom #s${j+1}`);
+
+                    if (!p.disabled && !s.disabled) {
+
+                        if (p.value === "" || s.value === "") {
+                            alert(`Please fill in Row ${i} - Pair ${j}`);
+                            return;
+                        } 
+
+                        if (i > 1) {
+                            const bottomP = document.querySelector(`.r${i-1} .top #p${j}`);
+                            const bottomS = document.querySelector(`.r${i-1} .bottom #s${j}`);
+
+                            if (bottomP && bottomS && p.value === bottomP.value && s.value === bottomS.value) {
+                                alert("Current pair can't be same as pair below!")
+                                return;
+                            }
+                        }
+
+                        p.disabled = true;
+                        s.disabled = true;
+
+                        let enabledNext = false;
+                        let row2Complete = false;
+                        if (nextP && nextS) {
+                            if (i > 1) {
+
+                                for (let k = 1; k <= 4; k++) {
+                                    let nextBottomP = document.querySelector(`.r${i-1} .top #p${j+k}`);
+                                    let nextBottomS = document.querySelector(`.r${i-1} .bottom #s${j+k}`);
+                                    nextP = document.querySelector(`.r${i} .top #p${j+k}`);
+                                    nextS = document.querySelector(`.r${i} .bottom #s${j+k}`);
+
+                                    if (nextBottomP && nextBottomS && nextP && nextS) {
+                                        if (Number(nextBottomS.value) < 3) {
+                                            // nextP.disabled = false;
+                                            // nextS.disabled = false;
+                                            enabledNext = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!enabledNext) {
+                                    alert(`Row ${i} complete!`);
+                                    row2Complete = true;
+                                    // for (let k = 2; k <= 3; k++) {
+                                    //     let nextRowP = document.querySelector(`.r${k+1} .top #p1`);
+                                    //     let nextRowS = document.querySelector(`.r${k+1} .bottom #s1`);
+
+                                    //     if (nextRowP && nextRowS) {
+                                    //         for (let h = 1; h <= 5; h++) {
+                                    //             let currentP = document.querySelector(`.r${k} .top #p${h}`);
+                                    //             let currentS = document.querySelector(`.r${k} .bottom #s${h}`);
+                                    //             nextRowP = document.querySelector(`.r${k+1} .top #p${h}`);
+                                    //             nextRowS = document.querySelector(`.r${k+1} .bottom #s${h}`);
+
+                                    //             if (currentS.value < 3) {
+                                    //                 nextRowP.disabled = false;
+                                    //                 nextRowS.disabled = false;
+                                    //             }
+                                    //         }
+                                    //     }
+                                    //     return;
+                                    // }
+                                    // return;
+                                    for (let k = 2; k <= 3; k++) {
+                                        let nextRowP = document.querySelector(`.r${k+1} .top #p1`);
+                                        let nextRowS = document.querySelector(`.r${k+1} .bottom #s1`);
+
+                                        if (nextRowP && nextRowS) {
+                                            for (let h = 1; h <= 5; h++) {
+                                                let currentP = document.querySelector(`.r${k} .top #p${h}`);
+                                                let currentS = document.querySelector(`.r${k} .bottom #s${h}`);
+                                                nextRowP = document.querySelector(`.r${k+1} .top #p${h}`);
+                                                nextRowS = document.querySelector(`.r${k+1} .bottom #s${h}`);
+
+                                                if (Number(currentS.value) === 2) {
+                                                    nextRowP.disabled = false;
+                                                    nextRowS.disabled = false;
+                                                }
+                                            }
+                                        }
+                                        return;
+                                    }
+                                }
+                            } else {
+                                nextP.disabled = false;
+                                nextS.disabled = false;
+                            }
+
+                            alert(`Pair ${j} filled!`);
+                            return;
+                        } else {
+                            alert(`Row ${i} complete!`);
+
+                            for (let k = 1; k <= 3; k++) {
+                                let nextRowP = document.querySelector(`.r${k+1} .top #p1`);
+                                let nextRowS = document.querySelector(`.r${k+1} .bottom #s1`);
+
+                                if (nextRowP && nextRowS) {
+                                    for (let h = 1; h <= 5; h++) {
+                                        let currentP = document.querySelector(`.r${k} .top #p${h}`);
+                                        let currentS = document.querySelector(`.r${k} .bottom #s${h}`);
+                                        nextRowP = document.querySelector(`.r${k+1} .top #p${h}`);
+                                        nextRowS = document.querySelector(`.r${k+1} .bottom #s${h}`);
+
+                                        if (currentS.value < 3) {
+                                            nextRowP.disabled = false;
+                                            nextRowS.disabled = false;
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+                        }
+
+                        // for (let k = 1; k <= 4; k++) {
+                        //     let nextP = document.querySelector(`.r${i} .top #p${j + k}`);
+                        //     let nextS = document.querySelector(`.r${i} .bottom #s${j + k}`);
+                        //     let nextBottomS = document.querySelector(`.r${i - 1} .bottom #s${j + k}`);
+
+                        //     if (nextP && nextS) {
+                        //         if (i === 1 || (nextBottomS && Number(nextBottomS.value) < 3)) {
+                        //             nextP.disabled = false;
+                        //             nextS.disabled = false;
+                        //             nextEnabled = true;
+                        //             break;
+                        //         }
+                        //     }
+                        // }
+
+                        // if (nextEnabled) {
+                        //     alert(`Pair ${j} filled!`);
+                        //     return;
+                        // } else {
+                        //     // No next pairs to enable, check if all enabled pairs are filled in this row
+                        //     let allFilled = true;
+                        //     for (let x = 1; x <= 5; x++) {
+                        //         let pairP = document.querySelector(`.r${i} .top #p${x}`);
+                        //         let pairS = document.querySelector(`.r${i} .bottom #s${x}`);
+                        //         if (pairP && pairS && !pairP.disabled && !pairS.disabled) {
+                        //             if (pairP.value === "" || pairS.value === "") {
+                        //                 allFilled = false;
+                        //                 break;
+                        //             }
+                        //         }
+                        //     }
+
+                        //     if (allFilled) {
+                        //         alert(`Row ${i} complete!`);
+
+                        //         // Enable next row first valid pairs
+                        //         const nextRow = i + 1;
+                        //         if (nextRow <= 3) {
+                        //             for (let h = 1; h <= 5; h++) {
+                        //                 let currentS = document.querySelector(`.r${i} .bottom #s${h}`);
+                        //                 let nextRowP = document.querySelector(`.r${nextRow} .top #p${h}`);
+                        //                 let nextRowS = document.querySelector(`.r${nextRow} .bottom #s${h}`);
+
+                        //                 if (nextRowP && nextRowS && currentS) {
+                        //                     if (Number(currentS.value) < 3) {
+                        //                         nextRowP.disabled = false;
+                        //                         nextRowS.disabled = false;
+                        //                         break; // Enable only first valid pair in next row
+                        //                     }
+                        //                 }
+                        //             }
+                        //         }
+                        //         return;
+                        //     } else {
+                        //         alert(`Please fill all enabled pairs in Row ${i}`);
+                        //         return;
+                        //     }
+                        // }
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

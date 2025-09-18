@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <title>Log In</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .btns {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    .btns button {
+      padding: 10px 60px;
+      border: 0;
+      outline: none;
+      font-size: 20px;
+      border-radius: 30px;
+      color: black;
+      background-color: rgb(188, 188, 188);
+    }
+
+    .btns button:hover {
+      cursor: pointer;
+      background-color: gray;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      visibility: hidden;
+      z-index: 5;
+    }
+
+    .overlay.show {
+      visibility: visible;
+    }
+
+    .adminPopup{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: rgb(184, 184, 184);
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
+    .guestPopup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: #c0c0c0;
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
+    .open-popup {
+      visibility: visible;
+    }
+
+    .popupBtns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .popupBtns button {
+      padding: 5px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlay Background -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Button Options -->
+  <div class="btns">
+    <button onclick="openAdminPopup()">Admin</button>
+    <button onclick="alert('GM clicked')">GM</button>
+    <button onclick="openGuestPopup()">Guest</button>
+  </div>
+
+  <!-- Admin Popup -->
+  <div class="adminPopup" id="popupAdmin">
+    <label for="idAdmin">ID:</label>
+    <input type="text" id="adminId">
+    <label for="pwAdmin">PW:</label>
+    <input type="password" id="adminPw">
+    <div class="popupBtns">
+      <button onclick="closeAdminPopup()">Cancel</button>
+      <button onclick="submitAdminLogin()">OK</button>
+    </div>
+  </div>
+
+  <!-- Guest Popup -->
+  <div class="guestPopup" id="popupGuest">
+    <label for="teams">Choose your team:</label>
+    <select name="team" id="teams">
+      <option value="">Select</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+    </select>
+    <div class="popupBtns">
+      <button onclick="closeGuestPopup()">Cancel</button>
+      <button onclick="submitTeam()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyBcWYGKCj42Oz41p3SJA2drBnU7FMs4MhU",
+    //     authDomain: "awe-db.firebaseapp.com",
+    //     projectId: "awe-db",
+    //     storageBucket: "awe-db.firebasestorage.app",
+    //     messagingSenderId: "70964725621",
+    //     appId: "1:70964725621:web:42cdec6e7b963eb3a2b53c",
+    //     measurementId: "G-9EH2X0QJHR"
+    // };
+    
+    // // Initialize Firebase
+    // firebase.initializeApp(firebaseConfig);
+    // const db = firebase.firestore();
+
+    // // Authentication
+    // db.collection("authentication").doc("admin").set({
+    //     id: "001",
+    //     password: "admin"
+    // });
+
+    // db.collection("authentication").doc("gamemaster").set({
+    //   accounts: {
+    //     gm1: { id: "gm1", password: "pw1" },
+    //     gm2: { id: "gm2", password: "pw2" },
+    //     gm3: { id: "gm3", password: "pw3" },
+    //     gm4: { id: "gm4", password: "pw4" },
+    //     gm5: { id: "gm5", password: "pw5" },
+    //     gm6: { id: "gm6", password: "pw6" },
+    //     gm7: { id: "gm7", password: "pw7" },
+    //     gm8: { id: "gm8", password: "pw8" },
+    //     gm9: { id: "gm9", password: "pw9" },
+    //     gm10: { id: "gm10", password: "pw10" },
+    //     gm11: { id: "gm11", password: "pw11" },
+    //     gm12: { id: "gm12", password: "pw12" },
+    //     gm13: { id: "gm13", password: "pw13" },
+    //     gm14: { id: "gm14", password: "pw14" },
+    //     gm15: { id: "gm15", password: "pw15" },
+    //     gm16: { id: "gm16", password: "pw16" },
+    //     gm17: { id: "gm17", password: "pw17" },
+    //     gm18: { id: "gm18", password: "pw18" },
+    //     gm19: { id: "gm19", password: "pw19" },
+    //     gm20: { id: "gm20", password: "pw20" },
+    //     gm21: { id: "gm21", password: "pw21" },
+    //     gm22: { id: "gm22", password: "pw22" },
+    //     gm23: { id: "gm23", password: "pw23" },
+    //     gm24: { id: "gm24", password: "pw24" },
+    //     gm25: { id: "gm25", password: "pw25" }
+    //   }
+    // })
+
+    const id = document.getElementById("adminId");
+    const pw = document.getElementById("adminPw");
+
+    const popupAdmin = document.getElementById("popupAdmin");
+    const popupGuest = document.getElementById("popupGuest");
+    const overlay = document.getElementById("overlay");
+
+    function openAdminPopup() {
+      popupAdmin.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closeAdminPopup() {
+      popupAdmin.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function openGuestPopup() {
+      popupGuest.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closeGuestPopup() {
+      popupGuest.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function submitAdminLogin() {
+      const enteredId = id.value.trim();
+      const enteredPw = pw.value.trim();
+
+      db.collection("authentication").doc("admin").get()
+        .then((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            const correctId = data.id;
+            const correctPw = data.password;
+
+            if (enteredId === correctId && enteredPw === correctPw) {
+              alert("Welcome!");
+            } else if (enteredId !== correctId && enteredPw === correctPw) {
+              alert("Id incorrect!");
+            } else if (enteredId === correctId && enteredPw !== correctPw) {
+              alert("Password incorrect!");
+            } else {
+              alert("Id and Password incorrect!");
+            }
+          } else {
+            alert("Admin credentials not found in database.")
+          }
+        })
+        .catch((error) => {
+          console.error("Error retrieving admin credentials:", error);
+          alert("Something went wrong. Please try again later.");
+        })
+    }
+
+    // function submitGmLogin(inputId, inputPassword) {
+    //   db.collection("authentication").doc("gamemaster").get()
+    //     .then(doc => {
+    //       if (!doc.exists) {
+    //         alert("No GM data found.");
+    //         return;
+    //       }
+
+    //       const accounts = doc.data().accounts;
+
+    //       // Look through the GM accounts
+    //       for (const key in accounts) {
+    //         const account = accounts[key];
+    //         if (account.id === inputId) {
+    //           if (account.password === inputPassword) {
+    //             alert("Welcome GM " + inputId);
+    //             // redirect or continue
+    //             return;
+    //           } else {
+    //             alert("Incorrect password.");
+    //             return;
+    //           }
+    //         }
+    //       }
+
+    //       alert("GM ID not found.");
+    //     })
+    //     .catch(error => {
+    //       console.error("Error checking GM credentials:", error);
+    //       alert("Something went wrong.");
+    //     });
+    // }
+
+
+    function submitTeam() {
+      const team = document.getElementById("teams").value;
+      if (!team) {
+        alert("Please select a team.");
+        return;
+      }
+
+      // Example: Redirect or handle logic
+      alert("Selected team: " + team);
+      location.href = `guest.html?team=${team}`;
+    }
+  </script>
+  <script src="dbInsert.js"></script>
+</body>
+</html>
