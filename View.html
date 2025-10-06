@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview</title>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: -35px;
+        }
+
+        .title {
+            display: flex;
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        .top, .bottom {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            flex-direction: row;
+            gap: 10px;
+            /* margin-bottom: 35px; */
+        }
+
+        .top {
+            margin-bottom: 100px;
+        }
+
+        .bottom {
+            margin-bottom: 35px;
+        }
+
+        .team1, .team2, .team3, .team4, .team5, .team6, .team7, .team8, .team9, .team10, .team11, .team12, .team13, .team14{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h5 {
+            margin: 0 0 10px 0;
+            margin-bottom: 4px;
+            font-size: 25px;
+            height: 36px;
+        }
+
+        table {
+            border-collapse: collapse;
+            border: 2px solid #444;
+            min-width: 50px;
+            background-color: #fff;
+        }
+
+        td {
+            border: 1px solid #aaa;
+            padding: 15px 15px;
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1 id="countdown">Loading Countdown...</h1>
+        </div>
+        <div class="top">
+            <div class="team1">
+                <h5>1</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team2">
+                <h5>2</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team3">
+                <h5>3</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team4">
+                <h5>4</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team5">
+                <h5>5</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team6">
+                <h5>6</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team7">
+                <h5>7</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="team8">
+                <h5>8</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team9">
+                <h5>9</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team10">
+                <h5>10</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team11">
+                <h5>11</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team12">
+                <h5>12</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team13">
+                <h5>13</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team14">
+                <h5>14</h5>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcWYGKCj42Oz41p3SJA2drBnU7FMs4MhU",
+            authDomain: "awe-db.firebaseapp.com",
+            projectId: "awe-db",
+            storageBucket: "awe-db.firebasestorage.app",
+            messagingSenderId: "70964725621",
+            appId: "1:70964725621:web:42cdec6e7b963eb3a2b53c",
+            measurementId: "G-9EH2X0QJHR"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let stationTopTeamsMap = new Map();
+
+        db.collection("stationSubmission").onSnapshot(snapshot => {
+            stationTopTeamsMap.clear();
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const top5 = getTop5Teams(data);
+                const match = doc.id.match(/(\d+)/);
+                if (!match) return;
+                const stationNumber = parseInt(match[1]);
+                stationTopTeamsMap.set(stationNumber, top5);
+            });
+
+            for (let i = 1; i <= 14; i++) {
+                updateTeamHighlight(i);
+            }
+        });
+
+        function updateTeamHighlight(teamId) {
+            // console.log(`Updating team ${teamId}`);
+
+            db.collection('assignments').doc("team" + teamId)
+                .onSnapshot((doc) => {
+                    if (!doc.exists) {
+                        console.warn(`team${teamId} document not found.`);
+                        return;
+                    }
+
+                    const data = doc.data();
+                    const assignments = data.assignments;
+                    const name = data.name;
+
+                    // console.log(`Team ${teamId} name: ${name}`);
+                    // console.log(`Assignments for team ${teamId}:`, assignments);
+
+                    const container = document.querySelector(`.team${teamId}`);
+
+                    if (!container) {
+                        console.warn(`.team${teamId} container not found in DOM.`);
+                        return;
+                    }
+
+                    const title = container.querySelector('h5');
+                    const cells = container.querySelectorAll('td');
+
+                    title.textContent = name;
+
+                    if (Array.isArray(assignments)) {
+                        assignments.forEach((assignment) => {
+                            const positionIndex = assignment.position - 1;
+                            const label = assignment.value || "";
+                            const cell = cells[positionIndex];
+
+                            // console.log(`Assignment > Position ${assignment.position}, Value: "${label}"`);
+
+                            if (!cell) {
+                                console.warn(`Cell at index ${positionIndex} not found.`);
+                                return;
+                            }
+                            
+                            cell.textContent = label;
+
+                            const match = label.match(/^S?(\d+)$/i);
+                            if (match) {
+                                const stationNumber = parseInt(match[1]);
+                                const topTeams = stationTopTeamsMap.get(stationNumber);
+
+                                // console.log(`Station #${stationNumber} top teams:`, topTeams);
+
+
+                                if (topTeams && topTeams.includes("team" + teamId)) {
+                                    console.log(`Team ${teamId} is in top 5 of station ${stationNumber}`);
+
+                                    cell.style.background = "green";
+                                    cell.style.color = "white";
+                                } else {
+                                    // console.log(`Team ${teamId} is NOT in top 5 of station ${stationNumber}`);
+
+                                    cell.style.background = "white";
+                                    cell.style.color = "black";
+                                }
+                            } else {
+                                console.log(`Couldn't extract station number from label "${label}"`);
+
+                                cell.style.background = "white";
+                                cell.style.color = "black";
+                            }
+                        });
+                    }
+                });
+        }
+
+        function getTop5Teams(stationData) {
+            const MAX_ROWS = 4;
+            const MAX_PAIRS = 5;
+            const topPairs = Array.from({ length: MAX_PAIRS }, () => ({ team: null, baby: -Infinity }));
+
+            for (let row = 1; row <= MAX_ROWS; row++) {
+                const rowData = stationData[`row${row}`];
+                if (!rowData || !rowData.team || !rowData.baby) continue;
+
+                for (let i = 0; i < MAX_PAIRS; i++) {
+                    const team = rowData.team[i];
+                    const baby = parseFloat(rowData.baby[i]);
+                    if (team && !isNaN(baby) && baby > topPairs[i].baby) {
+                        topPairs[i] = { team, baby };
+                    }
+                }
+            }
+
+            return topPairs.map(pair => pair.team).filter(Boolean);
+        }
+
+        const countdownTarget = new Date("2025-10-05T21:43:50").getTime();
+
+        function updateCountdown() {
+            const now = Date.now();
+            const distance = countdownTarget - now;
+            
+            if (distance < 0) {
+                // document.getElementById("countdown").textContent = "Countdown Finished";
+                // clearInterval(intervalId);
+                document.getElementById("countdown").style.visibility = "hidden";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const pad = (num) => num.toString().padStart(2, '0');
+
+            document.getElementById("countdown").textContent =
+            `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+
+        const intervalId = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    });
+        
+    </script>
+</body>
+</html>

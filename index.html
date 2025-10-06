@@ -76,6 +76,24 @@
       visibility: hidden;
     }
 
+    .gmPopup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: #c0c0c0;
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
     .guestPopup {
       display: flex;
       flex-direction: column;
@@ -118,19 +136,31 @@
   <!-- Button Options -->
   <div class="btns">
     <button onclick="openAdminPopup()">Admin</button>
-    <button onclick="alert('GM clicked')">GM</button>
+    <button onclick="openGMPopup()">GM</button>
     <button onclick="openGuestPopup()">Guest</button>
   </div>
 
   <!-- Admin Popup -->
   <div class="adminPopup" id="popupAdmin">
-    <label for="idAdmin">ID:</label>
+    <label for="idAdmin">Admin ID:</label>
     <input type="text" id="adminId">
     <label for="pwAdmin">PW:</label>
     <input type="password" id="adminPw">
     <div class="popupBtns">
       <button onclick="closeAdminPopup()">Cancel</button>
       <button onclick="submitAdminLogin()">OK</button>
+    </div>
+  </div>
+
+  <!-- GM Popup -->
+  <div class="gmPopup" id="popupGM">
+    <label for="idGM">GM ID:</label>
+    <input type="text" id="gmId">
+    <label for="pwGM">PW:</label>
+    <input type="password" id="gmPw">
+    <div class="popupBtns">
+      <button onclick="closeGMPopup()">Cancel</button>
+      <button onclick="submitGMLogin()">OK</button>
     </div>
   </div>
 
@@ -162,60 +192,14 @@
   </div>
 
   <script>
-    // const firebaseConfig = {
-    //     apiKey: "AIzaSyBcWYGKCj42Oz41p3SJA2drBnU7FMs4MhU",
-    //     authDomain: "awe-db.firebaseapp.com",
-    //     projectId: "awe-db",
-    //     storageBucket: "awe-db.firebasestorage.app",
-    //     messagingSenderId: "70964725621",
-    //     appId: "1:70964725621:web:42cdec6e7b963eb3a2b53c",
-    //     measurementId: "G-9EH2X0QJHR"
-    // };
-    
-    // // Initialize Firebase
-    // firebase.initializeApp(firebaseConfig);
-    // const db = firebase.firestore();
+    const adminId = document.getElementById("adminId");
+    const adminPw = document.getElementById("adminPw");
 
-    // // Authentication
-    // db.collection("authentication").doc("admin").set({
-    //     id: "001",
-    //     password: "admin"
-    // });
-
-    // db.collection("authentication").doc("gamemaster").set({
-    //   accounts: {
-    //     gm1: { id: "gm1", password: "pw1" },
-    //     gm2: { id: "gm2", password: "pw2" },
-    //     gm3: { id: "gm3", password: "pw3" },
-    //     gm4: { id: "gm4", password: "pw4" },
-    //     gm5: { id: "gm5", password: "pw5" },
-    //     gm6: { id: "gm6", password: "pw6" },
-    //     gm7: { id: "gm7", password: "pw7" },
-    //     gm8: { id: "gm8", password: "pw8" },
-    //     gm9: { id: "gm9", password: "pw9" },
-    //     gm10: { id: "gm10", password: "pw10" },
-    //     gm11: { id: "gm11", password: "pw11" },
-    //     gm12: { id: "gm12", password: "pw12" },
-    //     gm13: { id: "gm13", password: "pw13" },
-    //     gm14: { id: "gm14", password: "pw14" },
-    //     gm15: { id: "gm15", password: "pw15" },
-    //     gm16: { id: "gm16", password: "pw16" },
-    //     gm17: { id: "gm17", password: "pw17" },
-    //     gm18: { id: "gm18", password: "pw18" },
-    //     gm19: { id: "gm19", password: "pw19" },
-    //     gm20: { id: "gm20", password: "pw20" },
-    //     gm21: { id: "gm21", password: "pw21" },
-    //     gm22: { id: "gm22", password: "pw22" },
-    //     gm23: { id: "gm23", password: "pw23" },
-    //     gm24: { id: "gm24", password: "pw24" },
-    //     gm25: { id: "gm25", password: "pw25" }
-    //   }
-    // })
-
-    const id = document.getElementById("adminId");
-    const pw = document.getElementById("adminPw");
+    const gmId = document.getElementById("gmId");
+    const gmPw = document.getElementById("gmPw");
 
     const popupAdmin = document.getElementById("popupAdmin");
+    const popupGM = document.getElementById("popupGM");
     const popupGuest = document.getElementById("popupGuest");
     const overlay = document.getElementById("overlay");
 
@@ -226,6 +210,16 @@
 
     function closeAdminPopup() {
       popupAdmin.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function openGMPopup() {
+      popupGM.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closeGMPopup() {
+      popupGM.classList.remove("open-popup");
       overlay.classList.remove("show");
     }
 
@@ -240,8 +234,8 @@
     }
 
     function submitAdminLogin() {
-      const enteredId = id.value.trim();
-      const enteredPw = pw.value.trim();
+      const enteredId = adminId.value.trim();
+      const enteredPw = adminPw.value.trim();
 
       db.collection("authentication").doc("admin").get()
         .then((doc) => {
@@ -267,6 +261,47 @@
           console.error("Error retrieving admin credentials:", error);
           alert("Something went wrong. Please try again later.");
         })
+    }
+
+    function submitGMLogin() {
+      const enteredId = gmId.value.trim();
+      const enteredPw = gmPw.value.trim();
+
+      if (!enteredId || !enteredPw) {
+        alert("Please enter both ID and password.");
+        return;
+      }
+
+      db.collection("authentication").doc("gamemaster").get()
+        .then(doc => {
+          if (!doc.exists) {
+            alert("No GM data found.");
+            return;
+          }
+
+          const accounts = doc.data().accounts;
+
+          for (const key in accounts) {
+            const account = accounts[key];
+            if (account.id === enteredId) {
+              if (account.password === enteredPw) {
+                alert("Welcome GM" + enteredId);
+
+                location.href = `gm.html?id=${enteredId}`;
+                return;
+              } else {
+                alert("Incorrect password");
+                return;
+              }
+            }
+          }
+
+          alert("GM ID not found.");
+        })
+        .catch(error => {
+          console.error("Error checking GM credentials:", error);
+          alert("Something went wrong.")
+        });
     }
 
     // function submitGmLogin(inputId, inputPassword) {

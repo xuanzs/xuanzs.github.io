@@ -21,33 +21,33 @@ db.collection("authentication").doc("admin").set({
 // Authentication GM
 db.collection("authentication").doc("gamemaster").set({
   accounts: {
-    gm1: { id: "gm1", password: "pw1" },
-    gm2: { id: "gm2", password: "pw2" },
-    gm3: { id: "gm3", password: "pw3" },
-    gm4: { id: "gm4", password: "pw4" },
-    gm5: { id: "gm5", password: "pw5" },
-    gm6: { id: "gm6", password: "pw6" },
-    gm7: { id: "gm7", password: "pw7" },
-    gm8: { id: "gm8", password: "pw8" },
-    gm9: { id: "gm9", password: "pw9" },
-    gm10: { id: "gm10", password: "pw10" },
-    gm11: { id: "gm11", password: "pw11" },
-    gm12: { id: "gm12", password: "pw12" },
-    gm13: { id: "gm13", password: "pw13" },
-    gm14: { id: "gm14", password: "pw14" },
-    gm15: { id: "gm15", password: "pw15" },
-    gm16: { id: "gm16", password: "pw16" },
-    gm17: { id: "gm17", password: "pw17" },
-    gm18: { id: "gm18", password: "pw18" },
-    gm19: { id: "gm19", password: "pw19" },
-    gm20: { id: "gm20", password: "pw20" },
-    gm21: { id: "gm21", password: "pw21" },
-    gm22: { id: "gm22", password: "pw22" },
-    gm23: { id: "gm23", password: "pw23" },
-    gm24: { id: "gm24", password: "pw24" },
-    gm25: { id: "gm25", password: "pw25" }
+    gm1: { id: "1", password: "pw1", status: "vacant"},
+    gm2: { id: "2", password: "pw2", status: "vacant" },
+    gm3: { id: "3", password: "pw3", status: "vacant" },
+    gm4: { id: "4", password: "pw4", status: "vacant" },
+    gm5: { id: "5", password: "pw5", status: "vacant" },
+    gm6: { id: "6", password: "pw6", status: "vacant" },
+    gm7: { id: "7", password: "pw7", status: "vacant" },
+    gm8: { id: "8", password: "pw8", status: "vacant" },
+    gm9: { id: "9", password: "pw9", status: "vacant" },
+    gm10: { id: "10", password: "pw10", status: "vacant" },
+    gm11: { id: "11", password: "pw11", status: "vacant" },
+    gm12: { id: "12", password: "pw12", status: "vacant" },
+    gm13: { id: "13", password: "pw13", status: "vacant" },
+    gm14: { id: "14", password: "pw14", status: "vacant" },
+    gm15: { id: "15", password: "pw15", status: "vacant" },
+    gm16: { id: "16", password: "pw16", status: "vacant" },
+    gm17: { id: "17", password: "pw17", status: "vacant" },
+    gm18: { id: "18", password: "pw18", status: "vacant" },
+    gm19: { id: "19", password: "pw19", status: "vacant" },
+    gm20: { id: "20", password: "pw20", status: "vacant" },
+    gm21: { id: "21", password: "pw21", status: "vacant" },
+    gm22: { id: "22", password: "pw22", status: "vacant" },
+    gm23: { id: "23", password: "pw23", status: "vacant" },
+    gm24: { id: "24", password: "pw24", status: "vacant" },
+    gm25: { id: "25", password: "pw25", status: "vacant" }
   }
-})
+});
 
 // // Team
 // for (let i = 1; i <= 15; i++) {
