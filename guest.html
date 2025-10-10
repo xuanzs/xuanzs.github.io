@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View</title>
-    <link rel="stylesheet" href="style_guest.css">
+    <link rel="stylesheet" href="guest_style.css">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -12,9 +12,14 @@
 
 </head>
 <body>
-    
+    <!-- <div id="loadingOverlay">
+        <p>Loading...</p>
+    </div> -->
+    <div class="overlay" id="overlay"></div>
+
     <div class="container">
         <h1></h1>
+        <input type="text" id="teamName" maxlength="10">
         <div class="table">
             <table id="t1">
                 <tbody>
@@ -99,7 +104,17 @@
             <button class="Submit">Submit</button>
         </div>
     </div>
+    <div class="popup" id="popup">
+        <h4></h4>
+        <div class="babies">
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+        </div>
+    </div>
     
-    <script src="script_guest.js"></script>
+    <script src="guest_script.js"></script>
 </body>
 </html>

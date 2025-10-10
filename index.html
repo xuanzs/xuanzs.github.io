@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <title>Log In</title>
   <style>
     body {
@@ -53,6 +58,42 @@
       visibility: visible;
     }
 
+    .adminPopup{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: rgb(184, 184, 184);
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
+    .gmPopup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      background: #c0c0c0;
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      gap: 10px;
+      z-index: 10;
+      visibility: hidden;
+    }
+
     .guestPopup {
       display: flex;
       flex-direction: column;
@@ -94,13 +135,37 @@
 
   <!-- Button Options -->
   <div class="btns">
-    <button onclick="alert('Admin clicked')">Admin</button>
-    <button onclick="alert('GM clicked')">GM</button>
-    <button onclick="openPopup()">Guest</button>
+    <button onclick="openAdminPopup()">Admin</button>
+    <button onclick="openGMPopup()">GM</button>
+    <button onclick="openGuestPopup()">Guest</button>
+  </div>
+
+  <!-- Admin Popup -->
+  <div class="adminPopup" id="popupAdmin">
+    <label for="idAdmin">Admin ID:</label>
+    <input type="text" id="adminId">
+    <label for="pwAdmin">PW:</label>
+    <input type="password" id="adminPw">
+    <div class="popupBtns">
+      <button onclick="closeAdminPopup()">Cancel</button>
+      <button onclick="submitAdminLogin()">OK</button>
+    </div>
+  </div>
+
+  <!-- GM Popup -->
+  <div class="gmPopup" id="popupGM">
+    <label for="idGM">GM ID:</label>
+    <input type="text" id="gmId">
+    <label for="pwGM">PW:</label>
+    <input type="password" id="gmPw">
+    <div class="popupBtns">
+      <button onclick="closeGMPopup()">Cancel</button>
+      <button onclick="submitGMLogin()">OK</button>
+    </div>
   </div>
 
   <!-- Guest Popup -->
-  <div class="guestPopup" id="popup">
+  <div class="guestPopup" id="popupGuest">
     <label for="teams">Choose your team:</label>
     <select name="team" id="teams">
       <option value="">Select</option>
@@ -121,24 +186,157 @@
       <option value="15">15</option>
     </select>
     <div class="popupBtns">
-      <button onclick="closePopup()">Cancel</button>
+      <button onclick="closeGuestPopup()">Cancel</button>
       <button onclick="submitTeam()">OK</button>
     </div>
   </div>
 
   <script>
-    const popup = document.getElementById("popup");
+    const adminId = document.getElementById("adminId");
+    const adminPw = document.getElementById("adminPw");
+
+    const gmId = document.getElementById("gmId");
+    const gmPw = document.getElementById("gmPw");
+
+    const popupAdmin = document.getElementById("popupAdmin");
+    const popupGM = document.getElementById("popupGM");
+    const popupGuest = document.getElementById("popupGuest");
     const overlay = document.getElementById("overlay");
 
-    function openPopup() {
-      popup.classList.add("open-popup");
+    function openAdminPopup() {
+      popupAdmin.classList.add("open-popup");
       overlay.classList.add("show");
     }
 
-    function closePopup() {
-      popup.classList.remove("open-popup");
+    function closeAdminPopup() {
+      popupAdmin.classList.remove("open-popup");
       overlay.classList.remove("show");
     }
+
+    function openGMPopup() {
+      popupGM.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closeGMPopup() {
+      popupGM.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function openGuestPopup() {
+      popupGuest.classList.add("open-popup");
+      overlay.classList.add("show");
+    }
+
+    function closeGuestPopup() {
+      popupGuest.classList.remove("open-popup");
+      overlay.classList.remove("show");
+    }
+
+    function submitAdminLogin() {
+      const enteredId = adminId.value.trim();
+      const enteredPw = adminPw.value.trim();
+
+      db.collection("authentication").doc("admin").get()
+        .then((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            const correctId = data.id;
+            const correctPw = data.password;
+
+            if (enteredId === correctId && enteredPw === correctPw) {
+              alert("Welcome!");
+            } else if (enteredId !== correctId && enteredPw === correctPw) {
+              alert("Id incorrect!");
+            } else if (enteredId === correctId && enteredPw !== correctPw) {
+              alert("Password incorrect!");
+            } else {
+              alert("Id and Password incorrect!");
+            }
+          } else {
+            alert("Admin credentials not found in database.")
+          }
+        })
+        .catch((error) => {
+          console.error("Error retrieving admin credentials:", error);
+          alert("Something went wrong. Please try again later.");
+        })
+    }
+
+    function submitGMLogin() {
+      const enteredId = gmId.value.trim();
+      const enteredPw = gmPw.value.trim();
+
+      if (!enteredId || !enteredPw) {
+        alert("Please enter both ID and password.");
+        return;
+      }
+
+      db.collection("authentication").doc("gamemaster").get()
+        .then(doc => {
+          if (!doc.exists) {
+            alert("No GM data found.");
+            return;
+          }
+
+          const accounts = doc.data().accounts;
+
+          for (const key in accounts) {
+            const account = accounts[key];
+            if (account.id === enteredId) {
+              if (account.password === enteredPw) {
+                alert("Welcome GM" + enteredId);
+
+                location.href = `gm.html?id=${enteredId}`;
+                return;
+              } else {
+                alert("Incorrect password");
+                return;
+              }
+            }
+          }
+
+          alert("GM ID not found.");
+        })
+        .catch(error => {
+          console.error("Error checking GM credentials:", error);
+          alert("Something went wrong.")
+        });
+    }
+
+    // function submitGmLogin(inputId, inputPassword) {
+    //   db.collection("authentication").doc("gamemaster").get()
+    //     .then(doc => {
+    //       if (!doc.exists) {
+    //         alert("No GM data found.");
+    //         return;
+    //       }
+
+    //       const accounts = doc.data().accounts;
+
+    //       // Look through the GM accounts
+    //       for (const key in accounts) {
+    //         const account = accounts[key];
+    //         if (account.id === inputId) {
+    //           if (account.password === inputPassword) {
+    //             alert("Welcome GM " + inputId);
+    //             // redirect or continue
+    //             return;
+    //           } else {
+    //             alert("Incorrect password.");
+    //             return;
+    //           }
+    //         }
+    //       }
+
+    //       alert("GM ID not found.");
+    //     })
+    //     .catch(error => {
+    //       console.error("Error checking GM credentials:", error);
+    //       alert("Something went wrong.");
+    //     });
+    // }
+
 
     function submitTeam() {
       const team = document.getElementById("teams").value;
@@ -150,9 +348,8 @@
       // Example: Redirect or handle logic
       alert("Selected team: " + team);
       location.href = `guest.html?team=${team}`;
-
-      closePopup();
     }
   </script>
+  <script src="dbInsert.js"></script>
 </body>
 </html>
