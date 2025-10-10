@@ -55,15 +55,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.querySelector('.container h1').textContent = data.name;
                 
                     highlightCorrectStations(`team${team}`, tableButtons);
+                    document.body.classList.add('submitted'); 
                 } else {
                     teamName.style.display = 'block';
                     document.querySelector('.right').style.display = 'block';
                     document.querySelector('.bottom').style.display = 'block';
+                    document.body.classList.remove('submitted'); 
                 }
             }, (error) => {
                 console.error("Error fetching document:", error);
                 alert("Failed to load data");
             });
+
     } else {
         alert('No team selected');
         location.href = 'index.html'; // fallback redirect
@@ -198,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
+            document.body.classList.add('submitted');
             alert("Submitted successfully!");
         })
         .catch((error) => {

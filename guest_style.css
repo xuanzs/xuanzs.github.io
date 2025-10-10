@@ -1,78 +1,71 @@
-#loadingOverlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-  
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 5;
-    visibility: hidden;
-}
-
-.overlay:hover {
-    cursor: pointer;
-}
-
-.overlay.show {
-    visibility: visible;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
 body{
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    font-family:'Times New Roman', Times, serif;
+background: url('./public/background/background.png') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100svh;
+  display: grid;
+  font-family:'Times New Roman', Times, serif;
 }
+
+body.submitted{
+  background: url('./public/background/submitbackground.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/*After Submit changed the background*/
+body, body.submitted { transition: background-image .25s ease-in-out, background-color .25s; }
 
 .container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin: 0;
 }
 
-.container input{
-    margin-top: -4.5px;
-    margin-bottom: 20px;
-}
 
 #t1{
-    border: 1px solid black;
-    margin-bottom: 10px;
-    padding: 1px;
-    border-collapse: collapse;
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: min(92vw, 300px);
+  table-layout: fixed;
+  margin-bottom: 10px;
 }
 
+
 #t1 button{
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-    font-size: 20px;
-    background-color: white;
-    color: black;
-    border: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-size: clamp(16px, 3.5vw, 22px);
+  background-color: rgb(90, 35, 161);
+  border-radius: 10%;
+  color: black;
+  cursor: pointer;
 }
 
 #t1 .selected{
-    background-color: rgb(133, 133, 133);
+    background-color: rgb(116, 217, 87);
 }
 
 td{
-    border: 1px solid black;
-    padding: 0;
-    background-color: white;
+  border: 1px solid black;
+  padding: 0;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10%;
+}
+
+td::before{
+  content: "";
+  display: block;
+  padding-top: 100%;
 }
 
 .right{
@@ -86,7 +79,7 @@ td{
     width: 40px;
     height: 40px;
     font-size: 20px;
-    background-color: rgb(255, 255, 255);
+    background: rgba(255,255,255,.35);
     border: 1px solid black;
     margin: 2px;
 }
@@ -99,33 +92,53 @@ td{
     margin: 5px;
     padding: 10px 20px;
     cursor: pointer;
+    background: rgba(255,255,255,.35);
+    border-radius: 20%;
+    border-color: rgb(36, 10, 71);
 }
 
-.popup {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    background: white;
-    padding: 20px;
-    width: 200px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 20px;
-    z-index: 10;
-    visibility: hidden;
+
+/* --------Over Layer------------ */
+
+.table-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
 }
 
-.popup.show {
-    visibility: visible;
+html, body {
+  height: 100%;
 }
 
-.popup .babies {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
+body.zoomed {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.zoomed .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(2.0);
+  transform-origin: center center;
+}
+
+body.zoomed .right,
+body.zoomed .bottom {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body.zoomed .container { transform: none; }
+  #t1 { width: min(96vw, 320px); } 
+  #t1 button { font-size: clamp(14px, 5vw, 22px); }
 }
