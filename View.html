@@ -8,6 +8,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <style>
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            visibility: hidden;
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -69,9 +80,38 @@
             text-align: center;
             font-size: 20px;
         }
+
+        /* .popup{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 20px;
+            z-index: 10;
+            font-size: 200px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            visibility: hidden;
+        } */
+
+        #popup{
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            font-size: 200px;
+            background: gray;
+            padding: 20px;
+            visibility: hidden;
+        }
     </style>
 </head>
 <body>
+
+    <div class="overlay" id="overlay"></div>
+
     <div class="container">
         <div class="title">
             <h1 id="countdown">Loading Countdown...</h1>
@@ -668,6 +708,9 @@
                 </table>
             </div>
         </div>
+        <div class="popup" id="popup">
+            Time's Up
+        </div>
     </div>
 
     <script>
@@ -799,20 +842,97 @@
             return topPairs.map(pair => pair.team).filter(Boolean);
         }
 
-        const countdownTarget = new Date("2025-10-05T21:43:50").getTime();
+        const countdownTarget = new Date("2025-10-07T20:00:00").getTime();
+        const overlay = document.getElementById("overlay");
+        const popup = document.getElementById("popup");
+        const alarm = new Audio('alarm.mp3');
+
+        let animationIntervalId = null;
+        let countdownIntervalId = null;
+        let animationStarted = false;
+
+        // function getRandomColor() {
+        //     const letters = '0123456789ABCDEF';
+        //     let color = '#';
+        //     for (let i = 0; i < 6; i++) {
+        //         color += letters[Math.floor(Math.random() * 16)];
+        //     }
+        //     return color;
+        // }
+
+        // const fontFamilies = ['Arial', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Brush Script MT'];
+
+        // let currentIndex = 0;
+
+        // function changeFontFamily() {
+        //     popup.style.fontFamily = fontFamilies[currentIndex];
+        //     currentIndex = (currentIndex + 1) % fontFamilies.length;
+        // }
+
+        // function startAnimation() {
+        //     if (animationStarted) return;
+        //     animationStarted = true;
+        //     animationIntervalId = setInterval(() => {
+        //         overlay.style.background = getRandomColor();
+        //         changeFontFamily();
+        //     }, 100);
+        // }
+
+        let posX = 100;
+        let posY = 100;
+        let velocityX = 3;
+        let velocityY = 2;
+
+        function animate() {
+            const wordWidth = popup.offsetWidth;
+            const wordHeight = popup.offsetHeight;
+            const maxX = window.innerWidth - wordWidth;
+            const maxY = window.innerHeight - wordHeight;
+
+            posX += velocityX;
+            posY += velocityY;
+
+            if (posX >= maxX || posX <= 0) {
+                velocityX = -velocityX;
+                posX = Math.max(0, Math.min(posX, maxX));
+            }
+
+            if (posY >= maxY || posY <= 0) {
+                velocityY = -velocityY;
+                posY = Math.max(0, Math.min(posY, maxY));
+            }
+
+            popup.style.left = posX + 'px';
+            popup.style.top = posY + 'px';
+
+            requestAnimationFrame(animate);
+        }
+
 
         function updateCountdown() {
             const now = Date.now();
             const distance = countdownTarget - now;
             
             if (distance < 0) {
-                // document.getElementById("countdown").textContent = "Countdown Finished";
-                // clearInterval(intervalId);
                 document.getElementById("countdown").style.visibility = "hidden";
+                overlay.style.visibility = "visible";
+                popup.style.visibility = "visible";
+
+                clearInterval(countdownIntervalId);
+
+                // alarm.play().catch(e => {
+                //     console.warn("Audio play was prevented:", e);
+                // });
+
+                // startAnimation();
+
+                // if (!animationStarted) {
+                //     animationStarted = true;
+                //     animate();
+                // }
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
