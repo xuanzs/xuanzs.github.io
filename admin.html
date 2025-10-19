@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <link rel="stylesheet" href="./css/admin.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <div
+          class="bar active"
+          id="bar-station"
+          onclick="opentab(event, 'station')"
+        >
+          Station
+        </div>
+        <div class="bar" id="bar-baby" onclick="opentab(event, 'baby')">
+          Baby 4
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="station active" id="station">
+          <h2>Station</h2>
+          <hr />
+          <div class="station-content">
+            <div class="card">
+              <h4>Shutdown</h4>
+              <div class="card-body">
+                <select name="" id="shutDrop">
+                  <option value=""></option>
+                </select>
+                <button type="submit" id="shutBtn">Submit</button>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Restore</h4>
+              <div class="card-body">
+                <div class="resDrops">
+                  <select name="" id="resDrop-1">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-2">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-3">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-4">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-5">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-6">
+                    <option value=""></option>
+                  </select>
+                  <select name="" id="resDrop-7">
+                    <option value=""></option>
+                  </select>
+                </div>
+                <button type="submit" id="resBtn">Submit</button>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Swap</h4>
+              <div class="card-body">
+                <div class="swapDrops">
+                  <div class="line-1">
+                    <select name="" id="swapDrop-1">
+                      <option value=""></option>
+                    </select>
+                    <h6><-></h6>
+                    <select name="" id="swapDrop-2">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                  <div class="line-2">
+                    <select name="" id="swapDrop-3">
+                      <option value=""></option>
+                    </select>
+                    <h6><-></h6>
+                    <select name="" id="swapDrop-4">
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" id="swapBtn">Submit</button>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Pause</h4>
+              <button type="button" id="pauseBtn">Freeze</button>
+            </div>
+          </div>
+        </div>
+        <div class="baby" id="baby" style="visibility: hidden">
+          <h2>Baby 4</h2>
+          <hr />
+        </div>
+      </div>
+    </div>
+    <script src="./firebaseConfig.js"></script>
+    <script src="./js/admin.js"></script>
+  </body>
+</html>

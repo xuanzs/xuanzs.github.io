@@ -1,120 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View</title>
-    <link rel="stylesheet" href="guest_style.css">
+    <link rel="stylesheet" href="./css/guest.css" />
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-</head>
-<body>
+  </head>
+  <body>
     <!-- <div id="loadingOverlay">
         <p>Loading...</p>
     </div> -->
     <div class="overlay" id="overlay"></div>
 
     <div class="container">
-        <h1></h1>
-        <input type="text" id="teamName" maxlength="10">
-        <div class="table">
-            <table id="t1">
-                <tbody>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                    <tr>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                        <td><button></button></td>
-                    </tr>
-                </tbody>
-            </table>
+      <h1></h1>
+      <input type="text" id="teamName" maxlength="10" />
+      <div class="table">
+        <table id="t1">
+          <tbody>
+            <tr>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+            </tr>
+            <tr>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+            </tr>
+            <tr>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+            </tr>
+            <tr>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+            </tr>
+            <tr>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+              <td><button></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="right">
+        <div class="r1">
+          <button>1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>4</button>
+          <button>5</button>
         </div>
-        <div class="right">
-            <div class="r1">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-            </div>
-            <div class="r2">
-                <button>6</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>10</button>
-            </div>
-            <div class="r3">
-                <button>11</button>
-                <button>12</button>
-                <button>13</button>
-                <button>14</button>
-                <button>15</button>
-            </div>
-            <div class="r4">
-                <button>16</button>
-                <button>17</button>
-                <button>18</button>
-                <button>19</button>
-                <button>20</button>
-            </div>
-            <div class="r5">
-                <button>21</button>
-                <button>22</button>
-                <button>23</button>
-                <button>24</button>
-                <button>25</button>
-            </div>
+        <div class="r2">
+          <button>6</button>
+          <button>7</button>
+          <button>8</button>
+          <button>9</button>
+          <button>10</button>
         </div>
-        <div class="bottom">
-            <button class="Clear">Clear All</button>
-            <button class="Delete">Delete</button>
-            <button class="Submit">Submit</button>
+        <div class="r3">
+          <button>11</button>
+          <button>12</button>
+          <button>13</button>
+          <button>14</button>
+          <button>15</button>
         </div>
+        <div class="r4">
+          <button>16</button>
+          <button>17</button>
+          <button>18</button>
+          <button>19</button>
+          <button>20</button>
+        </div>
+        <div class="r5">
+          <button>21</button>
+          <button>22</button>
+          <button>23</button>
+          <button>24</button>
+          <button>25</button>
+        </div>
+      </div>
+      <div class="bottom">
+        <button class="Clear">Clear All</button>
+        <button class="Delete">Delete</button>
+        <button class="Submit">Submit</button>
+      </div>
     </div>
     <div class="popup" id="popup">
-        <h4></h4>
-        <div class="babies">
-            <h5></h5>
-            <h5></h5>
-            <h5></h5>
-            <h5></h5>
-            <h5></h5>
-        </div>
+      <h4></h4>
+      <div class="babies">
+        <h5></h5>
+        <h5></h5>
+        <h5></h5>
+        <h5></h5>
+        <h5></h5>
+      </div>
     </div>
-    
-    <script src="guest_script.js"></script>
-</body>
+    <script src="./firebaseConfig.js"></script>
+    <script src="./js/guest.js"></script>
+  </body>
 </html>

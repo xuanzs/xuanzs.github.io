@@ -1,292 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <title>GM</title>
     <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: row;
-            height: 100vh;
-        }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        height: 100vh;
+      }
 
-        .left {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-left: 10%;
-            padding-right: 20%;
-            gap: 100px;
-        }
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 10%;
+        padding-right: 20%;
+        gap: 100px;
+      }
 
-        .left button {
-            cursor: pointer;
-            padding: 20px;
-            font-size: 20px;
-            border: none;
-            border-radius: 15px;
-        }
+      .left button {
+        cursor: pointer;
+        padding: 20px;
+        font-size: 20px;
+        border: none;
+        border-radius: 15px;
+      }
 
-        .right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .rows {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-        }
+      .rows {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+      }
 
-        .row {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
-        }
+      .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+      }
 
-        .top {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+      .top {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
 
-        .bottom {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+      .bottom {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
 
-        select {
-            width: 70px;
-            height: 30px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+      select {
+        width: 70px;
+        height: 30px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
 
-        .right button {
-            font-size: 20px;
-            font-family: 'Times New Roman', Times, serif;
-            cursor: pointer;
-            margin: 10px;
-            width: 70%;
-            height: 50px;
-            border: none;
-            border-radius: 10px;
-            background: white;
-        }
-        .right button:hover {
-            transition: 0.3s;
-            background: rgb(172, 172, 172);
-        }
+      .right button {
+        font-size: 20px;
+        font-family: "Times New Roman", Times, serif;
+        cursor: pointer;
+        margin: 10px;
+        width: 70%;
+        height: 50px;
+        border: none;
+        border-radius: 10px;
+        background: white;
+      }
+      .right button:hover {
+        transition: 0.3s;
+        background: rgb(172, 172, 172);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="left">
-            <h1></h1>
-            <button onclick="vacant()">Vacant</button>
-            <button onclick="occupied()">Occupied</button>
-        </div>
-        <div class="right">
-            <div class="rows">
-                <!-- Row 4 -->
-                <div class="row">
-                    <h3>Row 4</h3>
-                    <div class="r4">
-                        <div class="top">
-                            <h5>Team:</h5>
-                            <select name="p1" class="p1">
-                                <option value=""></option>
-                            </select>
-                            <select name="p2" class="p2">
-                                <option value=""></option>
-                            </select>
-                            <select name="p3" class="p3">
-                                <option value=""></option>
-                            </select>
-                            <select name="p4" class="p4">
-                                <option value=""></option>
-                            </select>
-                            <select name="p5" class="p5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div class="bottom">
-                            <h5>Baby:</h5>
-                            <select name="s1" class="s1">
-                                <option value=""></option>
-                                <option value="4">4</option>
-                            </select>
-                            <select name="s2" class="s2">
-                                <option value=""></option>
-                                <option value="4">4</option>
-                            </select>
-                            <select name="s3" class="s3">
-                                <option value=""></option>
-                                <option value="4">4</option>
-                            </select>
-                            <select name="s4" class="s4">
-                                <option value=""></option>
-                                <option value="4">4</option>
-                            </select>
-                            <select name="s5" class="s5">
-                                <option value=""></option>
-                                <option value="4">4</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 3 -->
-                <div class="row">
-                    <h3>Row 3</h3>
-                    <div class="r3">
-                        <div class="top">
-                            <h5>Team:</h5>
-                            <select name="p1" class="p1">
-                                <option value=""></option>
-                            </select>
-                            <select name="p2" class="p2">
-                                <option value=""></option>
-                            </select>
-                            <select name="p3" class="p3">
-                                <option value=""></option>
-                            </select>
-                            <select name="p4" class="p4">
-                                <option value=""></option>
-                            </select>
-                            <select name="p5" class="p5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div class="bottom">
-                            <h5>Baby:</h5>
-                            <select name="s1" class="s1">
-                                <option value=""></option>
-                            </select>
-                            <select name="s2" class="s2">
-                                <option value=""></option>
-                            </select>
-                            <select name="s3" class="s3">
-                                <option value=""></option>
-                            </select>
-                            <select name="s4" class="s4">
-                                <option value=""></option>
-                            </select>
-                            <select name="s5" class="s5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 2 -->
-                <div class="row">
-                    <h3>Row 2</h3>
-                    <div class="r2">
-                        <div class="top">
-                            <h5>Team:</h5>
-                            <select name="p1" class="p1">
-                                <option value=""></option>
-                            </select>
-                            <select name="p2" class="p2">
-                                <option value=""></option>
-                            </select>
-                            <select name="p3" class="p3">
-                                <option value=""></option>
-                            </select>
-                            <select name="p4" class="p4">
-                                <option value=""></option>
-                            </select>
-                            <select name="p5" class="p5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div class="bottom">
-                            <h5>Baby:</h5>
-                            <select name="s1" class="s1">
-                                <option value=""></option>
-                            </select>
-                            <select name="s2" class="s2">
-                                <option value=""></option>
-                            </select>
-                            <select name="s3" class="s3">
-                                <option value=""></option>
-                            </select>
-                            <select name="s4" class="s4">
-                                <option value=""></option>
-                            </select>
-                            <select name="s5" class="s5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 1 -->
-                <div class="row">
-                    <h3>Row 1</h3>
-                    <div class="r1">
-                        <div class="top">
-                            <h5>Team:</h5>
-                            <select name="p1" class="p1">
-                                <option value=""></option>
-                            </select>
-                            <select name="p2" class="p2">
-                                <option value=""></option>
-                            </select>
-                            <select name="p3" class="p3">
-                                <option value=""></option>
-                            </select>
-                            <select name="p4" class="p4">
-                                <option value=""></option>
-                            </select>
-                            <select name="p5" class="p5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div class="bottom">
-                            <h5>Baby:</h5>
-                            <select name="s1" class="s1">
-                                <option value=""></option>
-                            </select>
-                            <select name="s2" class="s2">
-                                <option value=""></option>
-                            </select>
-                            <select name="s3" class="s3">
-                                <option value=""></option>
-                            </select>
-                            <select name="s4" class="s4">
-                                <option value=""></option>
-                            </select>
-                            <select name="s5" class="s5">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="submitBtn()">Submit</button>
+      <div class="left">
+        <h1></h1>
+        <button onclick="vacant()">Vacant</button>
+        <button onclick="occupied()">Occupied</button>
+      </div>
+      <div class="right">
+        <div class="rows">
+          <!-- Row 4 -->
+          <div class="row">
+            <h3>Row 4</h3>
+            <div class="r4">
+              <div class="top">
+                <h5>Team:</h5>
+                <select name="p1" class="p1">
+                  <option value=""></option>
+                </select>
+                <select name="p2" class="p2">
+                  <option value=""></option>
+                </select>
+                <select name="p3" class="p3">
+                  <option value=""></option>
+                </select>
+                <select name="p4" class="p4">
+                  <option value=""></option>
+                </select>
+                <select name="p5" class="p5">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="bottom">
+                <h5>Baby:</h5>
+                <select name="s1" class="s1">
+                  <option value=""></option>
+                  <option value="4">4</option>
+                </select>
+                <select name="s2" class="s2">
+                  <option value=""></option>
+                  <option value="4">4</option>
+                </select>
+                <select name="s3" class="s3">
+                  <option value=""></option>
+                  <option value="4">4</option>
+                </select>
+                <select name="s4" class="s4">
+                  <option value=""></option>
+                  <option value="4">4</option>
+                </select>
+                <select name="s5" class="s5">
+                  <option value=""></option>
+                  <option value="4">4</option>
+                </select>
+              </div>
             </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="row">
+            <h3>Row 3</h3>
+            <div class="r3">
+              <div class="top">
+                <h5>Team:</h5>
+                <select name="p1" class="p1">
+                  <option value=""></option>
+                </select>
+                <select name="p2" class="p2">
+                  <option value=""></option>
+                </select>
+                <select name="p3" class="p3">
+                  <option value=""></option>
+                </select>
+                <select name="p4" class="p4">
+                  <option value=""></option>
+                </select>
+                <select name="p5" class="p5">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="bottom">
+                <h5>Baby:</h5>
+                <select name="s1" class="s1">
+                  <option value=""></option>
+                </select>
+                <select name="s2" class="s2">
+                  <option value=""></option>
+                </select>
+                <select name="s3" class="s3">
+                  <option value=""></option>
+                </select>
+                <select name="s4" class="s4">
+                  <option value=""></option>
+                </select>
+                <select name="s5" class="s5">
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="row">
+            <h3>Row 2</h3>
+            <div class="r2">
+              <div class="top">
+                <h5>Team:</h5>
+                <select name="p1" class="p1">
+                  <option value=""></option>
+                </select>
+                <select name="p2" class="p2">
+                  <option value=""></option>
+                </select>
+                <select name="p3" class="p3">
+                  <option value=""></option>
+                </select>
+                <select name="p4" class="p4">
+                  <option value=""></option>
+                </select>
+                <select name="p5" class="p5">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="bottom">
+                <h5>Baby:</h5>
+                <select name="s1" class="s1">
+                  <option value=""></option>
+                </select>
+                <select name="s2" class="s2">
+                  <option value=""></option>
+                </select>
+                <select name="s3" class="s3">
+                  <option value=""></option>
+                </select>
+                <select name="s4" class="s4">
+                  <option value=""></option>
+                </select>
+                <select name="s5" class="s5">
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 1 -->
+          <div class="row">
+            <h3>Row 1</h3>
+            <div class="r1">
+              <div class="top">
+                <h5>Team:</h5>
+                <select name="p1" class="p1">
+                  <option value=""></option>
+                </select>
+                <select name="p2" class="p2">
+                  <option value=""></option>
+                </select>
+                <select name="p3" class="p3">
+                  <option value=""></option>
+                </select>
+                <select name="p4" class="p4">
+                  <option value=""></option>
+                </select>
+                <select name="p5" class="p5">
+                  <option value=""></option>
+                </select>
+              </div>
+              <div class="bottom">
+                <h5>Baby:</h5>
+                <select name="s1" class="s1">
+                  <option value=""></option>
+                </select>
+                <select name="s2" class="s2">
+                  <option value=""></option>
+                </select>
+                <select name="s3" class="s3">
+                  <option value=""></option>
+                </select>
+                <select name="s4" class="s4">
+                  <option value=""></option>
+                </select>
+                <select name="s5" class="s5">
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="submitBtn()">Submit</button>
         </div>
+      </div>
     </div>
-    <script src="gm_script.js"></script>
-</body>
+    <script src="./firebaseConfig.js"></script>
+    <script src="./js/gm.js"></script>
+  </body>
 </html>
