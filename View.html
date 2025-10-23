@@ -81,6 +81,10 @@
             font-size: 20px;
         }
 
+        .btn-shutdown {
+            background-color: black !important;
+        }
+
         /* .popup{
             display: flex;
             flex-direction: column;
@@ -731,6 +735,11 @@
 
         let stationTopTeamsMap = new Map();
 
+        let shutdownStation = null;
+        let currentRestoreTeams = [];
+
+        const assignmentsCache = new Map();
+
         db.collection("stationSubmission").onSnapshot(snapshot => {
             stationTopTeamsMap.clear();
             snapshot.forEach(doc => {
@@ -742,83 +751,129 @@
                 stationTopTeamsMap.set(stationNumber, top5);
             });
 
-            for (let i = 1; i <= 14; i++) {
-                updateTeamHighlight(i);
-            }
+            refreshAllTeams();
         });
 
-        function updateTeamHighlight(teamId) {
+        db.collection("skills").doc("shutdown").onSnapshot((doc) => {
+            if (!doc.exists) {
+                shutdownStation = null;
+            } else {
+                const data = doc.data();
+                shutdownStation = data.station || null;
+            }
+            refreshAllTeams();
+        });
+
+        db.collection("skills").doc("restore").onSnapshot((doc) => {
+            console.log("restore snapshot triggered");
+            if (!doc.exists) {
+                currentRestoreTeams = [];
+            } else {
+                const data = doc.data();
+                currentRestoreTeams = data.teams || [];
+            }
+            refreshAllTeams();
+        });
+
+        function refreshAllTeams() {
+            for (let i = 1; i <= 14; i++) {
+                const currentTeamId = "team" + i;
+                const data = assignmentsCache.get(currentTeamId);
+                if (data) {
+                    updateTeamDisplay(i, data);
+                }
+            }
+        }
+
+        function startAssignmentListener(teamId) {
+            const currentTeamId = "team" + teamId;
+
+            db.collection("assignments").doc(currentTeamId).onSnapshot(doc => {
+                if (!doc.exists) {
+                    console.warn(`${currentTeamId} doc not found.`);
+                    return;
+                }
+
+                const data = doc.data();assignmentsCache.set(currentTeamId, data);
+
+                updateTeamDisplay(teamId, data);
+            });
+        }
+
+        function updateTeamDisplay(teamId, data) {
             // console.log(`Updating team ${teamId}`);
 
-            db.collection('assignments').doc("team" + teamId)
-                .onSnapshot((doc) => {
-                    if (!doc.exists) {
-                        console.warn(`team${teamId} document not found.`);
+            const currentTeamId = "team" + teamId;
+
+            const container = document.querySelector(`.team${teamId}`);
+
+            if (!container) {
+                console.warn(`.team${teamId} container not found in DOM.`);
+                return;
+            }
+
+            const title = container.querySelector('h5');
+            const cells = container.querySelectorAll('td');
+
+            title.textContent = data.name || "";
+
+            if (Array.isArray(data.assignments)) {
+                data.assignments.forEach(assignment => {
+                    const positionIndex = assignment.position - 1;
+                    const label = assignment.value || "";
+                    const cell = cells[positionIndex];
+
+                    if (!cell) {
+                        console.warn(`Cell at index ${positionIndex} not found.`);
                         return;
                     }
 
-                    const data = doc.data();
-                    const assignments = data.assignments;
-                    const name = data.name;
+                    cell.textContent = label;
 
-                    // console.log(`Team ${teamId} name: ${name}`);
-                    // console.log(`Assignments for team ${teamId}:`, assignments);
+                    const match = label.match(/^S?(\d+)$/i);
+                    if (match) {
+                        const stationNumber = parseInt(match[1]);
+                        const topTeams = stationTopTeamsMap.get(stationNumber);
 
-                    const container = document.querySelector(`.team${teamId}`);
-
-                    if (!container) {
-                        console.warn(`.team${teamId} container not found in DOM.`);
-                        return;
-                    }
-
-                    const title = container.querySelector('h5');
-                    const cells = container.querySelectorAll('td');
-
-                    title.textContent = name;
-
-                    if (Array.isArray(assignments)) {
-                        assignments.forEach((assignment) => {
-                            const positionIndex = assignment.position - 1;
-                            const label = assignment.value || "";
-                            const cell = cells[positionIndex];
-
-                            // console.log(`Assignment > Position ${assignment.position}, Value: "${label}"`);
-
-                            if (!cell) {
-                                console.warn(`Cell at index ${positionIndex} not found.`);
-                                return;
-                            }
-                            
-                            cell.textContent = label;
-
-                            const match = label.match(/^S?(\d+)$/i);
-                            if (match) {
-                                const stationNumber = parseInt(match[1]);
-                                const topTeams = stationTopTeamsMap.get(stationNumber);
-
-                                // console.log(`Station #${stationNumber} top teams:`, topTeams);
+                        // console.log(`Station #${stationNumber} top teams:`, topTeams);
 
 
-                                if (topTeams && topTeams.includes("team" + teamId)) {
-                                    console.log(`Team ${teamId} is in top 5 of station ${stationNumber}`);
+                        if (topTeams && topTeams.includes(currentTeamId)) {
+                            console.log(`Team ${teamId} is in top 5 of station ${stationNumber}`);
 
-                                    cell.style.background = "green";
-                                    cell.style.color = "white";
-                                } else {
-                                    // console.log(`Team ${teamId} is NOT in top 5 of station ${stationNumber}`);
+                            cell.style.background = "green";
+                            cell.style.color = "white";
+                        } else {
+                            // console.log(`Team ${teamId} is NOT in top 5 of station ${stationNumber}`);
 
-                                    cell.style.background = "white";
-                                    cell.style.color = "black";
-                                }
-                            } else {
-                                console.log(`Couldn't extract station number from label "${label}"`);
+                            cell.style.background = "white";
+                            cell.style.color = "black";
+                        }
+                    } else {
+                        console.log(`Couldn't extract station number from label "${label}"`);
 
-                                cell.style.background = "white";
-                                cell.style.color = "black";
-                            }
-                        });
+                        cell.style.background = "white";
+                        cell.style.color = "black";
                     }
                 });
+            }
+
+            if (shutdownStation && !currentRestoreTeams.includes(currentTeamId)) {
+                cells.forEach(cell => {
+                    if (cell.textContent === shutdownStation) {
+                        cell.classList.add("btn-shutdown");
+                        console.log(`Station ${shutdownStation} shut down for team ${currentTeamId}`);
+                    } else {
+                        cell.classList.remove("btn-shutdown");
+                    }
+                });
+            } else {
+                cells.forEach(cell => cell.classList.remove("btn-shutdown"));
+            }
+        }
+
+        for (let i = 1; i <= 14; i++) {
+            startAssignmentListener(i);
         }
 
         function getTop5Teams(stationData) {
@@ -850,33 +905,6 @@
         let animationIntervalId = null;
         let countdownIntervalId = null;
         let animationStarted = false;
-
-        // function getRandomColor() {
-        //     const letters = '0123456789ABCDEF';
-        //     let color = '#';
-        //     for (let i = 0; i < 6; i++) {
-        //         color += letters[Math.floor(Math.random() * 16)];
-        //     }
-        //     return color;
-        // }
-
-        // const fontFamilies = ['Arial', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Brush Script MT'];
-
-        // let currentIndex = 0;
-
-        // function changeFontFamily() {
-        //     popup.style.fontFamily = fontFamilies[currentIndex];
-        //     currentIndex = (currentIndex + 1) % fontFamilies.length;
-        // }
-
-        // function startAnimation() {
-        //     if (animationStarted) return;
-        //     animationStarted = true;
-        //     animationIntervalId = setInterval(() => {
-        //         overlay.style.background = getRandomColor();
-        //         changeFontFamily();
-        //     }, 100);
-        // }
 
         let posX = 100;
         let posY = 100;
@@ -915,8 +943,8 @@
             
             if (distance < 0) {
                 document.getElementById("countdown").style.visibility = "hidden";
-                overlay.style.visibility = "visible";
-                popup.style.visibility = "visible";
+                // overlay.style.visibility = "visible";
+                // popup.style.visibility = "visible";
 
                 clearInterval(countdownIntervalId);
 
