@@ -115,6 +115,22 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Freeze
+            const audioContext = new (window.AudioContext || window.webkitAudioContext) ();
+
+            async function loadAndPlaySound(url) {
+              await audioContext.resume();
+
+              const response = await fetch(url);
+              const arrayBuffer = await response.arrayBuffer();
+              const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+              const source = audioContext.createBufferSource();
+              source.buffer = audioBuffer;
+              source.connect(audioContext.destination);
+
+              source.start(0);
+            }
+
             db.collection("skills")
               .doc("pause")
               .onSnapshot((doc) => {
@@ -123,33 +139,43 @@ document.addEventListener("DOMContentLoaded", function () {
                   const status = data.status;
 
                   if (status === "Freeze") {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext) ();
-                    const alarm = new Audio("/sound/airHorn.mp3");
+                    
+                    console.log("Status is Freeze, playing sound...");
+                    loadAndPlaySound("/sound/airHorn.mp3").then(() => {
+                      console.log("Sound played successfully");
+                    })
+                    .catch((err) => {
+                      console.error("Error playing sound:", error);
+                    });
+
+                    // const alarm = new Audio("sound/airHorn.mp3");
                     // alarm.preload = 'auto';
 
                     // alarm.play();
                   
                     // alert("Play sound?");
                     // console.log("You are freezed");
-                    alarm.oncanplaythrough = () => {
-                      const source = audioContext.createMediaElementSource(alarm);
-                      source.connect(audioContext.destination);
-                      alarm.play().then(() => {
-                        console.log("Sound played successfully!");
-                        alert("You are FREEZED!");
+                    // alarm.oncanplaythrough = () => {
+                    //   const source = audioContext.createMediaElementSource(alarm);
+                    //   source.connect(audioContext.destination);
 
-                      }).catch((error) => {
-                        console.error("Error playing sound:", error);
-                      });
-                    };
+                    //   alert("You are FREEZED!");
+                    //   alarm.play().then(() => {
+                    //     console.log("Sound played successfully!");
+                    //   }).catch((error) => {
+                    //     console.error("Error playing sound:", error);
+                    //   });
+                    // };
 
-                    alarm.onerror = (e) => {
-                      console.error("Error loading sound", e);
-                    };
+                    // alarm.onerror = (e) => {
+                    //   console.error("Error loading sound", e);
+                    // };
 
-                    document.body.addEventListener("click", function() {
-                      alarm.play();
-                    });
+                    // document.body.addEventListener("click", function() {
+                    //   alarm.play();
+                    // });
+
+                    aysnc
                   }
                 }
               });
