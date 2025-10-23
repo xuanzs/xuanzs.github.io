@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       console.log("Sound played successfully");
                     })
                     .catch((err) => {
-                      console.error("Error playing sound:", error);
+                      console.error("Error playing sound:", err);
                     });
 
                     // const alarm = new Audio("sound/airHorn.mp3");
@@ -174,8 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     // document.body.addEventListener("click", function() {
                     //   alarm.play();
                     // });
-
-                    aysnc
                   }
                 }
               });
