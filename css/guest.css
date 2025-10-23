@@ -97,6 +97,10 @@ td::before{
     border-color: rgb(36, 10, 71);
 }
 
+.btn-shutdown{
+  background-color: black !important;
+}
+
 
 /* --------Over Layer------------ */
 

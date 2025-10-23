@@ -23,25 +23,114 @@ document.addEventListener("DOMContentLoaded", function () {
           if (doc.exists) {
             const data = doc.data();
             console.log("Data received:", data);
-            const assignments = data.assignments;
+            let assignments = data.assignments;
 
-            if (Array.isArray(assignments)) {
-              assignments.forEach((item, index) => {
-                const btn = tableButtons[index];
-                btn.textContent = item.value || "";
-                // btn.disabled = false;
-              });
+            // if (Array.isArray(assignments)) {
+            //   assignments.forEach((item, index) => {
+            //     const btn = tableButtons[index];
+            //     btn.textContent = item.value || "";
+            //     // btn.disabled = false;
+            //   });
+            // }
+
+            if (!Array.isArray(assignments)) {
+              console.warn("Assignments is not an array");
+              return;
             }
 
+            assignments.forEach((item, index) => {
+              const btn = tableButtons[index];
+              btn.textContent = item.value || "";
+            })
+        
             filled = true;
-
+        
             teamName.style.display = "none";
             document.querySelector(".right").style.display = "none";
             document.querySelector(".bottom").style.display = "none";
             document.querySelector(".container h1").textContent = data.name;
-
+            
+        
             highlightCorrectStations(`team${team}`, tableButtons);
             document.body.classList.add("submitted");
+
+            // Shutdown + Restore
+
+            let shutdownStation = null;
+            let currentRestoreTeams = [];
+            let currentTeamId = "team" + team;
+
+            db.collection("skills")
+              .doc("shutdown")
+              .onSnapshot((doc) => {
+                if (!doc.exists) {
+                  shutdownStation = null;
+                  applyShutdownIfNeeded();
+                  return;
+                }
+
+                const data = doc.data();
+                shutdownStation = data.station;
+                console.log("Shutdown station is:", shutdownStation);
+                applyShutdownIfNeeded();
+              });
+
+            db.collection("skills")
+            .doc("restore")
+            .onSnapshot((resDoc) => {
+              if (!resDoc.exists) {
+                currentRestoreTeams = [];
+              } else {
+                const data = resDoc.data();
+                currentRestoreTeams = data.teams || [];
+              }
+              applyShutdownIfNeeded();
+            });
+
+            function applyShutdownIfNeeded() {
+              if (!shutdownStation) return;
+
+              if (currentRestoreTeams.includes(currentTeamId)) {
+                console.log(`Team ${currentTeamId} is in restore list, skipping shutdown`);
+                resetButtons();
+                return;
+              }
+
+              tableButtons.forEach((btn) => {
+                if (btn.textContent === shutdownStation) {
+                  btn.classList.add("btn-shutdown");
+                  btn.disabled = true;
+                  console.log(
+                    `Station ${shutdownStation} shut down for team ${currentTeamId}`
+                  );
+                }
+              });
+            }
+
+            function resetButtons() {
+              tableButtons.forEach((btn) => {
+                btn.classList.remove("btn-shutdown");
+                btn.disabled = false;
+              });
+            }
+
+            // Freeze
+            db.collection("skills")
+              .doc("pause")
+              .onSnapshot((doc) => {
+                if (doc.exists) {
+                  const data = doc.data();
+                  const status = data.status;
+
+                  if (status === "Freeze") {
+                    const alarm = new Audio("/sound/airHorn.mp3");
+
+                    alarm.play();
+                    alert("You are freezed")
+                    console.log("You are freezed");
+                  }
+                }
+              });
           } else {
             teamName.style.display = "block";
             document.querySelector(".right").style.display = "block";
@@ -52,12 +141,29 @@ document.addEventListener("DOMContentLoaded", function () {
         (error) => {
           console.error("Error fetching document:", error);
           alert("Failed to load data");
-        }
-      );
+        });
   } else {
     alert("No team selected");
     location.href = "index.html"; // fallback redirect
   }
+
+  // function updateUI(assignments, teamNameText) {
+  //   assignments.forEach((item, index) => {
+  //     const btn = tableButtons[index];
+  //     btn.textContent = item.value || "";
+  //   })
+
+  //   filled = true;
+
+  //   teamName.style.display = "none";
+  //   document.querySelector(".right").style.display = "none";
+  //   document.querySelector(".bottom").style.display = "none";
+  //   document.querySelector(".container h1").textContent = teamNameText;
+  //   // data.name
+
+  //   highlightCorrectStations(`team${team}`, tableButtons);
+  //   document.body.classList.add("submitted");
+  // }
 
   let selectedTableButton = null;
   const assignedButtonsMap = new Map();
