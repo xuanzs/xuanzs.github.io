@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // console.log("You are freezed");
                     alarm.oncanplaythrough = () => {
                       const source = audioContext.createMediaElementSource(alarm);
+                      source.connect(audioContext.destination);
                       alarm.play().then(() => {
                         console.log("Sound played successfully!");
                         alert("You are FREEZED!");
