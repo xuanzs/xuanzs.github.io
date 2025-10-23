@@ -124,18 +124,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
                   if (status === "Freeze") {
                     const alarm = new Audio("/sound/airHorn.mp3");
+                    alarm.preload = 'auto';
 
                     // alarm.play();
                   
-                    // alert("You are freezed")
+                    // alert("Play sound?");
                     // console.log("You are freezed");
                     alarm.oncanplaythrough = () => {
-                      alarm.play().then(() => {
-                        console.log("Sound played successfully!");
-
-                      }).catch((error) => {
-                        console.error("Error playing sound:", error);
-                      });
+                      try {
+                        alarm.play().then(() => {
+                          console.log("Sound played successfully!");
+  
+                        }).catch((error) => {
+                          console.error("Error playing sound:", error);
+                        });
+                      } catch (err) {
+                        console.error("Error in playing sound:", err);
+                      }
                     };
 
                     alarm.onerror = (e) => {
