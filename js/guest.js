@@ -131,17 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     // alert("Play sound?");
                     // console.log("You are freezed");
                     alarm.oncanplaythrough = () => {
-                      try {
-                        alarm.play().then(() => {
-                          console.log("Sound played successfully!");
-                          alert("You are FREEZED!");
-  
-                        }).catch((error) => {
-                          console.error("Error playing sound:", error);
-                        });
-                      } catch (err) {
-                        console.error("Error in playing sound:", err);
-                      }
+                      alarm.play().then(() => {
+                        console.log("Sound played successfully!");
+                        alert("You are FREEZED!");
+
+                      }).catch((error) => {
+                        console.error("Error playing sound:", error);
+                      });
                     };
 
                     alarm.onerror = (e) => {
