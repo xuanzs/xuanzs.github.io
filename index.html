@@ -246,6 +246,8 @@
 
             if (enteredId === correctId && enteredPw === correctPw) {
               alert("Welcome!");
+              location.href = "admin.html";
+              return;
             } else if (enteredId !== correctId && enteredPw === correctPw) {
               alert("Id incorrect!");
             } else if (enteredId === correctId && enteredPw !== correctPw) {
