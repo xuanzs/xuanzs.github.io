@@ -134,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       try {
                         alarm.play().then(() => {
                           console.log("Sound played successfully!");
+                          alert("You are FREEZED!");
   
                         }).catch((error) => {
                           console.error("Error playing sound:", error);
