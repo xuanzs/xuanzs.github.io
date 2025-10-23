@@ -123,14 +123,16 @@ document.addEventListener("DOMContentLoaded", function () {
                   const status = data.status;
 
                   if (status === "Freeze") {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext) ();
                     const alarm = new Audio("/sound/airHorn.mp3");
-                    alarm.preload = 'auto';
+                    // alarm.preload = 'auto';
 
                     // alarm.play();
                   
                     // alert("Play sound?");
                     // console.log("You are freezed");
                     alarm.oncanplaythrough = () => {
+                      const source = audioContext.createMediaElementSource(alarm);
                       alarm.play().then(() => {
                         console.log("Sound played successfully!");
                         alert("You are FREEZED!");
@@ -143,6 +145,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     alarm.onerror = (e) => {
                       console.error("Error loading sound", e);
                     };
+
+                    document.body.addEventListener("click", function() {
+                      alarm.play();
+                    });
                   }
                 }
               });
