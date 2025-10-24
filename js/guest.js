@@ -138,45 +138,31 @@ document.addEventListener("DOMContentLoaded", function () {
                   const data = doc.data();
                   const status = data.status;
 
+                  let overlay_2 = document.getElementById("overlay-2");
+
                   if (status === "Freeze") {
-                    
+                    overlay_2.style.visibility = "visible";
+
+                    alert("You are FREEZED")
+
                     console.log("Status is Freeze, playing sound...");
                     loadAndPlaySound("/sound/airHorn.mp3").then(() => {
                       console.log("Sound played successfully");
                     })
                     .catch((err) => {
                       console.error("Error playing sound:", err);
+                      overlay_2.style.visibility = "visible";
                     });
-
-                    // const alarm = new Audio("sound/airHorn.mp3");
-                    // alarm.preload = 'auto';
-
-                    // alarm.play();
-                  
-                    // alert("Play sound?");
-                    // console.log("You are freezed");
-                    // alarm.oncanplaythrough = () => {
-                    //   const source = audioContext.createMediaElementSource(alarm);
-                    //   source.connect(audioContext.destination);
-
-                    //   alert("You are FREEZED!");
-                    //   alarm.play().then(() => {
-                    //     console.log("Sound played successfully!");
-                    //   }).catch((error) => {
-                    //     console.error("Error playing sound:", error);
-                    //   });
-                    // };
-
-                    // alarm.onerror = (e) => {
-                    //   console.error("Error loading sound", e);
-                    // };
-
-                    // document.body.addEventListener("click", function() {
-                    //   alarm.play();
-                    // });
+                  } else {
+                    if (overlay_2.style.visibility === "visible") {
+                      alert("You are UNfreezed");
+                      overlay_2.style.visibility = "hidden";
+                    }
+                    
                   }
                 }
-              });
+            });
+
           } else {
             teamName.style.display = "block";
             document.querySelector(".right").style.display = "block";
