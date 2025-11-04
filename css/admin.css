@@ -1,266 +1,584 @@
+.active {
+  visibility: visible;
+}
+
 .container {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    height: 100vh;
-    width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  height: 100vh;
+  width: 100vw;
 }
 
 /* Sidebar */
 
 .sidebar {
-    position: fixed;
-    margin: 50px 20px;
-    font-size: 20px;
-    height: 100vh;
-    width: 160px;
+  position: fixed;
+  margin: 50px 20px;
+  font-size: 20px;
+  height: 100vh;
+  width: 160px;
 }
 
 .bar {
-    padding: 20px 50px;
-    /* visibility: hidden; */
+  padding: 20px 50px;
+  /* visibility: hidden; */
 }
 
 .bar.active {
-    visibility: visible;
-    background: rgb(175, 118, 211);
+  visibility: visible;
+  background: rgb(175, 118, 211);
 }
 
 .bar:hover {
-    cursor: pointer;
-    background: rgb(104, 27, 114);
-    color: white;
-    transition: all 0.05s ease-in;
+  cursor: pointer;
+  background: rgb(104, 27, 114);
+  color: white;
+  transition: all 0.05s ease-in;
 }
 
 .bar:first-child {
-    border-radius: 15px 0px 0px 0px;
-
+  border-radius: 15px 0px 0px 0px;
 }
 
 .bar:last-child {
-    border-radius: 0px 0px 0px 15px;
-
+  border-radius: 0px 0px 0px 15px;
 }
 
 /* Content */
 
 .content {
-    margin-left: 180px;
-    position: relative;
-    flex: 1;
+  margin-left: 180px;
+  position: relative;
+  flex: 1;
 }
 
 .content > div {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 }
 
 .content h2 {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
-.content hr{
-    border: none;
-    height: 1px;
-    width: 95%;
-    margin-top: -20px;
-    margin-left: 20px;
+.content hr {
+  border: none;
+  height: 1px;
+  width: 95%;
+  margin-top: -20px;
+  margin-left: 20px;
 
-    background: linear-gradient(to right, #000 0%, transparent 100%);
+  background: linear-gradient(to right, #000 0%, transparent 100%);
 }
 
 .station-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    height: 80%;
-    width: 95%;
-    margin: 10px;
-    padding: 10px;
-    gap: 20px;
-    box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  height: 80%;
+  width: 95%;
+  margin: 10px;
+  padding: 10px;
+  gap: 20px;
+  box-sizing: border-box;
 }
 
 .station-content button {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: column;
-    flex: 1 1 calc(50% - 25px);
-    background: rgb(232, 232, 232);
-    font-size: 18px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    height: 400px;
-    box-sizing: border-box;
-    /* border: 1px solid black; */
-    border-radius: 15px;
-    box-shadow: 3px 3px rgb(134, 134, 134);
-    padding: 20px;
-    margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  flex: 1 1 calc(50% - 25px);
+  background: rgb(232, 232, 232);
+  font-size: 18px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  height: 400px;
+  box-sizing: border-box;
+  /* border: 1px solid black; */
+  border-radius: 15px;
+  box-shadow: 3px 3px rgb(134, 134, 134);
+  padding: 20px;
+  margin: 0;
 }
 
 .card h4 {
-    align-items: flex-start;
-    margin-top: 30px;
-    font-size: 30px;
+  align-items: flex-start;
+  margin-top: 30px;
+  font-size: 30px;
 }
 
 .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 }
 
 /* Shutdown card */
 
 .card:nth-child(1) select {
-    cursor: pointer;
-    height: 30px;
-    width: 70px;
-    border-radius: 8px;
-    text-align: center;
-    text-align-last: center;
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
 }
 
 .card:nth-child(1) button {
-    margin-top: 50px;
-    height: 50px;
-    width: 100px;
-    border: none;
-    border-radius: 10px;
-    background: gray;
-    color: white;
-    box-shadow: 2px 1px black;
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
 }
 
 .card:nth-child(1) button:hover {
-    cursor: pointer;
-    background: rgb(47, 47, 47);
-    color: white;
-    transition: all 0.05s ease-in;
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
 }
 
 /* Restore card */
 
 .resDrops {
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    gap: 10px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  gap: 10px;
 }
 
 .card:nth-child(2) select {
-    cursor: pointer;
-    height: 30px;
-    width: 70px;
-    border-radius: 8px;
-    text-align: center;
-    text-align-last: center;
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
 }
 
 .card:nth-child(2) button {
-    margin-top: 50px;
-    height: 50px;
-    width: 100px;
-    border: none;
-    border-radius: 10px;
-    background: gray;
-    color: white;
-    box-shadow: 2px 1px black;
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
 }
 
 .card:nth-child(2) button:hover {
-    cursor: pointer;
-    background: rgb(47, 47, 47);
-    color: white;
-    transition: all 0.05s ease-in;
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
 }
 
 /* Swap card */
 
 .swapDrops {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .swapDrops select {
-    cursor: pointer;
-    height: 30px;
-    width: 70px;
-    border-radius: 8px;
-    text-align: center;
-    text-align-last: center;
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
 }
 
 .swapDrops .line-1 {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .swapDrops .line-1 select {
-    margin: 20px;
+  margin: 20px;
 }
 
 .swapDrops .line-2 select {
-    margin: 20px;
+  margin: 20px;
 }
 
 .swapDrops .line-2 {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .card:nth-child(3) button {
-    margin-top: 50px;
-    height: 50px;
-    width: 100px;
-    border: none;
-    border-radius: 10px;
-    background: gray;
-    color: white;
-    box-shadow: 2px 1px black;
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
 }
 
 .card:nth-child(3) button:hover {
-    cursor: pointer;
-    background: rgb(47, 47, 47);
-    color: white;
-    transition: all 0.05s ease-in;
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
 }
 
 /* Pause card */
 .card:nth-child(4) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .card:nth-child(4) button {
-    position: absolute;
-    top: 50%;
-    height: 100px;
-    width: 300px;
-    font-size: 50px;
-    border: none;
-    border-radius: 10px;
-    background: gray;
-    color: white;
-    box-shadow: 2px 1px black;
+  position: absolute;
+  top: 50%;
+  height: 100px;
+  width: 300px;
+  font-size: 50px;
+  border: none;
+  border-radius: 10px;
+  background: rgb(255, 0, 0);
+  color: white;
+  box-shadow: 2px 1px black;
 }
 
 .card:nth-child(4) button:hover {
-    cursor: pointer;
-    background: rgb(47, 47, 47);
+  cursor: pointer;
+  /* background: rgb(47, 47, 47);
     color: white;
-    transition: all 0.05s ease-in;
+    transition: all 0.05s ease-in; */
+}
+
+/* Baby Content */
+
+.baby-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  margin: 10px;
+  padding: 10px;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: rgb(232, 232, 232);
+  box-shadow: 3px 3px rgb(134, 134, 134);
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10%;
+  padding-right: 20%;
+  gap: 20px;
+}
+
+.left h5 {
+  font-size: 30px;
+}
+
+.left select {
+  width: 70px;
+  height: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.left button {
+  cursor: pointer;
+  padding: 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.right select {
+  width: 70px;
+  height: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.right button {
+  font-size: 20px;
+  font-family: "Times New Roman", Times, serif;
+  cursor: pointer;
+  margin: 10px;
+  width: 70%;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+}
+.right button:hover {
+  transition: 0.3s;
+  background: rgb(172, 172, 172);
+}
+
+
+/* Bucket List */
+
+.bucket-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  height: 70%;
+  width: 95%;
+  margin: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.bucket-content button {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  flex: 1 1 calc(50% - 25px);
+  background: rgb(232, 232, 232);
+  font-size: 18px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  height: 400px;
+  box-sizing: border-box;
+  /* border: 1px solid black; */
+  border-radius: 15px;
+  box-shadow: 3px 3px rgb(134, 134, 134);
+  padding: 20px;
+  margin: 0;
+}
+
+.box h4 {
+  align-items: flex-start;
+  margin-top: 30px;
+  font-size: 30px;
+}
+
+.box-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+/* Anabelle Checkin */
+
+.box:nth-child(1) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.box:nth-child(1) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(1) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
+}
+
+/* Overall NPC Pic */
+
+.box:nth-child(2) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.box:nth-child(2) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(2) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
+}
+
+/* Group NPC Pic */
+
+.box:nth-child(3) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.groupDrops {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.box:nth-child(3) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(3) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
+}
+
+/* 100 Smiles */
+
+.box:nth-child(4) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.box:nth-child(4) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(4) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
+}
+
+/* Puzzle */
+
+.box:nth-child(5) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.box:nth-child(5) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(5) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
 }
