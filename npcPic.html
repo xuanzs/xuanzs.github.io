@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selfie Pic Submission</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <link rel="stylesheet" href="./css/npcPic.css">
+</head>
+<body>
+    <div class="selfiePage" id="selfiePage">
+        <div class="overlay" id="overlay">
+            <div class="spinner"></div>
+            <div class="loading">Uploading Image... Please wait.</div>
+        </div>
+
+        <div class="selfieBackBtn">
+            <button onclick="backNpcMainPage()">< Back</button>
+        </div>
+        <div class="selfieTitle">
+            <h3></h3>
+            <h5>Upload Image (Max 3)</h5>
+        </div>
+        <input type="file" accept="image/*" id="fileInput">
+        <br><br>
+        
+        <div id="imagePreview"></div>
+
+        <br>
+
+        <button id="npcSubmitBtn" disabled>Submit</button>
+    </div>
+
+    <script src="./firebaseConfig.js"></script>
+    <script src="./js/npcPic.js"></script>
+</body>
+</html>

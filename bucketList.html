@@ -4,13 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+    <link rel="stylesheet" href="./css/bucketList.css">
 </head>
 <body>
-    <input type="file" id="imageUpload" accept="image/*">
+    <div class="container">
+        <div class="mainPage " id="mainPage">
+            <h1>Bucket List</h1>
+            <div class="anabelle-checkin">
+                <button>带 Anabelle 去打卡三层</button>
+            </div>
+            <div class="npcPic">
+                <button onclick="openNpcMainPage()">每组至少和3位npc合照</button>
+            </div>
+            <div class="smilePic">
+                <button onclick="openSmilePage()">集齐100个笑容</button>
+            </div>
+            <div class="sealLvl7">
+                <button>封印第7层</button>
+            </div>
+            <div class="searchPuzzle">
+                <button>寻找消失的部件</button>
+            </div>
+        </div>
 
-    <script>
-        const imageUploadInput = document('imageUpload');
-        imageUploadInput.addEventListener('change', handleImageUpload);
-    </script>
+        <!-- npc 合照 -->
+        <div class="npcMainPage active" id="npcMainPage">
+            <div class="selfieMainBackBtn">
+                <button onclick="backMainPage()">< Back</button>
+            </div>
+            <div class="selfieMainTitle">
+                <h3>每组至少和3位npc合照</h3>
+            </div>
+            <div class="_14Btn">
+                <button id="team1"></button>
+                <button id="team2"></button>
+                <button id="team3"></button>
+                <button id="team4"></button>
+                <button id="team5"></button>
+                <button id="team6"></button>
+                <button id="team7"></button>
+                <button id="team8"></button>
+                <button id="team9"></button>
+                <button id="team10"></button>
+                <button id="team11"></button>
+                <button id="team12"></button>
+                <button id="team13"></button>
+                <button id="team14"></button>
+                
+            </div>
+        </div>
+
+        <!-- npc 合照 Submission page -->
+        <!-- <div class="selfiePage " id="selfiePage">
+            <div class="overlay" id="overlay">
+                <div class="spinner"></div>
+                <div class="loading">Uploading Image... Please wait.</div>
+            </div>
+
+            <div class="selfieBackBtn">
+                <button onclick="backNpcMainPage()">< Back</button>
+            </div>
+            <div class="selfieTitle">
+                <h3>Group</h3>
+                <h5>Upload Image (Max 3)</h5>
+            </div>
+            <input type="file" accept="image/*" id="fileInput">
+            <br><br>
+            
+            <div id="imagePreview"></div>
+
+            <br>
+
+            <button id="npcSubmitBtn" disabled>Submit</button>
+        </div> -->
+
+
+        <!-- 100 张微笑 -->
+        <div class="smilePage" id="smilePage">
+            <div class="smileBackBtn">
+                <button onclick="backMainPage()">< Back</button>
+            </div>
+            <div class="smileTitle">
+                <h3>集齐100个笑容</h3>
+            </div>
+            <input type="file" id="smileUpload" accept="image/*">
+        </div>
+    </div>
+    <script src="./firebaseConfig.js"></script>
+    <script src="./js/bucketList.js"></script>
 </body>
 </html>
