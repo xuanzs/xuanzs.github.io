@@ -133,7 +133,7 @@ groupBtns.forEach((btn) => {
 
 // 100 张微笑
 
-const url = "https://script.google.com/macros/s/AKfycbz1c4pEryQJDpNWKQk-x1RhfALOZDmww28rNtHWFI8nayNLkv-hLo-uJ2Hln_SPKXIY/exec";
+const url = "https://script.google.com/macros/s/AKfycbyBMqmJaBhm-Mg1f1scCo_8NMz3l7TccJO_1PryFqAwCD1db44NQgoi1BAPZYU73FfI/exec";
 const smileUpload = document.getElementById("smileUpload");
 const submitBtn = document.getElementById("smileSubmitBtn");
 const imgPre = document.getElementById("imagePreview");
