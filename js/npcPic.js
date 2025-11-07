@@ -76,12 +76,12 @@ if (teamNo) {
             img.style.border = "2px solid #ddd";
 
             // If thumbnail fails, try the uc export format
-            img.onerror = function() {
+            img.onerror = function () {
               console.warn("Thumbnail failed, trying uc format for:", fileId);
               this.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
-              
+
               // If that also fails, show error
-              this.onerror = function() {
+              this.onerror = function () {
                 console.error("All image formats failed for fileId:", fileId);
                 this.style.display = "none";
                 const errorBox = document.createElement("div");
@@ -98,19 +98,25 @@ if (teamNo) {
                 errorBox.style.cursor = "pointer";
                 errorBox.style.color = "#666";
                 errorBox.onclick = () => {
-                  window.open(`https://drive.google.com/file/d/${fileId}/view`, "_blank");
+                  window.open(
+                    `https://drive.google.com/file/d/${fileId}/view`,
+                    "_blank"
+                  );
                 };
                 this.parentNode.insertBefore(errorBox, this);
               };
             };
 
             img.addEventListener("click", () => {
-              window.open(`https://drive.google.com/file/d/${fileId}/view`, "_blank");
+              window.open(
+                `https://drive.google.com/file/d/${fileId}/view`,
+                "_blank"
+              );
             });
 
             imgPre.appendChild(img);
           });
-        } 
+        }
       } else {
         console.warn(`No npcPic document found for team${teamNo}`);
       }
