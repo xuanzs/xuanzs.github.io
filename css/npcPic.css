@@ -94,3 +94,9 @@ img {
     max-width: 100px;
     margin: 10px;
 }
+
+#imagePreview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
