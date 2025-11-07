@@ -13,27 +13,27 @@
 </head>
 <body>
     <div class="container">
-        <div class="mainPage " id="mainPage">
+        <div class="mainPage active" id="mainPage">
             <h1>Bucket List</h1>
             <div class="anabelle-checkin">
-                <button>带 Anabelle 去打卡三层</button>
+                <button></button>
             </div>
             <div class="npcPic">
-                <button onclick="openNpcMainPage()">每组至少和3位npc合照</button>
+                <button onclick="openNpcMainPage()"></button>
             </div>
             <div class="smilePic">
-                <button onclick="openSmilePage()">集齐100个笑容</button>
+                <button onclick="openSmilePage()"></button>
             </div>
             <div class="sealLvl7">
                 <button>封印第7层</button>
             </div>
             <div class="searchPuzzle">
-                <button>寻找消失的部件</button>
+                <button></button>
             </div>
         </div>
 
         <!-- npc 合照 -->
-        <div class="npcMainPage active" id="npcMainPage">
+        <div class="npcMainPage " id="npcMainPage">
             <div class="selfieMainBackBtn">
                 <button onclick="backMainPage()">< Back</button>
             </div>
@@ -85,7 +85,12 @@
 
 
         <!-- 100 张微笑 -->
-        <div class="smilePage" id="smilePage">
+        <div class="smilePage " id="smilePage">
+            <div class="overlay" id="overlay">
+                <div class="spinner"></div>
+                <div class="loading">Uploading Image... Please wait.</div>
+            </div>
+
             <div class="smileBackBtn">
                 <button onclick="backMainPage()">< Back</button>
             </div>
@@ -93,6 +98,13 @@
                 <h3>集齐100个笑容</h3>
             </div>
             <input type="file" id="smileUpload" accept="image/*">
+            <br><br>
+
+            <div id="imagePreview"></div>
+
+            <br>
+
+            <button id="smileSubmitBtn">Submit</button>
         </div>
     </div>
     <script src="./firebaseConfig.js"></script>

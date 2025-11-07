@@ -5,6 +5,14 @@ const smilePage = document.getElementById("smilePage");
 
 // Main Page
 
+const checkin = document.querySelector(".anabelle-checkin button");
+const npcPic = document.querySelector(".npcPic button");
+const smilePic = document.querySelector(".smilePic button");
+const sealLvl7 = document.querySelector(".sealLvl7 button");
+const searchPuzzle = document.querySelector(".searchPuzzle button");
+
+const bucketDocRef = db.collection("bucketList");
+
 function openNpcMainPage() {
   mainPage.classList.remove("active");
   npcMainPage.classList.add("active");
@@ -14,6 +22,43 @@ function openSmilePage() {
   mainPage.classList.remove("active");
   smilePage.classList.add("active");
 }
+
+bucketDocRef.doc("checkin").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    checkin.textContent = `带 Anabelle 去打卡三层 (${count}/3)`
+  }
+});
+
+bucketDocRef.doc("overall").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    npcPic.textContent = `每组至少和3位npc合照 (${count}/14)`
+  }
+});
+
+bucketDocRef.doc("smiles").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    smilePic.textContent = `集齐100个笑容 (${count}/100)`
+  }
+});
+
+bucketDocRef.doc("puzzle").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const left = data.left;
+    const right = data.right;
+
+    searchPuzzle.textContent = `寻找消失的部件 (${left}/${right})`
+  }
+});
 
 // NPC 合照 Main Page
 
@@ -34,7 +79,21 @@ groupBtns.forEach((btn) => {
         const data = doc.data();
         const name = data.name;
 
-        btn.textContent = name;
+
+        db.collection("npcPic").doc(btn.id).onSnapshot((picDoc) => {
+          if (picDoc.exists) {
+            const picData = picDoc.data();
+            const count = picData.count;
+
+            if (count) {
+              btn.textContent = `${name} (${count}/3)`;
+            } else {
+              btn.textContent = `${name} (0/3)`;
+            }
+          } else {
+            btn.textContent = `${name} (0/3)`;
+          }
+        })
       }
     });
 });
@@ -72,4 +131,126 @@ groupBtns.forEach((btn) => {
 });
 
 
+// 100 张微笑
 
+const url = "https://script.google.com/macros/s/AKfycbz1c4pEryQJDpNWKQk-x1RhfALOZDmww28rNtHWFI8nayNLkv-hLo-uJ2Hln_SPKXIY/exec";
+const smileUpload = document.getElementById("smileUpload");
+const submitBtn = document.getElementById("smileSubmitBtn");
+const imgPre = document.getElementById("imagePreview");
+
+let selectedFiles = [];
+
+const overlay = document.getElementById("overlay");
+
+smileUpload.addEventListener("change", () => {
+  if (selectedFiles.length >= 1) {
+    alert("You can only upload a maximum of 1 images")
+    smileUpload.disabled = true;
+    return;
+  }
+
+  const file = smileUpload.files[0];
+  if (!file) return;
+
+  const fr = new FileReader();
+
+  fr.onloadend = () => {
+    const img = document.createElement("img");
+    img.src = fr.result;
+
+    const imgContainer = document.createElement("div");
+    imgContainer.classList.add("img-container");
+
+    const removeBtn = document.createElement("div");
+    removeBtn.classList.add("remove-btn");
+    removeBtn.textContent = "X";
+
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      imgContainer.remove();
+
+      const index = selectedFiles.indexOf(file);
+      if (index > -1) {
+        selectedFiles.splice(index, 1);
+      }
+
+      if (selectedFiles.length === 0) {
+        smileUpload.value = "";
+        submitBtn.disabled = true;
+      }
+    });
+
+    imgContainer.appendChild(img);
+    imgContainer.appendChild(removeBtn);
+    imgPre.appendChild(imgContainer);
+
+    selectedFiles.push(file);
+
+    submitBtn.disabled = false;
+
+    smileUpload.value = "";
+  };
+
+  fr.readAsDataURL(file);
+});
+
+submitBtn.addEventListener("click", () => {
+  overlay.style.visibility = "visible";
+
+  const uploadPromises = selectedFiles.map(async (file) => {
+    const fr = new FileReader();
+    return new Promise((resolve, reject) => {
+      fr.onloadend = async () => {
+        try {
+          const res = fr.result;
+          const spt = res.split("base64,")[1];
+
+          const obj = {
+            base64: spt,
+            type: file.type,
+          };
+
+          const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(obj),
+          });
+          const data = await response.json();
+
+          if (data.success) {
+            console.log("Upload successful:", data.url);
+
+            await db.collection("smiles").doc("list").set({
+              imageUrls: firebase.firestore.FieldValue.arrayUnion(data.url),
+            }, {merge: true});
+
+            resolve();
+          } else {
+            console.error("Upload failed:", data.error);
+            reject(data.error);
+          }
+        } catch (err) {
+          console.error("Error:", err);
+          reject(err);
+        }
+      };
+
+      fr.readAsDataURL(file);
+    });
+  });
+
+  Promise.all(uploadPromises)
+    .then(() => {
+      overlay.style.visibility = "hidden";
+      alert("Images uploaded successfully!");
+      selectedFiles = [];
+      imgPre.innerHTML = "";
+      submitBtn.disabled = true;
+    })
+    .catch((err) => {
+      overlay.style.visibility = "hidden";
+      alert("Upload failed: " + err);
+      selectedFiles = [];
+      smileUpload.value = "";
+      imgPre.innerHTML = "";
+    })
+});

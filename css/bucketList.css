@@ -127,9 +127,9 @@
     }
 }
 
-/* Group NPC 合照 Submission Page */
+/* 100 Smiles */
 
-.selfiePage {
+.smilePage {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -141,6 +141,22 @@
     z-index: 10;
     width: 100%;
     height: 100%;
+}
+
+.smileBackBtn {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.smileBackBtn button {
+    padding: 20px;
+    background: white;
+    border: none;
+}
+
+.smileTitle {
+    font-size: 30px;
 }
 
 .overlay {
@@ -183,22 +199,6 @@
     margin-top: 10px;
 }
 
-.selfieBackBtn {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-}
-
-.selfieBackBtn button {
-    padding: 20px;
-    background: white;
-    border: none;
-}
-
-.selfieTitle {
-    font-size: 30px;
-}
-
 .remove-btn {
     position: absolute;
     top: 0;
@@ -226,4 +226,10 @@
 img {
     max-width: 100px;
     margin: 10px;
+}
+
+#imagePreview {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
