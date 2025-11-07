@@ -9,19 +9,16 @@ function opentab(event, tab) {
   const baby = document.getElementById("baby");
   const bucket = document.getElementById("bucket");
 
-
   if (tab === "station") {
     baby.style.visibility = "hidden";
     bucket.style.visibility = "hidden";
 
     station.style.visibility = "visible";
-
   } else if (tab === "baby") {
     station.style.visibility = "hidden";
     bucket.style.visibility = "hidden";
-    
-    baby.style.visibility = "visible";
 
+    baby.style.visibility = "visible";
   } else if (tab === "bucketList") {
     station.style.visibility = "hidden";
     baby.style.visibility = "hidden";
@@ -439,13 +436,21 @@ stationDropArray.forEach((item) => {
 });
 
 let station = 0;
+let unsubcribeStation = null;
 
 stationDrop.addEventListener("change", () => {
+  if (unsubcribeStation) {
+    console.log("Unsubscribing previous Firestore listener...");
+    unsubcribeStation();
+    unsubcribeStation = null;
+  }
+
   station = stationDrop.value;
   console.log("Current station", station);
 
   fillTeamDrop();
-  fillPreFilledValues();
+  unsubcribeStation = fillPreFilledValues(station);
+  // fillPreFilledValues();
 });
 
 function ensureOptionExistsAndSelect(select, value) {
@@ -591,7 +596,7 @@ function fillPreFilledValues() {
         console.log(count);
         console.log(inside);
       } else {
-        window.location.reload();
+        // window.location.reload();
       }
     });
 }
@@ -957,3 +962,233 @@ async function removeBabyFromAssignment(teamId, babyValue) {
     console.error("Error removing baby from assignment", error);
   }
 }
+
+// Bucket List
+
+// Anabelle Checkin
+
+const checkinDrop = document.getElementById("checkinDrop");
+const checkinBtn = document.getElementById("checkinBtn");
+
+const checkinDocRef = db.collection("bucketList").doc("checkin");
+
+checkinDocRef.onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    checkinDrop.value = count;
+  }
+});
+
+checkinBtn.addEventListener("click", () => {
+  if (checkinDrop.value === "") {
+    alert("Please select a number!");
+    return;
+  }
+
+  checkinDocRef
+    .set({
+      count: parseInt(checkinDrop.value),
+    })
+    .then(() => alert("Checkin Submitted!"))
+    .catch((err) => {
+      console.error("Error: ", err);
+    });
+
+  
+  console.log("Checkin Submitted Successful!");
+});
+
+// Overall NPC Pic
+
+const overallDrop = document.getElementById("overallDrop");
+const overallBtn = document.getElementById("overallBtn");
+
+const overallDocRef = db.collection("bucketList").doc("overall");
+const overallArray = [];
+
+for (let i = 1; i <= 14; i++) {
+  overallArray.push(i);
+}
+
+overallArray.forEach((item) => {
+  const option = document.createElement("option");
+
+  option.value = item;
+  option.textContent = item;
+  overallDrop.appendChild(option);
+});
+
+overallDocRef.onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    overallDrop.value = count;
+  }
+});
+
+overallBtn.addEventListener("click", () => {
+  if (overallDrop.value === "") {
+    alert("Please select a number!");
+    return;
+  }
+
+  overallDocRef
+    .set({
+      count: parseInt(overallDrop.value),
+    })
+    .catch((err) => {
+      console.error("Error: ", err);
+    });
+
+  alert("Overall Submitted!");
+  console.log("Overall NPC Pic Submitted Successful!");
+});
+
+// Group NPC Pic
+
+const groupDrop = document.getElementById("groupDrop");
+const npcDrop = document.getElementById("npcDrop");
+const groupBtn = document.getElementById("groupBtn");
+const groupNpcTitle = document.getElementById("groupNpcTitle");
+
+const groupArray = [];
+
+for (let i = 1; i <= 14; i++) {
+  groupArray.push(i);
+}
+
+groupArray.forEach((item) => {
+  const option = document.createElement("option");
+
+  option.value = item;
+  option.textContent = item;
+  groupDrop.appendChild(option);
+});
+
+let unsubcribeGroup = null;
+
+groupDrop.addEventListener("change", () => {
+  if (unsubcribeGroup) unsubcribeGroup();
+
+  let currentTeam = groupDrop.value;
+  const docRef = db.collection("npcPic").doc(`team${currentTeam}`);
+
+  unsubcribeGroup = docRef.onSnapshot((doc) => {
+    if (doc.exists) {
+      const data = doc.data();
+      const count = data.count;
+
+      npcDrop.value = count;
+    }
+  });
+});
+
+groupBtn.addEventListener("click", () => {
+  const teamNumber = groupDrop.value;
+  const npcValue = npcDrop.value;
+
+  if (!teamNumber || npcValue === "") {
+    alert("Please select a team and NPC count!");
+    return;
+  }
+
+  const npcCount = parseInt(npcValue, 10);
+
+  db.collection("npcPic").doc(`team${teamNumber}`).set({
+    count: npcCount,
+    
+  }, {merge: true})
+  .then(() => {
+    alert("Submission complete!");
+    console.log(`Updated team${teamNumber} -> count: ${npcValue}`);
+  })
+  .catch((err) => {
+    console.error("Error: ", err);
+  });
+});
+
+// 100 Smiles
+
+const smileDrop = document.getElementById("smileDrop");
+const smileBtn = document.getElementById("smileBtn");
+
+const smileDocRef = db.collection("bucketList").doc("smiles");
+
+const smilesArray = [];
+
+for (let i = 1; i <= 100; i++) {
+  smilesArray.push(i);
+}
+
+smilesArray.forEach(item => {
+  const option = document.createElement("option");
+
+  option.value = item;
+  option.textContent = item;
+  smileDrop.appendChild(option);
+})
+
+smileDocRef.onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const count = data.count;
+
+    smileDrop.value = count;
+  }
+});
+
+smileBtn.addEventListener("click", () => {
+  if (smileDrop.value === "") {
+    alert("Please select a number!");
+    return;
+  }
+
+  smileDocRef.set({
+    count: smileDrop.value,
+  })
+  .then(() => {
+    alert("Updated smile count!");
+  })
+  .catch((err) => {
+    console.error("Error: ", err);
+  });
+});
+
+// Puzzle
+const leftDrop = document.getElementById("leftDrop");
+const rightDrop = document.getElementById("rightDrop");
+const puzzleBtn = document.getElementById("puzzleBtn");
+
+const puzzleDocRef = db.collection("bucketList").doc("puzzle");
+
+puzzleDocRef.onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const leftCount = data.left;
+    const rightCount = data.right;
+
+    leftDrop.value = leftCount;
+    rightDrop.value = rightCount;
+  }
+});
+
+puzzleBtn.addEventListener("click", () => {
+  if (leftDrop.value === "" && rightDrop.value === "") {
+    alert("Please select a number");
+    return;
+  }
+
+  puzzleDocRef.set({
+    left: leftDrop.value,
+    right: rightDrop.value,
+  })
+  .then(() => {
+    alert("Upload complete");
+  })
+  .catch((err) => {
+    console.error("Error: ", err);
+  });
+});

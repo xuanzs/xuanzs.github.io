@@ -29,7 +29,7 @@
       </div>
 
       <div class="content">
-        <div class="station " id="station" style="visibility: hidden;">
+        <div class="station active" id="station" style="visibility: visible;">
           <h2>Station</h2>
           <hr />
           <div class="station-content">
@@ -299,7 +299,7 @@
           </div>
         </div>
 
-        <div class="bucket active" id="bucket" style="visibility: visible">
+        <div class="bucket " id="bucket" style="visibility: hidden">
           <h2>Bucket List</h2>
           <hr />
           <div class="bucket-content">
@@ -308,6 +308,9 @@
               <div class="box-body">
                 <select name="" id="checkinDrop">
                   <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
                 </select>
                 <button type="submit" id="checkinBtn">Submit</button>
               </div>
@@ -322,7 +325,7 @@
               </div>
             </div>
             <div class="box">
-              <h4>Group NPC Pic</h4>
+              <h4 class="groupNpcTitle">Group NPC Pic</h4>
               <div class="box-body">
                 <div class="groupDrops">
                   Group:
@@ -330,8 +333,11 @@
                     <option value=""></option>
                   </select>
                   Status:
-                  <select name="" id="smileDrop">
+                  <select name="" id="npcDrop">
                     <option value=""></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select>
                 </div>
                 <button type="submit" id="groupBtn">Submit</button>
@@ -352,10 +358,20 @@
                 <div class="Drops">
                   <select name="" id="leftDrop">
                     <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                   </select>
                   /
                   <select name="" id="rightDrop">
                     <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                   </select>
                 </div>
                 <button type="submit" id="puzzleBtn">Submit</button>
