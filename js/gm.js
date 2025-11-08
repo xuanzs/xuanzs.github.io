@@ -324,7 +324,7 @@ function fillPreFilledValues() {
         console.log(see);
         console.log(count);
         console.log(inside);
-        disabledSelects();
+        // disabledSelects();
       }
     });
 }
@@ -348,9 +348,9 @@ function fillPreFilledValues() {
 document.addEventListener("DOMContentLoaded", () => {
   fillTeamDrop();
   fillPreFilledValues();
-  setTimeout(() => {
-    disabledSelects();
-  }, 1000);
+  // setTimeout(() => {
+  //   disabledSelects();
+  // }, 1000);
 });
 
 function getInput(row, section, prefix, index) {
