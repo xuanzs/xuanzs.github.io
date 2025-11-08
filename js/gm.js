@@ -94,8 +94,19 @@ function ensureOptionExistsAndSelect(select, value) {
 
 // const element = document.querySelector(".container");
 
+const gmDocRef = db.collection("authentication").doc("gamemaster");
+
 function vacant() {
   element.style.backgroundColor = "green";
+  gmDocRef.set({
+    accounts: {
+      [`gm${station}`]: {
+        status: "vacant",
+      }
+    }
+  }, {merge: true});
+  disabledSelects();
+
 }
 
 vacant();
@@ -103,6 +114,14 @@ vacant();
 function occupied() {
   element.style.backgroundColor = "red";
   // alarm.play();
+  gmDocRef.set({
+    accounts: {
+      [`gm${station}`]: {
+        status: "occupied",
+      }
+    }
+  }, {merge: true});
+  disabledSelects();
 }
 
 function fillTeamDrop() {
@@ -189,70 +208,83 @@ function disabledSelects() {
   r2Selects.forEach((select) => {
     select.disabled = true;
   });
-
-  // Row 3
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(3, "top", "p", i);
-    let s = getInput(3, "bottom", "s", i);
-    let bottomP = getInput(2, "top", "p", i);
-    let bottomS = getInput(2, "bottom", "s", i);
-
-    if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-      p.disabled = false;
-      s.disabled = false;
-    }
-  }
-
-  // Row 2
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(2, "top", "p", i);
-    let s = getInput(2, "bottom", "s", i);
-    let bottomP = getInput(1, "top", "p", i);
-    let bottomS = getInput(1, "bottom", "s", i);
-
-    if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-      p.disabled = false;
-      s.disabled = false;
-    }
-  }
-
-  // Row 1
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(1, "top", "p", i);
-    let s = getInput(1, "bottom", "s", i);
-
-    if (p.value === "") {
-      p.disabled = false;
-      s.disabled = false;
-    } else {
-      p.disabled = true;
-      s.disabled = true;
-    }
-  }
-
-  const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
-
-  r4BottomSelects.forEach((select, index) => {
-    const babyValue = select.value;
-
-    if (babyValue !== "") {
-      const r1SelectT = getInput(1, "top", "p", index + 1);
-      const r1SelectB = getInput(1, "bottom", "s", index + 1);
-      const r2SelectT = getInput(2, "top", "p", index + 1);
-      const r2SelectB = getInput(2, "bottom", "s", index + 1);
-      const r3SelectT = getInput(3, "top", "p", index + 1);
-      const r3SelectB = getInput(3, "bottom", "s", index + 1);
-
-      disableInputs(
-        r1SelectT,
-        r1SelectB,
-        r2SelectT,
-        r2SelectB,
-        r3SelectT,
-        r3SelectB
-      );
-    }
+  r1Selects.forEach((select) => {
+    select.disabled = true;
   });
+
+  gmDocRef.onSnapshot((doc) => {
+    if (doc.exists) {
+      const data = doc.data();
+      const gmData = data.accounts[`gm${station}`];
+      const status = gmData.status;
+
+      if (status === "occupied") {
+        // Row 3
+        for (let i = 1; i <= 5; i++) {
+          let p = getInput(3, "top", "p", i);
+          let s = getInput(3, "bottom", "s", i);
+          let bottomP = getInput(2, "top", "p", i);
+          let bottomS = getInput(2, "bottom", "s", i);
+      
+          if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+            p.disabled = false;
+            s.disabled = false;
+          }
+        }
+      
+        // Row 2
+        for (let i = 1; i <= 5; i++) {
+          let p = getInput(2, "top", "p", i);
+          let s = getInput(2, "bottom", "s", i);
+          let bottomP = getInput(1, "top", "p", i);
+          let bottomS = getInput(1, "bottom", "s", i);
+      
+          if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+            p.disabled = false;
+            s.disabled = false;
+          }
+        }
+      
+        // Row 1
+        for (let i = 1; i <= 5; i++) {
+          let p = getInput(1, "top", "p", i);
+          let s = getInput(1, "bottom", "s", i);
+      
+          if (p.value === "") {
+            p.disabled = false;
+            s.disabled = false;
+          } else {
+            p.disabled = true;
+            s.disabled = true;
+          }
+        }
+      
+        const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
+      
+        r4BottomSelects.forEach((select, index) => {
+          const babyValue = select.value;
+      
+          if (babyValue !== "") {
+            const r1SelectT = getInput(1, "top", "p", index + 1);
+            const r1SelectB = getInput(1, "bottom", "s", index + 1);
+            const r2SelectT = getInput(2, "top", "p", index + 1);
+            const r2SelectB = getInput(2, "bottom", "s", index + 1);
+            const r3SelectT = getInput(3, "top", "p", index + 1);
+            const r3SelectB = getInput(3, "bottom", "s", index + 1);
+      
+            disableInputs(
+              r1SelectT,
+              r1SelectB,
+              r2SelectT,
+              r2SelectB,
+              r3SelectT,
+              r3SelectB
+            );
+          }
+        });
+      }
+    }
+  })
 }
 
 function fillPreFilledValues() {
@@ -617,6 +649,8 @@ async function submitBtn() {
         // 8. Alert successful pair
         alert(`Row ${row} - Pair ${pair} filled!`);
         submitted = true;
+
+        vacant();
         break; // Only submit one pair per click
       }
     }
