@@ -554,12 +554,12 @@
   transition: all 0.05s ease-in;
 }
 
-/* Puzzle */
+/* Mission 4 */
 
 .box:nth-child(5) select {
   cursor: pointer;
   height: 30px;
-  width: 70px;
+  width: 150px;
   border-radius: 8px;
   text-align: center;
   text-align-last: center;
@@ -577,6 +577,35 @@
 }
 
 .box:nth-child(5) button:hover {
+  cursor: pointer;
+  background: rgb(47, 47, 47);
+  color: white;
+  transition: all 0.05s ease-in;
+}
+
+/* Puzzle */
+
+.box:nth-child(6) select {
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+  border-radius: 8px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.box:nth-child(6) button {
+  margin-top: 50px;
+  height: 50px;
+  width: 100px;
+  border: none;
+  border-radius: 10px;
+  background: gray;
+  color: white;
+  box-shadow: 2px 1px black;
+}
+
+.box:nth-child(6) button:hover {
   cursor: pointer;
   background: rgb(47, 47, 47);
   color: white;

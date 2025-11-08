@@ -1008,7 +1008,7 @@ const overallBtn = document.getElementById("overallBtn");
 const overallDocRef = db.collection("bucketList").doc("overall");
 const overallArray = [];
 
-for (let i = 1; i <= 14; i++) {
+for (let i = 0; i <= 14; i++) {
   overallArray.push(i);
 }
 
@@ -1056,7 +1056,7 @@ const groupNpcTitle = document.getElementById("groupNpcTitle");
 
 const groupArray = [];
 
-for (let i = 1; i <= 14; i++) {
+for (let i = 0; i <= 14; i++) {
   groupArray.push(i);
 }
 
@@ -1119,7 +1119,7 @@ const smileDocRef = db.collection("bucketList").doc("smiles");
 
 const smilesArray = [];
 
-for (let i = 1; i <= 100; i++) {
+for (let i = 0; i <= 100; i++) {
   smilesArray.push(i);
 }
 
@@ -1146,14 +1146,43 @@ smileBtn.addEventListener("click", () => {
     return;
   }
 
+  const smileValue = parseInt(smileDrop.value);
+
   smileDocRef.set({
-    count: smileDrop.value,
+    count: smileValue,
   })
   .then(() => {
     alert("Updated smile count!");
   })
   .catch((err) => {
     console.error("Error: ", err);
+  });
+});
+
+// Mission 4
+
+const mission4Drop = document.getElementById("mission4Drop");
+const missionBtn = document.getElementById("missionBtn");
+
+const missionDocRef = db.collection("bucketList").doc("mission4");
+
+missionDocRef.onSnapshot((doc) => {
+  const data = doc.data();
+  const status = data.status;
+
+  mission4Drop.value = status;
+});
+
+missionBtn.addEventListener("click", () => {
+  missionDocRef.set({
+    status: mission4Drop.value,
+  })
+  .then(() => {
+    alert("Sumission complete!");
+    console.log("Mission 4 Submission complete");
+  })
+  .catch ((err) => {
+    console.error("Error:", err);
   });
 });
 
@@ -1182,8 +1211,8 @@ puzzleBtn.addEventListener("click", () => {
   }
 
   puzzleDocRef.set({
-    left: leftDrop.value,
-    right: rightDrop.value,
+    left: parseInt(leftDrop.value),
+    right: parseInt(rightDrop.value),
   })
   .then(() => {
     alert("Upload complete");
