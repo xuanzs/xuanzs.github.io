@@ -6,6 +6,7 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 .active {
@@ -26,7 +27,7 @@
 .anabelle-checkin,
 .npcPic,
 .smilePic,
-.sealLvl7,
+.mission4,
 .searchPuzzle {
   padding: 10px 10px;
 }
@@ -34,19 +35,35 @@
 .anabelle-checkin button,
 .npcPic button,
 .smilePic button,
-.sealLvl7 button,
+.mission4 button,
 .searchPuzzle button {
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  font-size: 40px;
+  font-size: clamp(18px, 4vw, 32px);
+  max-width: 500px;
   border: 1px solid black;
   /* box-shadow: 3px 3px grey; */
   background: white;
   width: 85vw;
   height: 10vh;
+}
+
+.anabelle-checkin {
+  position: relative; /* allows the tick to position inside this div */
+  display: inline-block;
+}
+
+.anabelle-checkin .tick {
+  position: absolute;
+  bottom: 10px; /* adjust to control vertical placement */
+  right: 30px; /* adjust to control horizontal placement */
+  font-size: 2em; /* larger tick */
+  color: red;
+  font-weight: bold;
+  pointer-events: none; /* ensures it doesn't block button clicks */
 }
 
 /* NPC 合照 */
@@ -125,6 +142,21 @@
     font-size: 18px;
     padding: 15px;
   }
+}
+
+.npcPic {
+  position: relative; /* allows the tick to position inside this div */
+  display: inline-block;
+}
+
+.npcPic .tick {
+  position: absolute;
+  bottom: 10px; /* adjust to control vertical placement */
+  right: 30px; /* adjust to control horizontal placement */
+  font-size: 2em; /* larger tick */
+  color: red;
+  font-weight: bold;
+  pointer-events: none; /* ensures it doesn't block button clicks */
 }
 
 /* 100 Smiles */
@@ -224,11 +256,11 @@
 #imagePreview,
 #images {
   display: flex;
-  flex-wrap: wrap;          /* allow images to wrap */
-  justify-content: center;  /* center horizontally */
-  gap: 10px;                /* spacing between images */
-  max-height: 500px;        /* adjust as needed */
-  overflow-y: auto;         /* vertical scroll if overflow */
+  flex-wrap: wrap; /* allow images to wrap */
+  justify-content: center; /* center horizontally */
+  gap: 10px; /* spacing between images */
+  max-height: 500px; /* adjust as needed */
+  overflow-y: auto; /* vertical scroll if overflow */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -248,3 +280,51 @@
   cursor: pointer;
 }
 
+.smilePic {
+  position: relative; /* allows the tick to position inside this div */
+  display: inline-block;
+}
+
+.smilePic .tick {
+  position: absolute;
+  bottom: 10px; /* adjust to control vertical placement */
+  right: 30px; /* adjust to control horizontal placement */
+  font-size: 2em; /* larger tick */
+  color: red;
+  font-weight: bold;
+  pointer-events: none; /* ensures it doesn't block button clicks */
+}
+
+/* Mission 4 */
+
+.mission4 {
+  position: relative; /* allows the tick to position inside this div */
+  display: inline-block;
+}
+
+.mission4 .tick {
+  position: absolute;
+  bottom: 10px; /* adjust to control vertical placement */
+  right: 30px; /* adjust to control horizontal placement */
+  font-size: 2em; /* larger tick */
+  color: red;
+  font-weight: bold;
+  pointer-events: none; /* ensures it doesn't block button clicks */
+}
+
+/* Puzzle */
+
+.searchPuzzle {
+  position: relative; /* allows the tick to position inside this div */
+  display: inline-block;
+}
+
+.searchPuzzle .tick {
+  position: absolute;
+  bottom: 10px; /* adjust to control vertical placement */
+  right: 30px; /* adjust to control horizontal placement */
+  font-size: 2em; /* larger tick */
+  color: red;
+  font-weight: bold;
+  pointer-events: none; /* ensures it doesn't block button clicks */
+}

@@ -8,7 +8,7 @@ const smilePage = document.getElementById("smilePage");
 const checkin = document.querySelector(".anabelle-checkin button");
 const npcPic = document.querySelector(".npcPic button");
 const smilePic = document.querySelector(".smilePic button");
-const sealLvl7 = document.querySelector(".sealLvl7 button");
+const mission4 = document.querySelector(".mission4 button");
 const searchPuzzle = document.querySelector(".searchPuzzle button");
 
 const bucketDocRef = db.collection("bucketList");
@@ -28,7 +28,13 @@ bucketDocRef.doc("checkin").onSnapshot((doc) => {
     const data = doc.data();
     const count = data.count;
 
-    checkin.textContent = `带 Anabelle 去打卡三层 (${count}/3)`;
+    if (count !== 3) {
+      checkin.textContent = `带 Anabelle 去打卡三层 (${count}/3)`;
+    } else {
+      checkin.innerHTML = `<span class="checkin-text">带 Anabelle 去打卡三层 (${count}/3)</span>
+      <span class="tick">✓</span>`;
+    }
+    
   }
 });
 
@@ -37,7 +43,12 @@ bucketDocRef.doc("overall").onSnapshot((doc) => {
     const data = doc.data();
     const count = data.count;
 
-    npcPic.textContent = `每组至少和3位npc合照 (${count}/14)`;
+    if (count !== 14) {
+      npcPic.textContent = `每组至少和3位npc合照 (${count}/14)`;
+    } else {
+      npcPic.innerHTML = `<span class="overall-text">每组至少和3位npc合照 (${count}/14)</span>
+      <span class="tick">✓</span>`;
+    }
   }
 });
 
@@ -46,7 +57,26 @@ bucketDocRef.doc("smiles").onSnapshot((doc) => {
     const data = doc.data();
     const count = data.count;
 
-    smilePic.textContent = `集齐100个笑容 (${count}/100)`;
+    if (count !== 100) {
+      smilePic.textContent = `集齐100个笑容 (${count}/100)`;
+    } else {
+      smilePic.innerHTML = `<span class="smile-text">集齐100个笑容 (${count}/100)</span>
+      <span class="tick">✓</span>`;
+    }
+  }
+});
+
+bucketDocRef.doc("mission4").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const status = data.status;
+
+    if (status === "completed") {
+      mission4.innerHTML = `<span class="mission-text">封印第7层</span>
+      <span class="tick">✓</span>`;
+    } else {
+      mission4.textContent = `封印第7层`;
+    }
   }
 });
 
@@ -56,7 +86,12 @@ bucketDocRef.doc("puzzle").onSnapshot((doc) => {
     const left = data.left;
     const right = data.right;
 
-    searchPuzzle.textContent = `寻找消失的部件 (${left}/${right})`;
+    if (left === 4) {
+      searchPuzzle.innerHTML = `<span class="puzzle-text">寻找消失的部件 (${left}/${right})</span>
+      <span class="tick">✓</span>`;
+    } else {
+      searchPuzzle.textContent = `寻找消失的部件 (${left}/${right})`;
+    }
   }
 });
 
