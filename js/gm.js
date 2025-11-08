@@ -208,9 +208,9 @@ function disabledSelects() {
   r2Selects.forEach((select) => {
     select.disabled = true;
   });
-  r1Selects.forEach((select) => {
-    select.disabled = true;
-  });
+  // r1Selects.forEach((select) => {
+  //   select.disabled = true;
+  // });
 
   gmDocRef.onSnapshot((doc) => {
     if (doc.exists) {
@@ -218,71 +218,135 @@ function disabledSelects() {
       const gmData = data.accounts[`gm${station}`];
       const status = gmData.status;
 
-      if (status === "occupied") {
-        // Row 3
-        for (let i = 1; i <= 5; i++) {
-          let p = getInput(3, "top", "p", i);
-          let s = getInput(3, "bottom", "s", i);
-          let bottomP = getInput(2, "top", "p", i);
-          let bottomS = getInput(2, "bottom", "s", i);
+      // if (status === "occupied") {
+      //   // Row 3
+      //   for (let i = 1; i <= 5; i++) {
+      //     let p = getInput(3, "top", "p", i);
+      //     let s = getInput(3, "bottom", "s", i);
+      //     let bottomP = getInput(2, "top", "p", i);
+      //     let bottomS = getInput(2, "bottom", "s", i);
       
-          if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-            p.disabled = false;
-            s.disabled = false;
-          }
+      //     if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+      //       p.disabled = false;
+      //       s.disabled = false;
+      //     }
+      //   }
+      
+      //   // Row 2
+      //   for (let i = 1; i <= 5; i++) {
+      //     let p = getInput(2, "top", "p", i);
+      //     let s = getInput(2, "bottom", "s", i);
+      //     let bottomP = getInput(1, "top", "p", i);
+      //     let bottomS = getInput(1, "bottom", "s", i);
+      
+      //     if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+      //       p.disabled = false;
+      //       s.disabled = false;
+      //     }
+      //   }
+      
+      //   // Row 1
+      //   for (let i = 1; i <= 5; i++) {
+      //     let p = getInput(1, "top", "p", i);
+      //     let s = getInput(1, "bottom", "s", i);
+      
+      //     if (p.value === "") {
+      //       p.disabled = false;
+      //       s.disabled = false;
+      //     } else {
+      //       p.disabled = true;
+      //       s.disabled = true;
+      //     }
+      //   }
+      
+      //   const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
+      
+      //   r4BottomSelects.forEach((select, index) => {
+      //     const babyValue = select.value;
+      
+      //     if (babyValue !== "") {
+      //       const r1SelectT = getInput(1, "top", "p", index + 1);
+      //       const r1SelectB = getInput(1, "bottom", "s", index + 1);
+      //       const r2SelectT = getInput(2, "top", "p", index + 1);
+      //       const r2SelectB = getInput(2, "bottom", "s", index + 1);
+      //       const r3SelectT = getInput(3, "top", "p", index + 1);
+      //       const r3SelectB = getInput(3, "bottom", "s", index + 1);
+      
+      //       disableInputs(
+      //         r1SelectT,
+      //         r1SelectB,
+      //         r2SelectT,
+      //         r2SelectB,
+      //         r3SelectT,
+      //         r3SelectB
+      //       );
+      //     }
+      //   });
+      // }
+
+      // Row 3
+      for (let i = 1; i <= 5; i++) {
+        let p = getInput(3, "top", "p", i);
+        let s = getInput(3, "bottom", "s", i);
+        let bottomP = getInput(2, "top", "p", i);
+        let bottomS = getInput(2, "bottom", "s", i);
+    
+        if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+          p.disabled = false;
+          s.disabled = false;
         }
-      
-        // Row 2
-        for (let i = 1; i <= 5; i++) {
-          let p = getInput(2, "top", "p", i);
-          let s = getInput(2, "bottom", "s", i);
-          let bottomP = getInput(1, "top", "p", i);
-          let bottomS = getInput(1, "bottom", "s", i);
-      
-          if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-            p.disabled = false;
-            s.disabled = false;
-          }
-        }
-      
-        // Row 1
-        for (let i = 1; i <= 5; i++) {
-          let p = getInput(1, "top", "p", i);
-          let s = getInput(1, "bottom", "s", i);
-      
-          if (p.value === "") {
-            p.disabled = false;
-            s.disabled = false;
-          } else {
-            p.disabled = true;
-            s.disabled = true;
-          }
-        }
-      
-        const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
-      
-        r4BottomSelects.forEach((select, index) => {
-          const babyValue = select.value;
-      
-          if (babyValue !== "") {
-            const r1SelectT = getInput(1, "top", "p", index + 1);
-            const r1SelectB = getInput(1, "bottom", "s", index + 1);
-            const r2SelectT = getInput(2, "top", "p", index + 1);
-            const r2SelectB = getInput(2, "bottom", "s", index + 1);
-            const r3SelectT = getInput(3, "top", "p", index + 1);
-            const r3SelectB = getInput(3, "bottom", "s", index + 1);
-      
-            disableInputs(
-              r1SelectT,
-              r1SelectB,
-              r2SelectT,
-              r2SelectB,
-              r3SelectT,
-              r3SelectB
-            );
-          }
-        });
       }
+    
+      // Row 2
+      for (let i = 1; i <= 5; i++) {
+        let p = getInput(2, "top", "p", i);
+        let s = getInput(2, "bottom", "s", i);
+        let bottomP = getInput(1, "top", "p", i);
+        let bottomS = getInput(1, "bottom", "s", i);
+    
+        if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
+          p.disabled = false;
+          s.disabled = false;
+        }
+      }
+    
+      // Row 1
+      for (let i = 1; i <= 5; i++) {
+        let p = getInput(1, "top", "p", i);
+        let s = getInput(1, "bottom", "s", i);
+    
+        if (p.value === "") {
+          p.disabled = false;
+          s.disabled = false;
+        } else {
+          p.disabled = true;
+          s.disabled = true;
+        }
+      }
+    
+      const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
+    
+      r4BottomSelects.forEach((select, index) => {
+        const babyValue = select.value;
+    
+        if (babyValue !== "") {
+          const r1SelectT = getInput(1, "top", "p", index + 1);
+          const r1SelectB = getInput(1, "bottom", "s", index + 1);
+          const r2SelectT = getInput(2, "top", "p", index + 1);
+          const r2SelectB = getInput(2, "bottom", "s", index + 1);
+          const r3SelectT = getInput(3, "top", "p", index + 1);
+          const r3SelectB = getInput(3, "bottom", "s", index + 1);
+    
+          disableInputs(
+            r1SelectT,
+            r1SelectB,
+            r2SelectT,
+            r2SelectB,
+            r3SelectT,
+            r3SelectB
+          );
+        }
+      });
     }
   })
 }
@@ -324,7 +388,7 @@ function fillPreFilledValues() {
         console.log(see);
         console.log(count);
         console.log(inside);
-        // disabledSelects();
+        disabledSelects();
       }
     });
 }
@@ -348,9 +412,9 @@ function fillPreFilledValues() {
 document.addEventListener("DOMContentLoaded", () => {
   fillTeamDrop();
   fillPreFilledValues();
-  // setTimeout(() => {
-  //   disabledSelects();
-  // }, 1000);
+  setTimeout(() => {
+    disabledSelects();
+  }, 1000);
 });
 
 function getInput(row, section, prefix, index) {
