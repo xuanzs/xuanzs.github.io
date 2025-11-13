@@ -104,16 +104,18 @@
         <button class="Submit">Submit</button>
       </div>
     </div>
-    <div class="popup" id="popup">
-      <h4></h4>
-      <div class="babies">
-        <h5></h5>
-        <h5></h5>
-        <h5></h5>
-        <h5></h5>
-        <h5></h5>
-      </div>
+    <div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+        <button class="popup-close" id="popupClose" aria-label="Close">✕</button>
+        <h4 id="popupTitle"></h4>
+        <div class="babies">
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+            <h5></h5>
+        </div>
     </div>
+
     <script src="./firebaseConfig.js"></script>
     <script src="./js/guest.js"></script>
   </body>

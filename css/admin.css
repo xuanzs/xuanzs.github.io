@@ -264,3 +264,47 @@
     color: white;
     transition: all 0.05s ease-in;
 }
+
+.table-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body.zoomed {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.zoomed .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(2.0);
+  transform-origin: center center;
+}
+
+
+body.zoomed .right,
+body.zoomed .bottom {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body.zoomed .container { transform: none; }
+  #t1 { width: min(96vw, 320px); } 
+  #t1 button { font-size: clamp(14px, 5vw, 22px); }
+}
