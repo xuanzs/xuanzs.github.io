@@ -95,6 +95,135 @@ bucketDocRef.doc("puzzle").onSnapshot((doc) => {
   }
 });
 
+bucketDocRef.doc("notification").onSnapshot((doc) => {
+  if (doc.exists) {
+    const data = doc.data();
+    const status = data.status;
+    const notiIcon = document.querySelector(".mainPage i");
+
+    if (status === true) {
+      // Only create badge if it doesn’t already exist
+      if (!notiIcon.querySelector(".notification-badge")) {
+        const badge = document.createElement("span");
+        badge.classList.add("notification-badge");
+        badge.textContent = "1";
+        notiIcon.appendChild(badge);
+      }
+    } else {
+      // Remove existing badge if notification turned off
+      const existingBadge = notiIcon.querySelector(".notification-badge");
+      if (existingBadge) existingBadge.remove();
+    }
+  }
+});
+
+
+function Notify() {
+  let checkin = false;
+  let overall = false;
+  let smiles = false;
+  let mission = false;
+
+  function checkAllComplete() {
+    if (checkin && overall && smiles && mission) {
+      bucketDocRef.doc("notification").set({
+        status: true,
+      });
+      console.log("✅ All tasks completed! Notification triggered.");
+    } else {
+      bucketDocRef.doc("notification").set({
+        status: false,
+      });
+    }
+  }
+
+  bucketDocRef.doc("checkin").onSnapshot((doc) => {
+    if (doc.exists) {
+      const count = doc.data().count || 0;
+      checkin = (count === 3);
+      checkAllComplete();
+    }
+  });
+
+  bucketDocRef.doc("overall").onSnapshot((doc) => {
+    if (doc.exists) {
+      const count = doc.data().count || 0;
+      overall = (count === 14);
+      checkAllComplete();
+    }
+  });
+
+  bucketDocRef.doc("smiles").onSnapshot((doc) => {
+    if (doc.exists) {
+      const count = doc.data().count || 0;
+      smiles = (count === 100);
+      checkAllComplete();
+    }
+  });
+
+  bucketDocRef.doc("mission4").onSnapshot((doc) => {
+    if (doc.exists) {
+      const status = doc.data().status;
+      mission = (status === "completed");
+      checkAllComplete();
+    }
+  });
+}
+
+Notify();
+
+// Notification
+
+const notiIcon = document.querySelector(".mainPage i");
+const popup = document.getElementById("popup");
+const p = document.querySelector(".popup p");
+const overlay2 = document.getElementById("overlay-2");
+
+if (notiIcon && popup && p && overlay2) {
+  notiIcon.addEventListener("click", async () => {
+    try {
+      const doc = await bucketDocRef.doc("notification").get();
+
+      if (doc.exists) {
+        const { status } = doc.data();
+
+        if (status === true) {
+          p.innerHTML = `
+            找到8个蜡烛 (红黄白蓝各2个) 去表演室进行“终幕仪典” 用笑声吸引小丑直到它出现 
+            所有玩家握着蜡烛且无表情撑过小丑的死亡倒数 “10秒”
+            <br><br>
+            *仪式过程中若有任何表情或行为上动了，一切视为失败...
+          `;
+          p.style.color = "black";
+          popup.classList.add("active");
+          overlay2.classList.add("active");
+        } else {
+          popup.classList.add("active");
+          overlay2.classList.add("active");
+          p.textContent = "No notification";
+          p.style.color = "gray";
+        }
+      } else {
+        popup.classList.add("active");
+        overlay2.classList.add("active");
+        p.textContent = "No notification";
+        p.style.color = "gray";
+      }
+    } catch (error) {
+      console.error("Error fetching notification:", error);
+    }
+  });
+
+  overlay2.addEventListener("click", () => {
+    popup.classList.remove("active");
+    overlay2.classList.remove("active");
+  });
+} else {
+  console.error("Popup elements not found in DOM");
+}
+
+
+
 // NPC 合照 Main Page
 
 function backMainPage() {

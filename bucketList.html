@@ -9,11 +9,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
+    <script src="https://kit.fontawesome.com/358d7b76b2.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="./css/bucketList.css">
 </head>
 <body>
+    <div class="overlay-2" id="overlay-2"></div>
+
     <div class="container">
         <div class="mainPage active" id="mainPage">
+            <i class="fa-regular fa-bell"></i>
             <h1>Bucket List</h1>
             <div class="anabelle-checkin">
                 <button></button>
@@ -30,6 +35,11 @@
             <div class="searchPuzzle">
                 <button></button>
             </div>
+        </div>
+
+        <div class="popup" id="popup">
+            <h3>Notification Center</h4>
+            <p>No notification</p>
         </div>
 
         <!-- npc 合照 -->
