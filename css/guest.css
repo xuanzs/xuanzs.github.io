@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #loadingOverlay {
   position: fixed;
   top: 0; left: 0;
@@ -31,75 +32,670 @@
 html, body {
   height: 100%;
   margin: 0;
+=======
+/* ===== Graffiti / Street Sticker Skin (CSS-only) ===== */
+:root{
+  --font-serif-latin: Cambria, Georgia, Times, serif;
+  --ink:#0b0613;
+  --purple:#5a23a1;
+  --purple-deep:#3a1574;
+  --acid:#73ff5a;
+  --blood:#ff2e2e;
+  --ice:#7cf2ff;
+  --chalk:#f3f3f3;
+
+  /* 自适应尺寸 */
+  --gutter: clamp(12px, 4vw, 24px);
+  --block-gap: clamp(12px, 4vw, 20px);
+  --btn-size: clamp(36px, 10vw, 44px);
+  --btn-radius: 12px;
+  --table-max: 360px;
+  
+
+  /* ✅ 不再扣 padding/border，避免两侧多出空带 */
+  /* --frame-x: 24px;  // 这行可以直接删掉 */
+  --table-size: min(calc(100svw - 2 * var(--gutter)), var(--table-max));
+
+  --cell-gap: clamp(6px, 2.4vw, 10px);
+
+  /* 用于边缘定位的辅助变量，可以根据效果微调 */
+  --edge-bleed: 0px; 
+>>>>>>> origin/shawn
 }
 
-body{
-background: url('./public/background/background.png') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100svh;
-  display: grid;
-  font-family:'Times New Roman', Times, serif;
+/* 背景噪点图层 (html::before) */
+html::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none; z-index:-1;           /* <--- 底层 */
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9InRhYmxlIiB0YWJsZVZhbHVlcz0iMCAwIDAgMC4wOCAuMTUgMCIvPjwvZmVDb21wb25lbnRUcmFuc2Zlcj48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
+  mix-blend-mode: overlay;
 }
 
-body.submitted{
-  background: url('./public/background/submitbackground.png') no-repeat center center fixed;
-  background-size: cover;
+  /* 背景：紫黑渐变 + 暗角 + 噪点 */
+  html, body { height:100%; margin:0; }
+  html, body { overflow-x: hidden; } /* 彻底禁横向滚动 */
+  body{
+    color: var(--chalk);
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
+      linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
+      linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%) !important;
+    background-attachment: fixed;
+    display:grid;
+    place-items:start center; /* 水平居中；要垂直也居中改为 place-items:center */
+    min-height:100svh;
+    font-family: var(--font-serif);
+    transition: background-image .25s ease-in-out, background-color .25s;
+  }
+  
+/* 左侧竖排文字 */
+/* ===== 手机端左右竖排边框字（修改：完全贴边，占满垂直空间） ===== */
+@media (max-width: 768px){
+  /* 公共样式 */
+  body::before,
+  html::after{
+    position: fixed;
+    top: 0; 
+    bottom: 0;
+    transform-origin: center center; 
+    font-family: "Impact", "Anton", system-ui, sans-serif;
+    font-weight: 900;
+    font-size: clamp(24px, 6.8vw, 44px);
+    letter-spacing: clamp(0.14em, 2vw, 0.32em);
+    pointer-events: none;
+    z-index: 0; 
+    text-shadow:
+      1px 1px 2px rgba(0,0,0,.4),
+      -1px -1px 1px rgba(255,255,255,.03);
+    opacity: 1;
+    height: 100svh; 
+    width: auto; 
+    margin-top: auto; 
+    margin-bottom: auto; 
+    top: 50%;
+  }
+  
+  /* ================================================= */
+  /* 最左侧英文 (body::before) - 使用 writing-mode */
+  /* ================================================= */
+  body::before{
+    content: "APU WILD ESCAPE 2025";
+    left: 0; /* 贴最左边 */
+    color: rgba(180,160,200,.40);
+    
+    /* 使用 writing-mode 实现垂直排列（从上到下） */
+    writing-mode: vertical-rl;
+    transform: none; /* 移除旋转 */
+    
+    /* 微调位置 */
+    padding-left: 4px; /* 稍微离开边缘 */
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ================================================= */
+  /* 最右侧中文 (html::after) */
+  /* ================================================= */
+  html::after{
+    content: "亚太科技大学华文学会2025念外校交流营《阿布疯狂大逃亡》";
+    right: 0; /* 贴最右边 */
+    color: rgba(115,255,90,.35); 
+    
+    /* 使用 writing-mode 实现垂直排列（从上到下） */
+    writing-mode: vertical-rl;
+    transform: none;
+    
+    /* 调整中文字体属性 */
+    line-height: 1;
+    letter-spacing: normal; 
+    font-family: var(--font-serif-latin), system-ui, sans-serif;
+    font-size: clamp(20px, 4vw, 24px);
+    
+    /* 微调位置 */
+    padding-right: 4px; /* 稍微离开边缘 */
+    display: flex;
+    align-items: center;
+  }
 }
 
-/*After Submit changed the background*/
-body, body.submitted { transition: background-image .25s ease-in-out, background-color .25s; }
-
-.container{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin: 0;
+/* 超小屏可略微减淡（可选） */
+@media (max-width:480px){
+  body::before, html::after{ 
+    opacity:.85; 
+  }
+  
+  /* 超小屏可以调整字体大小 */
+  body::before {
+    font-size: clamp(20px, 5.5vw, 32px);
+  }
+  
+  html::after {
+    font-size: clamp(14px, 3.5vw, 20px);
+  }
 }
 
-
-#t1{
-  border: 1px solid black;
-  border-collapse: collapse;
-  width: min(92vw, 300px);
-  table-layout: fixed;
-  margin-bottom: 10px;
+/* 如果需要在平板/桌面端也显示，可以添加 */
+@media (min-width: 769px) and (max-width: 1024px){
+  body::before,
+  html::after{
+    position: fixed;
+    top: 0; 
+    bottom: 0;
+    font-family: "Impact", "Anton", system-ui, sans-serif;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 0;
+    text-shadow:
+      1px 1px 2px rgba(0,0,0,.4),
+      -1px -1px 1px rgba(255,255,255,.03);
+    opacity: 0.85;
+    height: 100svh;
+    writing-mode: vertical-rl;
+    transform: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  body::before{
+    content: "APU WILD ESCAPE 2025";
+    left: 0;
+    color: rgba(180,160,200,.40);
+    font-size: clamp(28px, 3vw, 36px);
+    letter-spacing: 0.2em;
+    padding-left: 8px;
+  }
+  
+  html::after{
+    content: "亚太科技大学华文学会2025念外校交流营《阿布疯狂大逃亡》";
+    right: 0;
+    color: rgba(115,255,90,.35);
+    font-family: var(--font-serif-latin), system-ui, sans-serif;
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.1;
+    letter-spacing: normal;
+    padding-right: 8px;
+  }
 }
 
+/* 超小屏可略微减淡（可选） */
+@media (max-width:480px){
+  body::before, html::after{ opacity:.85; }
+}
 
-#t1 button{
+  
+  body.submitted{
+    background:
+      url('./public/background/submitbackground.png') no-repeat center/cover fixed,
+      linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%);
+      place-items: center; 
+  }
+  
+  /* 原本的 body::after 噪音图层定义在后面，会导致冲突。我们统一在 html::before 中处理噪点。 */
+  /* 故删除这部分冲突代码，只保留 body::before 和 html::after 作为侧边文字 */
+  
+  /* 容器（与安全区） */
+  .container{
+    display:flex; flex-direction:column; align-items:center;
+    gap: var(--block-gap);
+    padding:
+      max(var(--gutter), env(safe-area-inset-top))
+      var(--gutter)
+      max(var(--gutter), env(safe-area-inset-bottom));
+    box-sizing:border-box;
+    z-index:1;
+    margin-left:auto; margin-right:auto; max-width:900px;
+  }
+
+  /* 表格外框 */
+  .table{
+    box-sizing: border-box;              /* ⭐ 关键：让 --table-size 真正等于外观宽 */
+    width: var(--table-size);            /* 外层宽固定为预算 */
+    padding:10px; border-radius:18px;
+    background:
+      linear-gradient(0deg, rgba(255,255,255,.08), rgba(255,255,255,.08)) padding-box,
+      repeating-linear-gradient(135deg, rgba(0,0,0,.45) 0 6px, rgba(255,255,255,.06) 6px 12px) border-box;
+    border:2px dashed rgba(255,255,255,.25);
+    box-shadow:0 10px 0 rgba(0,0,0,.45);
+  }
+
+  /* ================== 表格(棋盘) ================== */
+  #t1{
+    border:none; border-collapse:collapse;
+    width: 100%;                         /* 在 .table 内占满即可 */
+    table-layout:fixed;
+    margin-bottom:10px;
+    background:transparent;
+  }
+  #t1 td{
+    border:none; padding: var(--cell-gap); border-radius:14%;
+    position:relative; overflow:hidden; background:transparent;
+  }
+  #t1 td::before{ content:""; display:block; padding-top:100%; } /* 正方格 */
+  #t1 td::after{
+    content:""; position:absolute; inset:6px; border-radius:12%;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.18), transparent 40%),
+      linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+    box-shadow:0 2px 0 rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.12);
+    z-index:-1;
+  }
+
+  /* ================== 单元按钮(贴纸) ================== */
+  #t1 button{
+    position:absolute; inset:6px;
+    width:calc(100% - 12px); height:calc(100% - 12px);
+    border:none; border-radius:12%;
+    font-family:"Impact","Anton",system-ui,sans-serif;
+    font-weight:700;
+    font-size: clamp(18px, 5vw, 24px);
+    color:#0b0b0b;
+    background:linear-gradient(180deg,#fff,#f1f1f1);
+    box-shadow:0 6px 0 rgba(0,0,0,.35), 0 0 0 2px rgba(0,0,0,.75) inset;
+    transform:rotate(calc(var(--r,0)*1deg));
+    transition:transform .12s, box-shadow .12s, filter .12s;
+    cursor:pointer;
+    will-change: transform, text-shadow, filter;
+  }
+  #t1 button:hover{
+    transform:translateY(-2px) rotate(calc(var(--r,0)*1deg));
+    box-shadow:0 10px 0 rgba(0,0,0,.45), 0 0 0 2px rgba(0,0,0,.75) inset;
+    filter:saturate(1.07);
+  }
+  #t1 button:active{
+    transform: translateY(1px) scale(.98) rotate(calc(var(--r,0) * 1deg));
+    box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 0 2px rgba(0,0,0,.75) inset;
+  }
+
+  /* ================== 选中：pop + glitch ================== */
+  #t1 .selected{
+    background: linear-gradient(180deg, var(--acid), #4ff03b);
+    color:#061106;
+    text-shadow:none;
+    box-shadow:
+      0 0 16px rgba(115,255,90,.55),
+      0 8px 0 rgba(0,0,0,.45),
+      0 0 0 2px rgba(0,0,0,.85) inset;
+    animation-name: cell-pop, cell-glitch-move, cell-glitch-shadow;
+    animation-duration: .22s, .28s, .28s;
+    animation-timing-function: cubic-bezier(.2,.9,.2,1), steps(6,end), steps(6,end);
+    animation-iteration-count: 1, 1, 1;
+    animation-fill-mode: both, both, both;
+
+  }
+  #t1 .selected:hover,
+  #t1 .selected:active{
+    transform: none;
+    box-shadow:
+      0 0 16px rgba(115,255,90,.55),
+      0 8px 0 rgba(0,0,0,.45),
+      0 0 0 2px rgba(0,0,0,.85) inset;
+  }
+  @keyframes cell-pop{
+    0%   { transform: scale(.92) rotate(calc(var(--r,0)*1deg - .6deg)); }
+    70%  { transform: scale(1.06) rotate(calc(var(--r,0)*1deg + .4deg)); }
+    100% { transform: scale(1)    rotate(calc(var(--r,0)*1deg)); }
+  }
+  @keyframes cell-glitch-move{
+    0%   { transform: translateX(0)      scale(1)     rotate(calc(var(--r,0)*1deg)); }
+    20%  { transform: translateX(-1px)   scale(1.01)  rotate(calc(var(--r,0)*1deg)); }
+    40%  { transform: translateX(1px)    scale(1.005) rotate(calc(var(--r,0)*1deg)); }
+    60%  { transform: translateX(-.5px)  scale(1.003) rotate(calc(var(--r,0)*1deg)); }
+    80%  { transform: translateX(.5px)   scale(1.001) rotate(calc(var(--r,0)*1deg)); }
+    100% { transform: translateX(0)      scale(1)     rotate(calc(var(--r,0)*1deg)); }
+  }
+  @keyframes cell-glitch-shadow{
+    0%   { text-shadow: 1px 0 var(--blood), -1px 0 var(--ice), 0 1px rgba(0,0,0,.35); }
+    25%  { text-shadow: 2px 0 var(--blood), -2px 0 var(--ice), 0 1px rgba(0,0,0,.45); }
+    50%  { text-shadow: -2px 0 var(--blood), 2px 0 var(--ice), 0 1px rgba(0,0,0,.45); }
+    75%  { text-shadow: 1px 0 var(--blood), -1px 0 var(--ice), 0 1px rgba(0,0,0,.4); }
+    100% { text-shadow: none; }
+  }
+
+  /* ========== 数字变更：模糊→清晰 + 小幅错位(需要临时加类) ========== */
+  #t1 button.num-change{
+    color: transparent;
+    position: relative;
+    isolation: isolate;
+  }
+  #t1 button.num-change::after{
+    content: attr(data-label);
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font: inherit;
+    color: #b34545;
+    text-shadow: 1px 0 var(--blood), -1px 0 var(--ice), 0 1px rgba(0,0,0,.45);
+
+    filter: blur(10px) saturate(.9) contrast(.95);
+    opacity: 0;
+    transform: scale(.86) rotate(calc(var(--r,0)*1deg - .6deg));
+
+    animation: num-blur-in .32s cubic-bezier(.2,.9,.2,1) both,
+              num-glitch   .28s steps(6,end) 1 both;
+  }
+  @keyframes num-blur-in{
+    0%{
+      filter: blur(10px) saturate(.9) contrast(.95);
+      opacity: 0;
+      transform: scale(.86) rotate(calc(var(--r,0)*1deg - .6deg));
+    }
+    70%{
+      filter: blur(2px) saturate(1.04) contrast(1.02);
+      opacity: .95;
+      transform: scale(1.08) rotate(calc(var(--r,0)*1deg + .4deg));
+    }
+    100%{
+      filter: blur(0) saturate(1.02) contrast(1);
+      opacity: 1;
+      transform: scale(1) rotate(calc(var(--r,0)*1deg));
+    }
+  }
+  @keyframes num-glitch{
+    0%   { text-shadow: 2px 0 var(--blood), -2px 0 var(--ice), 0 1px rgba(0,0,0,.45); transform: translateX(0) }
+    25%  { text-shadow: -2px 0 var(--blood),  2px 0 var(--ice), 0 1px rgba(0,0,0,.45); transform: translateX(1px) }
+    50%  { text-shadow:  2px 0 var(--blood), -2px 0 var(--ice), 0 1px rgba(0,0,0,.45); transform: translateX(-1px) }
+    75%  { text-shadow: -1px 0 var(--blood),  1px 0 var(--ice), 0 1px rgba(0,0,0,.40); transform: translateX(.5px) }
+    100% { text-shadow: none; transform: translateX(0) }
+  }
+
+  /* ================== 随机角度(装饰) ================== */
+  #t1 td:nth-child(odd)  > button{ --r:-1.5; }
+  #t1 td:nth-child(even) > button{ --r: 1.5; }
+
+  /* ================== 动效可访问性 ================== */
+  @media (prefers-reduced-motion: reduce){
+    #t1 .selected{ animation: none !important; }
+    #t1 button.num-change::after{ animation: none !important; filter:none; opacity:1; transform: rotate(calc(var(--r,0)*1deg)); }
+  }
+
+/* Right 区域 */
+.right{
+  width: min(100%, var(--table-size));
+  max-width: var(--table-size);
+  margin-left:auto; margin-right:auto;
+  display:flex; flex-direction:column; align-items:center;
+  gap: clamp(6px, 2.4vw, 10px);
+  margin-bottom: var(--block-gap);
+}
+.right > div{
+  width:100%;
+  display:flex; justify-content:center;
+  gap: clamp(6px, 2.4vw, 10px);
+  flex-wrap: nowrap;
+}
+
+/* 默认按钮样式 - 深色背景 + 绿色边框 */
+.right button{
+  display:flex; align-items:center; justify-content:center;
+  width: var(--btn-size); height: var(--btn-size);
+  margin: clamp(1px,1vw,3px);
+  border-radius: var(--btn-radius);
+  border: 2px solid rgba(115,255,90,.7);
+  background: linear-gradient(180deg, #333, #1a1a1a) !important;
+  color: rgba(255,255,255,.85);
+  font: 800 clamp(16px,5vw,20px)/1 "Impact","Anton",system-ui,sans-serif;
+  text-align:center; line-height:1;
+  text-shadow: 0 1px 2px rgba(0,0,0,.8) !important;
+  box-shadow:
+    0 0 0 3px rgba(115,255,90,.25) inset,
+    0 4px 0 rgba(0,0,0,.45) !important;
+  transition:transform .12s, box-shadow .12s, filter .12s;
+  cursor:pointer; position:relative; overflow:hidden;
+  border-color: rgba(115,255,90,.3) !important;
+  opacity: 1 !important; 
+}
+.right button:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 0 0 3px rgba(115,255,90,.6) inset,
+    0 10px 0 rgba(0,0,0,.55);
+  filter:brightness(1.1);
+}
+.right button:active{
+  transform:translateY(0);
+  box-shadow:
+    0 0 0 3px rgba(115,255,90,.6) inset,
+    0 5px 0 rgba(0,0,0,.45);
+}
+
+/* 选中状态（临时选择）- 保持深色 + 更亮的绿色边框 */
+.right button.selected {
+  border-color: rgba(115,255,90,.9) !important;
+  box-shadow: 
+    0 0 0 3px rgba(115,255,90,.8) inset,
+    0 6px 0 rgba(0,0,0,.45),
+    0 0 12px rgba(115,255,90,.5) !important;
+  filter: brightness(1.15) !important;
+}
+.right button.selected:hover,
+.right button.selected:active {
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    0 0 0 3px rgba(115,255,90,.8) inset,
+    0 10px 0 rgba(0,0,0,.55),
+    0 0 12px rgba(115,255,90,.5) !important;
+}
+
+/* 已使用状态 - 透明背景 + 黑色边框 + 黑色文字 */
+.right button.used,
+.right button:disabled,
+.right button[aria-disabled="true"],
+.right button[data-used="1"] {
+  background: transparent !important;
+  color: rgba(255, 46, 46, 0.3) !important; /* 红色半透明 */
+  text-shadow: none !important;
+  border: 2px solid rgba(255, 46, 46, 0.2) !important;
+  box-shadow: 0 4px 0 rgba(0,0,0,.35) !important;
+  filter: none !important;
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+.right button.used:hover,
+.right button.used:active,
+.right button:disabled:hover,
+.right button:disabled:active {
+  transform: none !important;
+  box-shadow: 0 4px 0 rgba(0,0,0,.35) !important;
+}
+
+/* 移除伪元素（已使用的按钮不需要装饰） */
+.right button.used::before,
+.right button.used::after,
+.right button:disabled::before,
+.right button:disabled::after {
+  content: none !important;
+}
+
+/* 轻微随机角（装饰） - 仅对未使用的按钮 */
+.right .r1 button:not(.used):not(:disabled):nth-child(odd){ transform: rotate(-1deg); }
+.right .r2 button:not(.used):not(:disabled):nth-child(even){ transform: rotate( 1deg); }
+.right .r3 button:not(.used):not(:disabled):nth-child(3n){ transform: rotate(-.6deg); }
+.right .r4 button:not(.used):not(:disabled):nth-child(4n){ transform: rotate( .8deg); }
+.right .r5 button:not(.used):not(:disabled):nth-child(5n){ transform: rotate(-.8deg); }
+
+
+  /* 底部操作按钮 */
+  .bottom{
+    max-width: var(--table-size);
+    margin-inline: auto;
+    margin-top: var(--block-gap);
+
+    display: flex;
+    flex-wrap: nowrap;           /* 永远一行 */
+    justify-content: center;     /* 组内居中 */
+    gap: clamp(16px, 4vw, 28px);
+    align-items: stretch;
+  }
+  .bottom button{
+    flex: 0 0 clamp(96px, 28vw, 150px);
+    min-width: 0;
+    white-space: nowrap;
+    text-align: center;
+    
+    height: clamp(40px, 9vw, 56px);
+    padding: 0 clamp(12px, 3.6vw, 20px);
+    font-weight: 800;
+    font-size: clamp(13px, 3.6vw, 16px);
+    letter-spacing: .06em;
+
+    border: none;
+    border-radius: clamp(12px, 3vw, 14px);
+    box-shadow: 0 8px 0 rgba(0,0,0,.45);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .bottom button:hover{ transform: translateY(-2px); }
+
+  .bottom .Clear  { background: linear-gradient(180deg, #ffe4f0, #ffc3d7); color: var(--ink); }
+  .bottom .Delete { background: linear-gradient(180deg, #ffd7d7, #ffb2b2); color: var(--ink); }
+  .bottom .Submit { background: linear-gradient(180deg, #c8ffcc, #98ff9f); color: var(--ink); }
+
+  /* 遮罩层统一质感（如有使用） */
+  .table-overlay, .overlay-2{
+    position:fixed; inset:0;
+    display:none; align-items:center; justify-content:center;
+    z-index:999; padding:24px;
+    backdrop-filter:blur(2px);
+    background:rgba(0,0,0,.62) !important;
+  }
+  .btn-shutdown{ background:#000 !important; }
+
+  /* 响应式两列布局（>=768px时） */
+  @media (min-width:768px){
+    .container{
+      display:grid;
+      grid-template-columns: var(--table-size) minmax(0, 1fr); /* ⭐ 右列吃剩余，不再推爆 */
+      column-gap: clamp(12px, 3vw, 24px);
+      align-items:start;
+      /* 最大宽度≈ 左列宽 + 间距 + 右列上限(给个理性上限) */
+      max-width: calc(var(--table-size) + clamp(12px, 3vw, 24px) + min(420px, 40vw));
+    }
+    .table{ grid-column:1; }
+    .right{ grid-column:2; width: 100%; max-width: min(420px, 40vw); }
+    .bottom{ grid-column:1 / span 2; }
+  }
+
+  /* 小屏边距微调 */
+  @media (max-width:480px){
+    :root{ --gutter: clamp(12px, 5vw, 18px); }
+  }
+
+  /* Team Name 输入框 */
+  #teamName{
+    display:block;
+    width: min(100%, clamp(200px, 60vw, 320px)); /* ⭐ 不超过容器 */
+    height: clamp(40px, 9vw, 56px);
+    margin: 0 auto;
+    padding: 0 clamp(14px, 3.6vw, 18px);
+    justify-content: center;
+    text-align: center;
+
+    font: 800 clamp(14px, 3.8vw, 16px)/1 "Impact","Anton",system-ui,sans-serif;
+    letter-spacing: .06em;
+    color: #0b0b0b;
+    text-shadow: 1px 0 var(--blood), -1px 0 var(--ice), 0 1px rgba(0,0,0,.35);
+
+    border: none;
+    border-radius: clamp(12px, 3vw, 14px);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%),
+      linear-gradient(180deg, #ffffff, #f1f1f1);
+    box-shadow:
+      0 8px 0 rgba(0,0,0,.45),
+      inset 0 0 0 2px rgba(0,0,0,.75),
+      0 0 0 2px rgba(255,255,255,.18);
+
+    outline: none;
+    caret-color: var(--purple);
+    transition: transform .12s, box-shadow .12s, filter .12s;
+    margin-bottom: clamp(8px, 2.2vw, 12px);
+  }
+  #teamName::before,
+  #teamName::after{ content:none; }
+  #teamName::placeholder{
+    color: rgba(0,0,0,.55);
+    text-shadow: none;
+    letter-spacing: .04em;
+  }
+  #teamName:hover{
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 0 rgba(0,0,0,.55),
+      inset 0 0 0 2px rgba(0,0,0,.8),
+      0 0 14px rgba(115,255,90,.28);
+  }
+  #teamName:focus{
+    filter: saturate(1.05);
+    box-shadow:
+      0 10px 0 rgba(0,0,0,.55),
+      inset 0 0 0 2px rgba(0,0,0,.9),
+      0 0 0 2px rgba(115,255,90,.45),
+      0 0 18px rgba(115,255,90,.55);
+  }
+
+  #overlay{
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.62);
+    z-index: 90;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  #overlay.show{
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;  /* 拦截底下的点击 */
+  }
+
+  .popup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    background: white;
+    color: #0b0b0b;
+    padding: 20px;
+    width: min(92vw, 300px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    z-index: 9999;                 /* 比遮罩更高 */
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(-50%, -48%); /* 轻微上移，显示时回到位 */
+    transition: opacity .2s ease, transform .2s ease, visibility 0s .2s; /* 延迟让隐藏更顺滑 */
+  }
+
+.popup.show{
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.popup .popup-close{
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  font-size: clamp(16px, 3.5vw, 22px);
-  background-color: rgb(90, 35, 161);
-  border-radius: 10%;
-  color: black;
+  top: 8px; right: 8px;
+  width: 32px; height: 32px;
+  border: none; border-radius: 10px;
+  font: 600 16px/32px system-ui, -apple-system, sans-serif;
+  background: #111; color: #fff;
   cursor: pointer;
 }
 
-#t1 .selected{
-    background-color: rgb(116, 217, 87);
-}
-
-td{
-  border: 1px solid black;
-  padding: 0;
-  background: transparent;
-  position: relative;
+/* 打开弹窗时禁止页面滚动（可选） */
+body.modal-open{
   overflow: hidden;
-  border-radius: 10%;
 }
 
-td::before{
-  content: "";
-  display: block;
-  padding-top: 100%;
-}
-
-.right{
+.popup .babies {
     display: flex;
+<<<<<<< HEAD
     flex-direction: column;
     margin-bottom: 10px;
 }
@@ -215,3 +811,10 @@ body.zoomed .bottom {
   #t1 { width: min(96vw, 320px); } 
   #t1 button { font-size: clamp(14px, 5vw, 22px); }
 }
+=======
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+>>>>>>> origin/shawn

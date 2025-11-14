@@ -25,14 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Data received:", data);
             let assignments = data.assignments;
 
-            // if (Array.isArray(assignments)) {
-            //   assignments.forEach((item, index) => {
-            //     const btn = tableButtons[index];
-            //     btn.textContent = item.value || "";
-            //     // btn.disabled = false;
-            //   });
-            // }
-
             if (!Array.isArray(assignments)) {
               console.warn("Assignments is not an array");
               return;
@@ -50,12 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(".bottom").style.display = "none";
             document.querySelector(".container h1").textContent = data.name;
             
-        
             highlightCorrectStations(`team${team}`, tableButtons);
             document.body.classList.add("submitted");
 
             // Shutdown + Restore
-
             let shutdownStation = null;
             let currentRestoreTeams = [];
             let currentTeamId = "team" + team;
@@ -158,7 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
                       alert("You are UNfreezed");
                       overlay_2.style.visibility = "hidden";
                     }
-                    
                   }
                 }
             });
@@ -176,41 +165,62 @@ document.addEventListener("DOMContentLoaded", function () {
         });
   } else {
     alert("No team selected");
-    location.href = "index.html"; // fallback redirect
+    location.href = "index.html";
   }
 
-  // function updateUI(assignments, teamNameText) {
-  //   assignments.forEach((item, index) => {
-  //     const btn = tableButtons[index];
-  //     btn.textContent = item.value || "";
-  //   })
-
-  //   filled = true;
-
-  //   teamName.style.display = "none";
-  //   document.querySelector(".right").style.display = "none";
-  //   document.querySelector(".bottom").style.display = "none";
-  //   document.querySelector(".container h1").textContent = teamNameText;
-  //   // data.name
-
-  //   highlightCorrectStations(`team${team}`, tableButtons);
-  //   document.body.classList.add("submitted");
-  // }
-
+  // ⭐ 核心变量
   let selectedTableButton = null;
+  let selectedNumber = null;
+  let selectedRightButton = null;
   const assignedButtonsMap = new Map();
 
+  // ⭐ 1️⃣ 表格按钮点击事件（支持两种模式）
   tableButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      tableButtons.forEach((b) => b.classList.remove("selected"));
-      btn.classList.add("selected");
-
       if (!filled) {
-        selectedTableButton = btn;
+        // 模式2：如果已经选中了右侧数字，直接填入
+        if (selectedNumber !== null && selectedRightButton) {
+          // 检查这个单元格是否已经有数字
+          const oldRightBtn = assignedButtonsMap.get(btn);
+          if (oldRightBtn) {
+            // 释放旧数字
+            oldRightBtn.disabled = false;
+            oldRightBtn.classList.remove('used');
+            assignedButtonsMap.delete(btn);
+          }
+
+          // 填入新数字
+          btn.textContent = selectedNumber;
+          
+          // 标记右侧按钮为已使用
+          selectedRightButton.disabled = true;
+          selectedRightButton.classList.add('used');
+          selectedRightButton.classList.remove('selected');
+          assignedButtonsMap.set(btn, selectedRightButton);
+
+          // 清除选中状态
+          rightButtons.forEach((b) => b.classList.remove("selected"));
+          tableButtons.forEach((b) => b.classList.remove("selected"));
+          selectedNumber = null;
+          selectedRightButton = null;
+          selectedTableButton = null;
+        } else {
+          // 模式1：选中这个单元格，等待点击右侧数字
+          tableButtons.forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          selectedTableButton = btn;
+          
+          // 清除右侧选中状态
+          rightButtons.forEach((b) => b.classList.remove("selected"));
+          selectedNumber = null;
+          selectedRightButton = null;
+        }
       } else {
+        // 已提交后点击显示弹窗
+        tableButtons.forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
         document.getElementById("popup").classList.add("show");
         document.getElementById("overlay").classList.add("show");
-
         showTop5PairsAndBabyForStation(btn.textContent);
       }
     });
@@ -219,28 +229,48 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("overlay").addEventListener("click", () => {
     document.getElementById("popup").classList.remove("show");
     document.getElementById("overlay").classList.remove("show");
-
     tableButtons.forEach((b) => b.classList.remove("selected"));
   });
 
+  // ⭐ 2️⃣ 右侧数字按钮点击事件（支持两种模式）
   rightButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      if (selectedTableButton) {
-        const usedRightBtn = assignedButtonsMap.get(selectedTableButton);
-        if (usedRightBtn) {
-          usedRightBtn.disabled = false;
-          assignedButtonsMap.delete(selectedTableButton);
-        }
+      if (!btn.disabled && !btn.classList.contains('used')) {
+        // 模式1：如果已经选中了表格单元格，直接填入
+        if (selectedTableButton) {
+          const oldRightBtn = assignedButtonsMap.get(selectedTableButton);
+          if (oldRightBtn) {
+            oldRightBtn.disabled = false;
+            oldRightBtn.classList.remove('used');
+            assignedButtonsMap.delete(selectedTableButton);
+          }
 
-        selectedTableButton.textContent = btn.textContent;
-        btn.disabled = true;
-        assignedButtonsMap.set(selectedTableButton, btn);
-        tableButtons.forEach((b) => b.classList.remove("selected"));
-        selectedTableButton = null;
+          selectedTableButton.textContent = btn.textContent;
+          btn.disabled = true;
+          btn.classList.add('used');
+          assignedButtonsMap.set(selectedTableButton, btn);
+          
+          tableButtons.forEach((b) => b.classList.remove("selected"));
+          rightButtons.forEach((b) => b.classList.remove("selected"));
+          selectedTableButton = null;
+          selectedNumber = null;
+          selectedRightButton = null;
+        } else {
+          // 模式2：选中这个数字，等待点击表格
+          rightButtons.forEach((b) => b.classList.remove("selected"));
+          btn.classList.add('selected');
+          selectedNumber = btn.textContent;
+          selectedRightButton = btn;
+          
+          // 清除表格选中状态
+          tableButtons.forEach((b) => b.classList.remove("selected"));
+          selectedTableButton = null;
+        }
       }
     });
   });
 
+  // ⭐ 3️⃣ Delete 按钮
   deleteButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       if (selectedTableButton) {
@@ -248,6 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const usedRightBtn = assignedButtonsMap.get(selectedTableButton);
         if (usedRightBtn) {
           usedRightBtn.disabled = false;
+          usedRightBtn.classList.remove('used');
           assignedButtonsMap.delete(selectedTableButton);
         }
         tableButtons.forEach((b) => b.classList.remove("selected"));
@@ -256,6 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // ⭐ 4️⃣ Clear All 按钮
   clearAllButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const confirmed = confirm("Confirm to Clear All?");
@@ -268,17 +300,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
       rightButtons.forEach((rightBtn) => {
         rightBtn.disabled = false;
+        rightBtn.classList.remove('used');
+        rightBtn.classList.remove('selected');
       });
 
       assignedButtonsMap.clear();
       selectedTableButton = null;
+      selectedNumber = null;
+      selectedRightButton = null;
     });
   });
 
   submitButton.addEventListener("click", () => {
     const tableData = [];
     let numFilled = true;
-    let teamFilled = true;
 
     tableButtons.forEach((btn, index) => {
       const value = btn.textContent.trim();
@@ -293,7 +328,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (teamName.value.trim() === "") {
-      teamFilled = false;
       alert("Please fill in team name.");
       return;
     }
@@ -313,7 +347,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".right").style.display = "none";
     document.querySelector(".bottom").style.display = "none";
 
-    // Save to Firebase under collection "assignments", document "teamX"
     db.collection("assignments")
       .doc("team" + team)
       .set({
@@ -331,12 +364,9 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Submission failed.");
       });
   });
-
-  // setInterval(() => {
-  //     location.reload();
-  // }, 10000);
 });
 
+// 其他函数保持不变...
 function highlightCorrectStations(teamId, tableButtons) {
   firebase
     .firestore()
@@ -349,20 +379,15 @@ function highlightCorrectStations(teamId, tableButtons) {
           const data = doc.data();
           const top5Teams = getTop5Teams(data);
 
-          const match = doc.id.match(/(\d+)/); // e.g., "station13" → 13
+          const match = doc.id.match(/(\d+)/);
           if (!match) return;
           const stationNumber = parseInt(match[1]);
 
           stationTopTeamsMap.set(stationNumber, top5Teams);
-
-          console.log(`Station ${stationNumber} top5:`, top5Teams);
         });
 
         tableButtons.forEach((btn) => {
-          const label = btn.textContent.trim(); // e.g., "S13"
-
-          // console.log("Button label:", label);
-
+          const label = btn.textContent.trim();
           const match = label.match(/^S?(\d+)$/i);
           if (!match) return;
 
@@ -407,25 +432,16 @@ function getTop5Teams(stationData) {
     }
   }
 
-  const result = topPairs.map((pair) => pair.team).filter(Boolean);
-
-  console.log("Top 5 teams for this station:", result);
-  return result;
+  return topPairs.map((pair) => pair.team).filter(Boolean);
 }
 
 let unsubscribeStationPopup = null;
 
 function showTop5PairsAndBabyForStation(stationLabel) {
-  if (!stationLabel) {
-    console.warn("Invalid station label");
-    return;
-  }
+  if (!stationLabel) return;
 
   const match = stationLabel.match(/^S?(\d+)$/i);
-  if (!match) {
-    console.warn("Could not extract station number from:", stationLabel);
-    return;
-  }
+  if (!match) return;
 
   const stationNumber = match[1];
 
@@ -440,14 +456,12 @@ function showTop5PairsAndBabyForStation(stationLabel) {
     .onSnapshot(
       (doc) => {
         if (!doc.exists) {
-          console.log(`❌ No data found for station ${stationNumber}`);
           clearPopupDisplay();
           return;
         }
 
         const data = doc.data();
         if (!data) {
-          console.log(`❌ No valid data in station ${stationNumber}`);
           clearPopupDisplay();
           return;
         }
@@ -462,11 +476,7 @@ function showTop5PairsAndBabyForStation(stationLabel) {
 
         for (let row = 1; row <= MAX_ROWS; row++) {
           const rowData = data[`row${row}`];
-          if (
-            !rowData ||
-            !Array.isArray(rowData.team) ||
-            !Array.isArray(rowData.baby)
-          )
+          if (!rowData || !Array.isArray(rowData.team) || !Array.isArray(rowData.baby))
             continue;
 
           for (let i = 0; i < MAX_PAIRS; i++) {
@@ -481,19 +491,7 @@ function showTop5PairsAndBabyForStation(stationLabel) {
           }
         }
 
-        console.log(`📊 Top 5 positional pairs for Station ${stationNumber}:`);
-        top5Pairs.forEach(({ team, baby }, index) => {
-          if (team !== null) {
-            console.log(`#${index + 1}: Team ${team} - Baby: ${baby}`);
-          } else {
-            console.log(`#${index + 1}: [empty]`);
-          }
-        });
-
-        // Fill HTML
-        document.querySelector(
-          ".popup h4"
-        ).textContent = `Station ${stationNumber}`;
+        document.querySelector(".popup h4").textContent = `Station ${stationNumber}`;
 
         const h5Elements = document.querySelectorAll(".babies h5");
         top5Pairs.forEach(({ team, baby }, index) => {
@@ -503,9 +501,6 @@ function showTop5PairsAndBabyForStation(stationLabel) {
               : `#${index + 1}: [No data]`;
           }
         });
-      },
-      (err) => {
-        console.error(`Error fetching station${stationNumber} data:`, err);
       }
     );
 }
@@ -515,3 +510,20 @@ function clearPopupDisplay() {
   const h5Elements = document.querySelectorAll(".babies h5");
   h5Elements.forEach((h5) => (h5.textContent = ""));
 }
+
+const overlay = document.getElementById('overlay');
+const popup = document.getElementById('popup');
+const btnClose = document.getElementById('popupClose');
+
+function closePopup(){
+  popup.classList.remove('show');
+  overlay.classList.remove('show');
+  document.body.classList.remove('modal-open');
+}
+
+overlay.addEventListener('click', closePopup);
+btnClose.addEventListener('click', closePopup);
+popup.addEventListener('click', (e)=> e.stopPropagation());
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && popup.classList.contains('show')) closePopup();
+});
