@@ -42,80 +42,7 @@ if (teamNo) {
 
           console.log("Count is 3 - showing existing uploaded images");
 
-          imgPre.innerHTML = "";
-
-          imageUrls.forEach((driveUrl, index) => {
-            // Extract file ID from URL: https://drive.google.com/file/d/FILE_ID/view
-            let fileId;
-            try {
-              if (driveUrl.includes("/d/")) {
-                fileId = driveUrl.split("/d/")[1].split("/")[0];
-              } else if (driveUrl.includes("id=")) {
-                fileId = new URL(driveUrl).searchParams.get("id");
-              } else {
-                // If it's already just the ID
-                fileId = driveUrl;
-              }
-            } catch (e) {
-              console.error("Failed to parse URL:", driveUrl, e);
-              return;
-            }
-
-            console.log("Extracted fileId:", fileId);
-
-            const img = document.createElement("img");
-            // Use the thumbnail endpoint which works for embedding
-            img.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w800-h800`;
-            img.alt = `NPC Image ${index + 1}`;
-            img.style.width = "200px";
-            img.style.height = "auto";
-            img.style.margin = "10px";
-            img.style.borderRadius = "8px";
-            img.style.objectFit = "contain";
-            img.style.cursor = "pointer";
-            img.style.border = "2px solid #ddd";
-
-            // If thumbnail fails, try the uc export format
-            img.onerror = function () {
-              console.warn("Thumbnail failed, trying uc format for:", fileId);
-              this.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
-
-              // If that also fails, show error
-              this.onerror = function () {
-                console.error("All image formats failed for fileId:", fileId);
-                this.style.display = "none";
-                const errorBox = document.createElement("div");
-                errorBox.textContent = "Image unavailable";
-                errorBox.style.width = "150px";
-                errorBox.style.height = "150px";
-                errorBox.style.backgroundColor = "#f0f0f0";
-                errorBox.style.display = "inline-flex";
-                errorBox.style.alignItems = "center";
-                errorBox.style.justifyContent = "center";
-                errorBox.style.margin = "10px";
-                errorBox.style.borderRadius = "8px";
-                errorBox.style.border = "2px solid #ddd";
-                errorBox.style.cursor = "pointer";
-                errorBox.style.color = "#666";
-                errorBox.onclick = () => {
-                  window.open(
-                    `https://drive.google.com/file/d/${fileId}/view`,
-                    "_blank"
-                  );
-                };
-                this.parentNode.insertBefore(errorBox, this);
-              };
-            };
-
-            img.addEventListener("click", () => {
-              window.open(
-                `https://drive.google.com/file/d/${fileId}/view`,
-                "_blank"
-              );
-            });
-
-            imgPre.appendChild(img);
-          });
+          showImages(imageUrls);
         }
       } else {
         console.warn(`No npcPic document found for team${teamNo}`);
@@ -130,7 +57,79 @@ if (teamNo) {
 }
 
 function backNpcMainPage() {
+  localStorage.setItem("runFunction", "1");
   location.href = "bucketList.html";
+}
+
+const images = document.getElementById("images");
+
+function showImages(imageUrls) {
+  images.innerHTML = "";
+
+  imageUrls.forEach((driveUrl, index) => {
+    let fileId;
+    try {
+      if (driveUrl.includes("/d/")) {
+        fileId = driveUrl.split("/d/")[1].split("/")[0];
+      } else if (driveUrl.includes("id=")) {
+        fileId = new URL(driveUrl).searchParams.get("id");
+      } else {
+        fileId = driveUrl;
+      }
+    } catch (e) {
+      console.error("Failed to parse URL:", driveUrl, e);
+      return;
+    }
+
+    const imgContainer = document.createElement("div");
+    imgContainer.classList.add("img-container");
+    imgContainer.style.display = "inline-block";
+    imgContainer.style.position = "relative";
+
+    const img = document.createElement("img");
+    img.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w800-h800`;
+    img.alt = `Image ${index + 1}`;
+    img.style.width = "200px";
+    img.style.height = "auto";
+    img.style.margin = "10px";
+    img.style.borderRadius = "8px";
+    img.style.objectFit = "contain";
+    img.style.cursor = "pointer";
+    img.style.border = "2px solid #ddd";
+
+    img.onerror = function () {
+      this.src = `https://drive.google.com/uc?export=view&id=${fileId}`;
+      this.onerror = function () {
+        console.error("Image failed for fileId:", fileId);
+        this.style.display = "none";
+
+        const errorBox = document.createElement("div");
+        errorBox.textContent = "Image unavailable";
+        errorBox.style.width = "150px";
+        errorBox.style.height = "150px";
+        errorBox.style.backgroundColor = "#f0f0f0";
+        errorBox.style.display = "inline-flex";
+        errorBox.style.alignItems = "center";
+        errorBox.style.justifyContent = "center";
+        errorBox.style.margin = "10px";
+        errorBox.style.borderRadius = "8px";
+        errorBox.style.border = "2px solid #ddd";
+        errorBox.style.cursor = "pointer";
+        errorBox.style.color = "#666";
+        errorBox.onclick = () => {
+          window.open(`https://drive.google.com/file/d/${fileId}/view`, "_blank");
+        };
+        this.parentNode.insertBefore(errorBox, this);
+      };
+    };
+
+    img.addEventListener("click", () => {
+      window.open(`https://drive.google.com/file/d/${fileId}/view`, "_blank");
+    });
+
+    imgContainer.appendChild(img);
+    images.appendChild(imgContainer);
+  });
 }
 
 fileInput.addEventListener("change", () => {

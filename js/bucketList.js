@@ -1,3 +1,10 @@
+window.onload = function() {
+  if(localStorage.getItem("runFunction") === "1") {
+    localStorage.removeItem("runFunction");
+    openNpcMainPage();
+  }
+}
+
 const mainPage = document.getElementById("mainPage");
 const npcMainPage = document.getElementById("npcMainPage");
 const selfiePage = document.getElementById("selfiePage");
