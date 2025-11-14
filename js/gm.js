@@ -24,6 +24,7 @@ if (!station) {
 
 function initializeApp() {
   setupFreezeListener();
+  setupShutdownListener();
   fillTeamDropdowns();
   loadSubmissionData();
   setVacantStatus();
@@ -67,6 +68,22 @@ function setupFreezeListener() {
     });
 }
 
+function setupShutdownListener() {
+  db.collection("skills")
+    .doc("shutdown")
+    .onSnapshot((doc) => {
+      const data = doc.data();
+      const shutStation = data.station;
+
+      if (station === shutStation) {
+        alert("Your station is SHUTDOWN");
+        playSound("/sound/alarm2.mp3")
+          .then(() => console.log("Sound played successfully"))
+          .catch((err) => console.error("Error playing sound:", err));
+      }
+    })
+}
+
 // ===========================
 // STATUS MANAGEMENT
 // ===========================
@@ -97,8 +114,7 @@ function fillTeamDropdowns() {
   const teamSelects = document.querySelectorAll(".top select");
 
   db.collection("assignments")
-    .get()
-    .then((querySnapshot) => {
+    .onSnapshot((querySnapshot) => {
       // Clear existing options first (except the empty option)
       teamSelects.forEach((select) => {
         // Keep only the first empty option if it exists
@@ -532,6 +548,6 @@ function getInput(row, section, prefix, index) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  fillTeamDropdowns();
+  // fillTeamDropdowns();
   loadSubmissionData();
 });
