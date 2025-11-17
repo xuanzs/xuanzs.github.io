@@ -9,25 +9,25 @@
   justify-content: center;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 5;
+#overlay{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.62);
+  z-index: 90;
   visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
 }
 
 .overlay:hover {
   cursor: pointer;
 }
 
-.overlay.show {
+#overlay.show{
   visibility: visible;
+  opacity: 1;
+  pointer-events: auto;  /* 拦截底下的点击 */
 }
-
 /* ===== Graffiti / Street Sticker Skin (CSS-only) ===== */
 :root{
   --font-serif-latin: Cambria, Georgia, Times, serif;
@@ -128,9 +128,6 @@ html::before{
     align-items: center;
   }
   
-  /* ================================================= */
-  /* 最右侧中文 (html::after) */
-  /* ================================================= */
   html::after{
     content: "亚太科技大学华文学会2025念外校交流营《阿布疯狂大逃亡》";
     right: 0; /* 贴最右边 */
@@ -643,26 +640,25 @@ html::before{
     pointer-events: auto;  /* 拦截底下的点击 */
   }
 
-  .popup {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    background: white;
-    color: #0b0b0b;
-    padding: 20px;
-    width: min(92vw, 300px);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 20px;
-    z-index: 9999;                 /* 比遮罩更高 */
-    visibility: hidden;
-    opacity: 0;
-    transform: translate(-50%, -48%); /* 轻微上移，显示时回到位 */
-    transition: opacity .2s ease, transform .2s ease, visibility 0s .2s; /* 延迟让隐藏更顺滑 */
-  }
+.popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background: #ffffff;
+  color: #0b0b0b;
+  padding: 20px;
+  width: min(92vw, 320px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -48%); /* 初始略上移 */
+  border-radius: 20px;
+  z-index: 9999;                 /* 比遮罩更高 */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .2s ease, transform .2s ease, visibility 0s .2s;
+}
 
 .popup.show{
   visibility: visible;
@@ -687,101 +683,38 @@ body.modal-open{
 
 .popup .babies {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 8px;
-  padding: 0 12px 12px;
+  padding: 8px 12px 12px;
+  box-sizing: border-box;
 }
 
 .popup .babies h5{
-  margin: 0;
+  margin: 0 0 4px;
   font-weight: normal;
-  flex-direction: column;
-  margin-bottom: 10px;
 }
 
-
-
-.right button{
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    background: rgba(255,255,255,.35);
-    border: 1px solid black;
-    margin: 2px;
-}
-
-.bottom{
-    margin-top: 10px;
-}
-
-.bottom button{
-    margin: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    background: rgba(255,255,255,.35);
-    border-radius: 20%;
-    border-color: rgb(36, 10, 71);
-}
-
-.btn-shutdown{
-  background-color: black !important;
-}
-
+/* 统一遮罩层质感（table-overlay / overlay-2） */
+.table-overlay,
 .overlay-2 {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.6);
-  display: flex;
+  background: rgba(0,0,0,.62);
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 999;
   padding: 24px;
+  backdrop-filter: blur(2px);
 }
 
-.popup {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  background: white;
-  padding: 20px;
-  width: 200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 20px;
-  z-index: 10;
-  visibility: hidden;
+.btn-shutdown{
+  background-color: #000 !important;
 }
 
-.popup.show {
-  visibility: visible;
-}
-
-.popup .babies {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-}
-
-/* --------Over Layer------------ */
-
-.table-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  padding: 24px;
-}
+/* ===== Zoom 模式（保留原来的放大逻辑） ===== */
 
 html, body {
   height: 100%;

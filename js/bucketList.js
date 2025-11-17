@@ -241,6 +241,13 @@ function backMainPage() {
 
 const groupBtns = document.querySelectorAll("._14Btn button");
 
+const colorClasses = ["npc-red", "npc-blue", "npc-green", "npc-yellow", "npc-cyan", "npc-orange"];
+
+groupBtns.forEach((btn) => {
+  const randomClass = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+  btn.classList.add(randomClass);
+});
+
 groupBtns.forEach((btn) => {
   db.collection("assignments")
     .doc(btn.id)
@@ -269,6 +276,7 @@ groupBtns.forEach((btn) => {
       }
     });
 });
+
 
 const selfieTitle = document.querySelector(".selfieTitle h3");
 // selfieTitle.textContent = "group";

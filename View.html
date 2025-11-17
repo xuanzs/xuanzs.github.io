@@ -97,6 +97,7 @@
         }
 
         h5 {
+            color: rgb(165, 200, 245);
             margin: 0 0 10px 0;
             margin-bottom: 4px;
             font-size: 25px;
@@ -104,10 +105,14 @@
         }
 
         table {
-            border-collapse: collapse;
+            font-family: "Impact", "Anton", system-ui, sans-serif;
+            border-collapse: separate; 
+            border-spacing: 0; 
             border: 2px solid #444;
             min-width: 50px;
             background-color: #fff;
+            border-radius: 16px; 
+            overflow: hidden;
         }
 
         td {
@@ -878,12 +883,12 @@
                         if (topTeams && topTeams.includes(currentTeamId)) {
                             console.log(`Team ${teamId} is in top 5 of station ${stationNumber}`);
 
-                            cell.style.background = "green";
+                            cell.style.background = "linear-gradient(45deg, #0A4618FF, #1EFF00FF)";
                             cell.style.color = "white";
                         } else {
                             // console.log(`Team ${teamId} is NOT in top 5 of station ${stationNumber}`);
 
-                            cell.style.background = "white";
+                            cell.style.background = "#E6E6E6FF";
                             cell.style.color = "black";
                         }
                     } else {

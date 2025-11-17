@@ -491,12 +491,12 @@ function showTop5PairsAndBabyForStation(stationLabel) {
         }
 
         document.querySelector(".popup h4").textContent = `Station ${stationNumber}`;
-
+        
         const h5Elements = document.querySelectorAll(".babies h5");
         top5Pairs.forEach(({ team, baby }, index) => {
           if (h5Elements[index]) {
             h5Elements[index].textContent = team
-              ? `#${index + 1}: Team ${team} - Baby: ${baby}`
+              ? `#${index + 1}: Baby ${baby} -${team}`
               : `#${index + 1}: [No data]`;
           }
         });
