@@ -1,66 +1,210 @@
+// ===========================
+// CONSTANTS & CONFIGURATION
+// ===========================
+const MAX_ROWS = 4;
+const MAX_PAIRS = 5;
+
 const urlParams = new URLSearchParams(window.location.search);
 const station = urlParams.get("id");
 
-const dropdown = document.querySelector("select");
-
-const stationName = document.querySelector(".left h1");
-
 const element = document.querySelector(".container");
+const stationName = document.querySelector(".left h1");
+const gmDocRef = db.collection("authentication").doc("gamemaster");
 
-if (station) {
+// ===========================
+// INITIALIZATION
+// ===========================
+if (!station) {
+  alert("No GM selected!");
+  location.href = "index.html";
+} else {
   stationName.textContent = "Station " + station;
+  initializeApp();
+}
 
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+function initializeApp() {
+  setupFreezeListener();
+  setupShutdownListener();
+  fillTeamDropdowns();
+  loadSubmissionData();
+  setVacantStatus();
+}
 
-  async function loadAndPlaySound(url) {
-    await audioContext.resume();
+// ===========================
+// AUDIO & FREEZE FUNCTIONALITY
+// ===========================
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+async function playSound(url) {
+  await audioContext.resume();
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+  source.start(0);
+}
 
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-
-    source.start(0);
-  }
-
+function setupFreezeListener() {
   db.collection("skills")
     .doc("pause")
     .onSnapshot((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        const status = data.status;
+      if (!doc.exists) return;
+      
+      const status = doc.data().status;
+      
+      if (status === "Freeze") {
+        alert("You are FREEZED");
+        element.style.backgroundColor = "blue";
+        playSound("/sound/airHorn.mp3")
+          .then(() => console.log("Sound played successfully"))
+          .catch((err) => console.error("Error playing sound:", err));
+      } else if (element.style.backgroundColor === "blue") {
+        alert("You are UNfreezed");
+        element.style.backgroundColor = "green";
+      }
+    });
+}
 
-        let overlay_2 = document.getElementById("overlay-2");
+function setupShutdownListener() {
+  db.collection("skills")
+    .doc("shutdown")
+    .onSnapshot((doc) => {
+      const data = doc.data();
+      const shutStation = data.station;
 
-        if (status === "Freeze") {
-          // overlay_2.style.visibility = "visible";
+      if (station === shutStation) {
+        alert("Your station is SHUTDOWN");
+        playSound("/sound/alarm2.mp3")
+          .then(() => console.log("Sound played successfully"))
+          .catch((err) => console.error("Error playing sound:", err));
+      }
+    })
+}
 
-          alert("You are FREEZED");
-          element.style.backgroundColor = "blue";
+// ===========================
+// STATUS MANAGEMENT
+// ===========================
+function setVacantStatus() {
+  element.style.backgroundColor = "green";
+  updateStationStatus("vacant");
+  // Status update will trigger onSnapshot which will disable all dropdowns
+}
 
-          console.log("Status is Freeze, playing sound...");
-          loadAndPlaySound("/sound/airHorn.mp3")
-            .then(() => {
-              console.log("Sound played successfully");
-            })
-            .catch((err) => {
-              console.error("Error playing sound:", err);
-              //   overlay_2.style.visibility = "visible";
-            });
-        } else {
-          if (element.style.backgroundColor === "blue") {
-            alert("You are UNfreezed");
-            element.style.backgroundColor = "green";
+function setOccupiedStatus() {
+  element.style.backgroundColor = "red";
+  updateStationStatus("occupied");
+  // Status update will trigger onSnapshot which will enable required dropdowns
+}
+
+function updateStationStatus(status) {
+  gmDocRef.set({
+    accounts: {
+      [`gm${station}`]: { status }
+    }
+  }, { merge: true });
+}
+
+// ===========================
+// DROPDOWN POPULATION
+// ===========================
+function fillTeamDropdowns() {
+  const teamSelects = document.querySelectorAll(".top select");
+
+  db.collection("assignments")
+    .onSnapshot((querySnapshot) => {
+      // Clear existing options first (except the empty option)
+      teamSelects.forEach((select) => {
+        // Keep only the first empty option if it exists
+        const hasEmptyOption = select.options[0]?.value === "";
+        select.innerHTML = hasEmptyOption ? '<option value=""></option>' : '';
+      });
+
+      querySnapshot.forEach((doc) => {
+        const { name: teamName } = doc.data();
+        const option = document.createElement("option");
+        option.value = doc.id;
+        option.textContent = teamName;
+
+        teamSelects.forEach((select) => {
+          select.appendChild(option.cloneNode(true));
+        });
+      });
+
+      teamSelects.forEach((select) => {
+        select.addEventListener("change", () => fillBabyDropdown(select));
+      });
+    })
+    .catch((error) => console.error("Error loading teams:", error));
+}
+
+function fillBabyDropdown(teamSelect) {
+  const teamId = teamSelect.value;
+  if (!teamId) return;
+
+  const parentRow = teamSelect.closest(".row");
+  const pairClass = teamSelect.className;
+  const babySelect = parentRow.querySelector(`.bottom .s${pairClass.substring(1)}`);
+
+  babySelect.innerHTML = '<option value=""></option>';
+
+  db.collection("assignments")
+    .doc(teamId)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        console.error("Team not found in Firestore.");
+        return;
+      }
+
+      const babies = doc.data().baby || [];
+      babies.forEach((baby) => {
+        const option = document.createElement("option");
+        option.value = baby;
+        option.textContent = baby;
+        babySelect.appendChild(option);
+      });
+    })
+    .catch((error) => console.error("Error loading baby options:", error));
+}
+
+// ===========================
+// DATA LOADING
+// ===========================
+function loadSubmissionData() {
+  // Listen to station submission data
+  db.collection("stationSubmission")
+    .doc(`station${station}`)
+    .onSnapshot((doc) => {
+      if (!doc.exists) {
+        // No data yet, check gamemaster status to determine if dropdowns should be enabled
+        checkGamemasterStatusAndUpdateDropdowns();
+        return;
+      }
+
+      const data = doc.data();
+      
+      // Fill all existing data into dropdowns
+      for (let row = 1; row <= MAX_ROWS; row++) {
+        const rowData = data[`row${row}`];
+        if (!rowData) continue;
+
+        for (let i = 0; i < MAX_PAIRS; i++) {
+          if (rowData.team[i]) {
+            const teamSelect = getInput(row, "top", "p", i + 1);
+            const babySelect = getInput(row, "bottom", "s", i + 1);
+            
+            ensureOptionExistsAndSelect(teamSelect, rowData.team[i]);
+            ensureOptionExistsAndSelect(babySelect, rowData.baby[i]);
           }
         }
       }
+      
+      // After filling data, check gamemaster status and update dropdowns
+      checkGamemasterStatusAndUpdateDropdowns();
     });
-} else {
-  alert("No GM selected!");
-  location.href = "index.html";
 }
 
 function ensureOptionExistsAndSelect(select, value) {
@@ -74,16 +218,14 @@ function ensureOptionExistsAndSelect(select, value) {
     opt.textContent = value;
     select.appendChild(opt);
 
+    // Fetch team name if it's a team ID
     if (/^team\d+$/.test(value)) {
       db.collection("assignments")
         .doc(value)
         .get()
         .then((doc) => {
           if (doc.exists) {
-            const data = doc.data();
-            const name = data.name;
-
-            opt.textContent = name;
+            opt.textContent = doc.data().name;
           }
         });
     }
@@ -92,570 +234,283 @@ function ensureOptionExistsAndSelect(select, value) {
   select.value = value;
 }
 
-// const element = document.querySelector(".container");
-
-function vacant() {
-  element.style.backgroundColor = "green";
-}
-
-vacant();
-
-function occupied() {
-  element.style.backgroundColor = "red";
-  // alarm.play();
-}
-
-function fillTeamDrop() {
-  const teamSelects = document.querySelectorAll(".top select");
-
-  db.collection("assignments")
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const teamName = data.name;
-
-        const option = document.createElement("option");
-        option.value = doc.id;
-        option.textContent = teamName;
-
-        teamSelects.forEach((select) => {
-          select.appendChild(option.cloneNode(true));
-        });
-      });
-
-      teamSelects.forEach((select) => {
-        select.addEventListener("change", () => {
-          fillBabyDrop(select);
-        });
-      });
-    })
-    .catch((error) => {
-      console.error("Error loading teams:", error);
-    });
-}
-
-function fillBabyDrop(teamSelectElement) {
-  const selectedTeamId = teamSelectElement.value;
-
-  if (!selectedTeamId) return;
-
-  const parentRow = teamSelectElement.closest(".row");
-  const pairClass = teamSelectElement.className;
-
-  const babySelectElement = parentRow.querySelector(
-    `.bottom .s${pairClass.substring(1)}`
-  );
-
-  babySelectElement.innerHTML = '<option value=""></option>';
-
-  db.collection("assignments")
-    .doc(selectedTeamId)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        const babies = data.baby || [];
-
-        babies.forEach((baby) => {
-          const option = document.createElement("option");
-          option.value = baby;
-          option.textContent = baby;
-          babySelectElement.appendChild(option);
-        });
-      } else {
-        console.error("Team not found in Firestore.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error loading baby options:", error);
-    });
-}
-
-function disabledSelects() {
-  const r4Selects = document.querySelectorAll(".r4 select");
-  const r3Selects = document.querySelectorAll(".r3 select");
-  const r2Selects = document.querySelectorAll(".r2 select");
-  const r1Selects = document.querySelectorAll(".r1 select");
-  const r1P1 = document.querySelector(".r1 .top .p1");
-  const r1S1 = document.querySelector(".r1 .bottom .s1");
-
-  r4Selects.forEach((select) => {
-    select.disabled = true;
-  });
-  r3Selects.forEach((select) => {
-    select.disabled = true;
-  });
-  r2Selects.forEach((select) => {
-    select.disabled = true;
-  });
-
-  // Row 3
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(3, "top", "p", i);
-    let s = getInput(3, "bottom", "s", i);
-    let bottomP = getInput(2, "top", "p", i);
-    let bottomS = getInput(2, "bottom", "s", i);
-
-    if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-      p.disabled = false;
-      s.disabled = false;
+// ===========================
+// DROPDOWN STATE MANAGEMENT
+// ===========================
+function checkGamemasterStatusAndUpdateDropdowns() {
+  gmDocRef.onSnapshot((doc) => {
+    if (!doc.exists) {
+      disableAllRows();
+      return;
     }
-  }
 
-  // Row 2
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(2, "top", "p", i);
-    let s = getInput(2, "bottom", "s", i);
-    let bottomP = getInput(1, "top", "p", i);
-    let bottomS = getInput(1, "bottom", "s", i);
+    const data = doc.data();
+    const gmData = data.accounts?.[`gm${station}`];
+    const status = gmData?.status;
 
-    if (p.value === "" && bottomS.value < 3 && bottomS.value !== "") {
-      p.disabled = false;
-      s.disabled = false;
-    }
-  }
-
-  // Row 1
-  for (let i = 1; i <= 5; i++) {
-    let p = getInput(1, "top", "p", i);
-    let s = getInput(1, "bottom", "s", i);
-
-    if (p.value === "") {
-      p.disabled = false;
-      s.disabled = false;
+    if (status === "occupied") {
+      // Only enable required dropdowns when occupied
+      updateDropdownStates();
     } else {
-      p.disabled = true;
-      s.disabled = true;
-    }
-  }
-
-  const r4BottomSelects = document.querySelectorAll(".r4 .bottom select");
-
-  r4BottomSelects.forEach((select, index) => {
-    const babyValue = select.value;
-
-    if (babyValue !== "") {
-      const r1SelectT = getInput(1, "top", "p", index + 1);
-      const r1SelectB = getInput(1, "bottom", "s", index + 1);
-      const r2SelectT = getInput(2, "top", "p", index + 1);
-      const r2SelectB = getInput(2, "bottom", "s", index + 1);
-      const r3SelectT = getInput(3, "top", "p", index + 1);
-      const r3SelectB = getInput(3, "bottom", "s", index + 1);
-
-      disableInputs(
-        r1SelectT,
-        r1SelectB,
-        r2SelectT,
-        r2SelectB,
-        r3SelectT,
-        r3SelectB
-      );
+      // If vacant, disable all dropdowns
+      disableAllRows();
     }
   });
 }
 
-function fillPreFilledValues() {
-  db.collection("stationSubmission")
-    .doc(`station${station}`)
-    .onSnapshot((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        console.log(data);
-        let see = [];
-        count = 0;
-        let inside = [];
+function updateDropdownStates() {
+  // First, disable all dropdowns
+  disableAllRows();
 
-        for (let row = 1; row <= 4; row++) {
-          const rowData = data[`row${row}`];
-          if (!rowData) continue;
-          console.log(rowData.team);
-
-          for (let i = 0; i <= 4; i++) {
-            if (rowData.team[i] !== "") {
-              see.push(rowData.team[i]);
-
-              const p = getInput(row, "top", "p", i + 1);
-              const s = getInput(row, "bottom", "s", i + 1);
-              const teamValue = rowData.team[i];
-              const babyValue = rowData.baby[i];
-
-              inside.push(teamValue, babyValue);
-
-              ensureOptionExistsAndSelect(p, teamValue);
-              ensureOptionExistsAndSelect(s, babyValue);
-
-              count++;
-            }
-          }
-        }
-        console.log(see);
-        console.log(count);
-        console.log(inside);
-        disabledSelects();
-      }
-    });
-}
-
-// function loadSubmissionData() {
-//     db.collection('stationSubmission').doc(`station${station}`).get()
-//         .then((doc) => {
-//             if (!doc.exists) {
-//                 console.log("No submission data found for this station.");
-//                 return;
-//             }
-
-//             console.log("Data load complete");
-//         })
-//         .catch((error) => {
-//             console.error("Error loading submission data:", error);
-//             alert("Failed to load data from database.");
-//         });
-// }
-
-document.addEventListener("DOMContentLoaded", () => {
-  fillTeamDrop();
-  fillPreFilledValues();
-  setTimeout(() => {
-    disabledSelects();
-  }, 1000);
-});
-
-function getInput(row, section, prefix, index) {
-  return document.querySelector(`.r${row} .${section} .${prefix}${index}`);
-}
-
-function isInputEmpty(input) {
-  return !input || input.value.trim() === "";
-}
-
-function isSameAsPreviousRow(row, index) {
-  const currentP = getInput(row, "top", "p", index);
-  const currentS = getInput(row, "bottom", "s", index);
-  const prevP = getInput(row - 1, "top", "p", index);
-  const prevS = getInput(row - 1, "bottom", "s", index);
-
-  return (
-    prevP &&
-    prevS &&
-    currentP.value === prevP.value &&
-    currentS.value === prevS.value
-  );
-}
-
-function isSmallerAsPreviousRow(row, index) {
-  const currentP = getInput(row, "top", "p", index);
-  const currentS = getInput(row, "bottom", "s", index);
-  const prevP = getInput(row - 1, "top", "p", index);
-  const prevS = getInput(row - 1, "bottom", "s", index);
-
-  return (
-    prevP &&
-    prevS &&
-    currentP.value < prevP.value &&
-    currentS.value < prevS.value
-  );
-}
-
-function validatePair(p, s, row, pairIndex) {
-  if (isInputEmpty(p) || isInputEmpty(s)) {
-    alert(`Please fill in Row ${row} - Pair ${pairIndex}`);
-    return false;
-  }
-  return true;
-}
-
-function disableInputs(...inputs) {
-  inputs.forEach((input) => {
-    if (input) input.disabled = true;
-  });
-}
-
-function enableInputs(...inputs) {
-  inputs.forEach((input) => {
-    if (input) input.disabled = false;
-  });
-}
-
-function handleNextPairOfRow(row, pair) {
-  const nextP = getInput(row, "top", "p", pair + 1);
-  const nextS = getInput(row, "bottom", "s", pair + 1);
-
-  // If next pair exists in current row
-  if (nextP && nextS) {
-    if (row > 1) {
-      let enabledNext = false;
-
-      // Look ahead up to 4 pairs in the row above
-      for (let k = 1; k <= 4; k++) {
-        const aboveP = getInput(row - 1, "top", "p", pair + k);
-        const aboveS = getInput(row - 1, "bottom", "s", pair + k);
-        const currNextP = getInput(row, "top", "p", pair + k);
-        const currNextS = getInput(row, "bottom", "s", pair + k);
-
-        if (aboveP && currNextP && currNextS && Number(aboveS.value) < 3) {
-          enableInputs(currNextP, currNextS);
-          enabledNext = true;
-          break;
-        }
-      }
-
-      if (!enabledNext) {
-        alert(`Row ${row} complete`);
-        enableNextRowIfNeeded(row);
-      }
-    } else {
-      enableInputs(nextP, nextS);
-    }
-
-    alert(`Pair ${pair} filled!`);
-  } else {
-    alert(`Row ${row} complete!`);
-    enableNextRowIfNeeded(row);
+  // Process each column (pair position) from 1 to 5
+  for (let col = 1; col <= MAX_PAIRS; col++) {
+    enableDropdownsForColumn(col);
   }
 }
 
-function enableNextRowIfNeeded(currentRow) {
-  for (let nextRow = currentRow + 1; nextRow <= 3; nextRow++) {
-    for (let h = 1; h <= MAX_PAIRS; h++) {
-      const currentS = getInput(nextRow - 1, "bottom", "s", h);
-      const nextP = getInput(nextRow, "top", "p", h);
-      const nextS = getInput(nextRow, "bottom", "s", h);
-
-      if (currentS && nextP && nextS && Number(currentS.value) === 2) {
-        enableInputs(nextP, nextS);
-      }
-    }
-    return;
-  }
-}
-
-async function submitBtn() {
-  const MAX_ROWS = 4;
-  const MAX_PAIRS = 5;
-  const allData = {};
-  let submitted = false;
-
-  let submittedRow = null;
-
-  // ✅ Step 1: Load existing submission data to prevent overwriting
-  let existingData = {};
-  try {
-    const docSnap = await db
-      .collection("stationSubmission")
-      .doc(`station${station}`)
-      .get();
-    if (docSnap.exists) {
-      existingData = docSnap.data();
-    }
-  } catch (error) {
-    console.error("Error fetching existing data:", error);
-  }
-
+function disableAllRows() {
   for (let row = 1; row <= MAX_ROWS; row++) {
-    const team = [];
-    const baby = [];
+    const selects = document.querySelectorAll(`.r${row} select`);
+    selects.forEach((select) => (select.disabled = true));
+  }
+}
 
-    for (let pair = 1; pair <= MAX_PAIRS; pair++) {
-      const p = getInput(row, "top", "p", pair);
-      const s = getInput(row, "bottom", "s", pair);
+function enableDropdownsForColumn(col) {
+  // Check if row 4 has baby = 4 (column closed)
+  const row4Baby = getInput(4, "bottom", "s", col);
+  if (row4Baby && parseInt(row4Baby.value) === 4) {
+    return; // This column is closed, don't open any dropdowns
+  }
 
-      const pValue = p?.value?.trim();
-      const sValue = s?.value?.trim();
+  // Process from Row 1 to Row 3 (not Row 4 - it's manually managed)
+  for (let row = 1; row <= 3; row++) {
+    const teamSelect = getInput(row, "top", "p", col);
+    const babySelect = getInput(row, "bottom", "s", col);
 
-      team.push(pValue || "");
-      baby.push(sValue || "");
+    if (!teamSelect || !babySelect) continue;
 
-      if (!p.disabled && !s.disabled && sValue !== "") {
-        // 1. Validate empty inputs
-        if (!pValue || !sValue) {
-          alert(`Please fill in Row ${row} - Pair ${pair}`);
-          return;
-        }
+    const teamValue = teamSelect.value;
+    const babyValue = babySelect.value;
 
-        // 2. Prevent identical to row below
-        if (row > 1) {
-          const belowP = getInput(row - 1, "top", "p", pair);
-          const belowS = getInput(row - 1, "bottom", "s", pair);
+    // If current position is filled
+    if (teamValue && babyValue) {
+      const babyNum = parseInt(babyValue);
 
-          const belowPValue = belowP?.value?.trim();
-          const belowSValue = belowS?.value?.trim();
+      // ROW 1: If baby !== 3, open above (row 2) and right side
+      if (row === 1) {
+        if (babyNum !== 3) {
+          // Open above (row 2, same column)
+          const row2Team = getInput(2, "top", "p", col);
+          const row2Baby = getInput(2, "bottom", "s", col);
+          if (row2Team && row2Baby && !row2Team.value) {
+            row2Team.disabled = false;
+            row2Baby.disabled = false;
+          }
 
-          if (pValue === belowPValue && sValue === belowSValue) {
-            alert("Current pair can't be same as pair below!");
-            return;
+          // Open right side (row 1, next column)
+          const nextTeam = getInput(1, "top", "p", col + 1);
+          const nextBaby = getInput(1, "bottom", "s", col + 1);
+          if (nextTeam && nextBaby && !nextTeam.value) {
+            nextTeam.disabled = false;
+            nextBaby.disabled = false;
+          }
+        } else {
+          // baby === 3: only open right side, don't open above
+          const nextTeam = getInput(1, "top", "p", col + 1);
+          const nextBaby = getInput(1, "bottom", "s", col + 1);
+          if (nextTeam && nextBaby && !nextTeam.value) {
+            nextTeam.disabled = false;
+            nextBaby.disabled = false;
           }
         }
-
-        // 3. Enforce baby value > baby below
-        if (row > 1) {
-          const belowS = getInput(row - 1, "bottom", "s", pair);
-          const belowBaby = parseFloat(belowS?.value);
-
-          if (!isNaN(belowBaby) && parseFloat(sValue) <= belowBaby) {
-            alert(
-              `In Row ${row} - Pair ${pair}: Baby must be greater than Row ${
-                row - 1
-              }`
-            );
-            return;
-          }
-        }
-
-        // 4. Disable submitted pair
-        disableInputs(p, s);
-
-        if (row === 1 && parseInt(sValue) < 3) {
-          const aboveP = getInput(row + 1, "top", "p", pair);
-          const aboveS = getInput(row + 1, "bottom", "s", pair);
-
-          if (aboveP && aboveS && aboveP.disabled && aboveS.disabled) {
-            aboveP.disabled = false;
-            aboveS.disabled = false;
-            console.log(
-              `Enabled Row ${
-                row + 1
-              } - Pair ${pair} because baby was < 3 in Row ${row}`
-            );
-          }
-        }
-
-        // 5. Save to history
-        const submissionEntry = {
-          team: pValue,
-          baby: sValue,
-          pair: `Row${row}-Pair${pair}`,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        };
-
-        try {
-          await db
-            .collection("submissionHistory")
-            .doc(`station${station}`)
-            .collection("entries")
-            .add(submissionEntry);
-
-          console.log(`Logged Row${row}-Pair${pair} to history`);
-
-          await removeBabyFromAssignment(pValue, sValue);
-          console.log(`Removed baby ${sValue} from team ${pValue}`);
-        } catch (error) {
-          console.error("Error logging submission", error);
-        }
-
-        // 6. Determine if next pair in same row should be enabled
-        let enabledNext = false;
-        // if (row > 1) {
-        //     for (let k = pair + 1; k <= MAX_PAIRS; k++) {
-        //         const prevRowS = getInput(row - 1, "bottom", "s", k);
-        //         const prevBaby = parseFloat(prevRowS?.value);
-        //         const nextP = getInput(row, "top", "p", k);
-        //         const nextS = getInput(row, "bottom", "s", k);
-        //         const topBaby = parseFloat(getInput(4, "bottom", "s", k)?.value);
-
-        //         if (topBaby !== 4) {
-        //             if (!isNaN(prevBaby) && prevBaby < 3 && nextP && nextS) {
-        //                 nextP.disabled = false;
-        //                 nextS.disabled = false;
-        //                 enabledNext = true;
-        //                 break;
-        //             }
-        //         }
-
-        //     }
-        // } else {
-        //     // For row 1: just enable next pair
-        //     const nextP = getInput(row, "top", "p", pair + 1);
-        //     const nextS = getInput(row, "bottom", "s", pair + 1);
-        //     if (nextP && nextS) {
-        //         nextP.disabled = false;
-        //         nextS.disabled = false;
-        //         enabledNext = true;
-        //     }
-        // }
-
-        // 7. Enable next row pairs if needed (when current row completes)
-        if (!enabledNext) {
-          // alert(`Row ${row} complete!`);
-
-          if (row < MAX_ROWS) {
-            for (let h = 1; h <= MAX_PAIRS; h++) {
-              const currentS = getInput(row, "bottom", "s", h);
-              const nextRowP = getInput(row + 1, "top", "p", h);
-              const nextRowS = getInput(row + 1, "bottom", "s", h);
-
-              if (parseInt(currentS?.value) <= 2 && currentS.value === "") {
-                if (nextRowP && nextRowS) {
-                  nextRowP.disabled = false;
-                  nextRowS.disabled = false;
-
-                  if (h === pair && parseInt(currentS?.value) === 2) {
-                    console.log(
-                      `Enabled Row ${row + 1} - Pair ${pair} because baby was 2`
-                    );
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        // 🔁 Always check for Row 3 enablement if baby is 2 in Row 2
-        if (row === 2 && parseInt(sValue) <= 2 && row + 1 <= MAX_ROWS) {
-          const row3P = getInput(3, "top", "p", pair);
-          const row3S = getInput(3, "bottom", "s", pair);
-
-          if (row3P && row3S) {
-            row3P.disabled = false;
-            row3S.disabled = false;
-            console.log(
-              `Enabled Row 3 - Pair ${pair} because baby was 2 in Row 2`
-            );
-          }
-        }
-
-        // 8. Alert successful pair
-        alert(`Row ${row} - Pair ${pair} filled!`);
-        submitted = true;
-        break; // Only submit one pair per click
       }
+      // ROW 2: If baby === 2, open above (row 3). If baby === 3, don't open above
+      else if (row === 2) {
+        if (babyNum === 2) {
+          // Open above (row 3, same column)
+          const row3Team = getInput(3, "top", "p", col);
+          const row3Baby = getInput(3, "bottom", "s", col);
+          if (row3Team && row3Baby && !row3Team.value) {
+            row3Team.disabled = false;
+            row3Baby.disabled = false;
+          }
+        }
+        // If baby === 3, that's the end, don't open above
+      }
+      // ROW 3: Don't automatically open row 4
+      // Row 4 is manually managed, not opened by the system
     }
+    // If current position is empty
+    else {
+      // ROW 1: Always enable if empty (starting point)
+      if (row === 1) {
+        teamSelect.disabled = false;
+        babySelect.disabled = false;
+      }
+      // ROW 2: Enable if row 1 baby !== 3
+      else if (row === 2) {
+        const row1Team = getInput(1, "top", "p", col);
+        const row1Baby = getInput(1, "bottom", "s", col);
+        
+        if (row1Team?.value && row1Baby?.value) {
+          const row1BabyNum = parseInt(row1Baby.value);
+          
+          if (row1BabyNum !== 3) {
+            teamSelect.disabled = false;
+            babySelect.disabled = false;
+          }
+        }
+      }
+      // ROW 3: Enable if row 2 baby === 2
+      else if (row === 3) {
+        const row2Team = getInput(2, "top", "p", col);
+        const row2Baby = getInput(2, "bottom", "s", col);
+        
+        if (row2Team?.value && row2Baby?.value) {
+          const row2BabyNum = parseInt(row2Baby.value);
+          
+          if (row2BabyNum === 2) {
+            teamSelect.disabled = false;
+            babySelect.disabled = false;
+          }
+        }
+      }
+      
+      // Stop processing this column after first empty position
+      break;
+    }
+  }
+}
 
-    allData[`row${row}`] = { team, baby };
+// ===========================
+// SUBMISSION LOGIC
+// ===========================
+async function submitBtn() {
+  let submittedPair = null;
 
-    if (submitted) {
-      submittedRow = row;
-      allData[`row${row}`] = { team, baby };
-      break; // only one row updates per submission
+  // Find the first active (enabled and filled) pair
+  for (let row = 1; row <= MAX_ROWS && !submittedPair; row++) {
+    for (let col = 1; col <= MAX_PAIRS && !submittedPair; col++) {
+      const teamSelect = getInput(row, "top", "p", col);
+      const babySelect = getInput(row, "bottom", "s", col);
+
+      const teamValue = teamSelect?.value?.trim();
+      const babyValue = babySelect?.value?.trim();
+
+      // Check if this pair is active and filled
+      if (!teamSelect.disabled && !babySelect.disabled && teamValue && babyValue) {
+        submittedPair = { row, col, teamValue, babyValue, teamSelect, babySelect };
+      }
     }
   }
 
-  if (!submitted) {
+  if (!submittedPair) {
     alert("No active pair found to submit.");
     return;
   }
 
-  // 9. Save latest full submission
+  const { row, col, teamValue, babyValue, teamSelect, babySelect } = submittedPair;
+
+  // Validate submission
+  if (!validateSubmission(row, col, teamValue, babyValue)) {
+    return;
+  }
+
+  // Disable the submitted pair
+  teamSelect.disabled = true;
+  babySelect.disabled = true;
+
+  // Log to history
+  await logSubmission(row, col, teamValue, babyValue);
+
+  // Remove baby from assignment
+  await removeBabyFromAssignment(teamValue, babyValue);
+
+  // Update Firestore with new row data
+  await updateStationSubmission(row, col, teamValue, babyValue);
+
+  // Update dropdown states based on new submission
+  // After submission, status is set to vacant which will trigger
+  // the onSnapshot listener to disable all dropdowns
+  
+  alert(`Row ${row} - Pair ${col} submitted successfully!`);
+  setVacantStatus();
+}
+
+function validateSubmission(row, col, teamValue, babyValue) {
+  // Check if different from row below
+  if (row > 1) {
+    const belowTeam = getInput(row - 1, "top", "p", col)?.value;
+    const belowBaby = getInput(row - 1, "bottom", "s", col)?.value;
+
+    if (teamValue === belowTeam && babyValue === belowBaby) {
+      alert("Current pair can't be same as pair below!");
+      return false;
+    }
+
+    // Check if baby value is greater than row below
+    const belowBabyNum = parseFloat(belowBaby);
+    const babyNum = parseFloat(babyValue);
+
+    if (!isNaN(belowBabyNum) && babyNum <= belowBabyNum) {
+      alert(`Baby value must be greater than Row ${row - 1}`);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+async function logSubmission(row, col, teamValue, babyValue) {
+  try {
+    await db
+      .collection("submissionHistory")
+      .doc(`station${station}`)
+      .collection("entries")
+      .add({
+        team: teamValue,
+        baby: babyValue,
+        pair: `Row${row}-Pair${col}`,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    console.log(`Logged Row${row}-Pair${col} to history`);
+  } catch (error) {
+    console.error("Error logging submission:", error);
+  }
+}
+
+async function updateStationSubmission(row, col, teamValue, babyValue) {
   const docRef = db.collection("stationSubmission").doc(`station${station}`);
 
   try {
     const docSnap = await docRef.get();
+    
+    // Build the row data
+    const rowData = { team: [], baby: [] };
+    for (let i = 1; i <= MAX_PAIRS; i++) {
+      const t = getInput(row, "top", "p", i)?.value || "";
+      const b = getInput(row, "bottom", "s", i)?.value || "";
+      rowData.team.push(t);
+      rowData.baby.push(b);
+    }
 
     if (!docSnap.exists) {
+      const allData = {};
+      for (let r = 1; r <= MAX_ROWS; r++) {
+        allData[`row${r}`] = r === row ? rowData : { team: ["", "", "", "", ""], baby: ["", "", "", "", ""] };
+      }
       await docRef.set({
         ...allData,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      console.log("Document created with set()");
     } else {
       await docRef.update({
-        [`row${submittedRow}`]: allData[`row${submittedRow}`],
+        [`row${row}`]: rowData,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
-      console.log("Document updated");
     }
   } catch (error) {
-    console.error("Error writing document:", error);
+    console.error("Error updating submission:", error);
     alert("Error saving data.");
   }
 }
@@ -665,26 +520,34 @@ async function removeBabyFromAssignment(teamId, babyValue) {
     const docRef = db.collection("assignments").doc(teamId);
     const docSnap = await docRef.get();
 
-    if (docSnap.exists) {
-      const data = docSnap.data();
-      const babies = data.baby || [];
-
-      const index = babies.indexOf(Number(babyValue));
-      if (index > -1) {
-        babies.splice(index, 1);
-      } else {
-        console.warn(`Baby ${babyValue} not found in team ${teamId}`);
-        return;
-      }
-
-      await docRef.update({ baby: babies });
-      console.log(
-        `Removed one occurence of baby ${babyValue} from team ${teamId}`
-      );
-    } else {
+    if (!docSnap.exists) {
       console.warn(`Team ${teamId} not found.`);
+      return;
+    }
+
+    const babies = docSnap.data().baby || [];
+    const index = babies.indexOf(Number(babyValue));
+    
+    if (index > -1) {
+      babies.splice(index, 1);
+      await docRef.update({ baby: babies });
+      console.log(`Removed baby ${babyValue} from team ${teamId}`);
+    } else {
+      console.warn(`Baby ${babyValue} not found in team ${teamId}`);
     }
   } catch (error) {
-    console.error("Error removing baby from assignment", error);
+    console.error("Error removing baby from assignment:", error);
   }
 }
+
+// ===========================
+// UTILITY FUNCTIONS
+// ===========================
+function getInput(row, section, prefix, index) {
+  return document.querySelector(`.r${row} .${section} .${prefix}${index}`);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // fillTeamDropdowns();
+  loadSubmissionData();
+});

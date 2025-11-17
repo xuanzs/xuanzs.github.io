@@ -23,10 +23,13 @@
         <div class="bar" id="bar-baby" onclick="opentab(event, 'baby')">
           Baby 4
         </div>
+        <div class="bar" id="bar-bucketList" onclick="opentab(event, 'bucketList')">
+          Bucket List
+        </div>
       </div>
 
       <div class="content">
-        <div class="station active" id="station">
+        <div class="station active" id="station" style="visibility: visible;">
           <h2>Station</h2>
           <hr />
           <div class="station-content">
@@ -96,13 +99,297 @@
             </div>
             <div class="card">
               <h4>Pause</h4>
-              <button type="button" id="pauseBtn">Freeze</button>
+              <button type="button" id="pauseBtn">Unfreezed</button>
             </div>
           </div>
         </div>
+        
         <div class="baby" id="baby" style="visibility: hidden">
           <h2>Baby 4</h2>
           <hr />
+          <div class="baby-content">
+            <div class="left">
+              <h5>Station:</h5>
+              <select name="station" id="stationDrop">
+                <option value=""></option>
+              </select>
+            </div>
+            <div class="right">
+              <div class="rows">
+                <!-- Row 4 -->
+                <div class="row">
+                  <h3>Row 4</h3>
+                  <div class="r4">
+                    <div class="top">
+                      <h5>Team:</h5>
+                      <select name="p1" class="p1">
+                        <option value=""></option>
+                      </select>
+                      <select name="p2" class="p2">
+                        <option value=""></option>
+                      </select>
+                      <select name="p3" class="p3">
+                        <option value=""></option>
+                      </select>
+                      <select name="p4" class="p4">
+                        <option value=""></option>
+                      </select>
+                      <select name="p5" class="p5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                    <div class="bottom">
+                      <h5>Baby:</h5>
+                      <select name="s1" class="s1">
+                        <option value=""></option>
+                        <option value="4">4</option>
+                      </select>
+                      <select name="s2" class="s2">
+                        <option value=""></option>
+                        <option value="4">4</option>
+                      </select>
+                      <select name="s3" class="s3">
+                        <option value=""></option>
+                        <option value="4">4</option>
+                      </select>
+                      <select name="s4" class="s4">
+                        <option value=""></option>
+                        <option value="4">4</option>
+                      </select>
+                      <select name="s5" class="s5">
+                        <option value=""></option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="row">
+                  <h3>Row 3</h3>
+                  <div class="r3">
+                    <div class="top">
+                      <h5>Team:</h5>
+                      <select name="p1" class="p1">
+                        <option value=""></option>
+                      </select>
+                      <select name="p2" class="p2">
+                        <option value=""></option>
+                      </select>
+                      <select name="p3" class="p3">
+                        <option value=""></option>
+                      </select>
+                      <select name="p4" class="p4">
+                        <option value=""></option>
+                      </select>
+                      <select name="p5" class="p5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                    <div class="bottom">
+                      <h5>Baby:</h5>
+                      <select name="s1" class="s1">
+                        <option value=""></option>
+                      </select>
+                      <select name="s2" class="s2">
+                        <option value=""></option>
+                      </select>
+                      <select name="s3" class="s3">
+                        <option value=""></option>
+                      </select>
+                      <select name="s4" class="s4">
+                        <option value=""></option>
+                      </select>
+                      <select name="s5" class="s5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="row">
+                  <h3>Row 2</h3>
+                  <div class="r2">
+                    <div class="top">
+                      <h5>Team:</h5>
+                      <select name="p1" class="p1">
+                        <option value=""></option>
+                      </select>
+                      <select name="p2" class="p2">
+                        <option value=""></option>
+                      </select>
+                      <select name="p3" class="p3">
+                        <option value=""></option>
+                      </select>
+                      <select name="p4" class="p4">
+                        <option value=""></option>
+                      </select>
+                      <select name="p5" class="p5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                    <div class="bottom">
+                      <h5>Baby:</h5>
+                      <select name="s1" class="s1">
+                        <option value=""></option>
+                      </select>
+                      <select name="s2" class="s2">
+                        <option value=""></option>
+                      </select>
+                      <select name="s3" class="s3">
+                        <option value=""></option>
+                      </select>
+                      <select name="s4" class="s4">
+                        <option value=""></option>
+                      </select>
+                      <select name="s5" class="s5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 1 -->
+                <div class="row">
+                  <h3>Row 1</h3>
+                  <div class="r1">
+                    <div class="top">
+                      <h5>Team:</h5>
+                      <select name="p1" class="p1">
+                        <option value=""></option>
+                      </select>
+                      <select name="p2" class="p2">
+                        <option value=""></option>
+                      </select>
+                      <select name="p3" class="p3">
+                        <option value=""></option>
+                      </select>
+                      <select name="p4" class="p4">
+                        <option value=""></option>
+                      </select>
+                      <select name="p5" class="p5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                    <div class="bottom">
+                      <h5>Baby:</h5>
+                      <select name="s1" class="s1">
+                        <option value=""></option>
+                      </select>
+                      <select name="s2" class="s2">
+                        <option value=""></option>
+                      </select>
+                      <select name="s3" class="s3">
+                        <option value=""></option>
+                      </select>
+                      <select name="s4" class="s4">
+                        <option value=""></option>
+                      </select>
+                      <select name="s5" class="s5">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="submitBtn()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bucket " id="bucket" style="visibility: hidden">
+          <h2>Bucket List</h2>
+          <hr />
+          <div class="bucket-content">
+            <div class="box">
+              <h4>Anabelle Checkin</h4>
+              <div class="box-body">
+                <select name="" id="checkinDrop">
+                  <option value=""></option>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+                <button type="submit" id="checkinBtn">Submit</button>
+              </div>
+            </div>
+            <div class="box">
+              <h4>Overall NPC Pic</h4>
+              <div class="box-body">
+                <select name="" id="overallDrop">
+                  <option value=""></option>
+                </select>
+                <button type="submit" id="overallBtn">Submit</button>
+              </div>
+            </div>
+            <div class="box">
+              <h4 class="groupNpcTitle">Group NPC Pic</h4>
+              <div class="box-body">
+                <div class="groupDrops">
+                  Group:
+                  <select name="" id="groupDrop">
+                    <option value=""></option>
+                  </select>
+                  Status:
+                  <select name="" id="npcDrop">
+                    <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+                <button type="submit" id="groupBtn">Submit</button>
+              </div>
+            </div>
+            <div class="box">
+              <h4>100 Smiles</h4>
+              <div class="box-body">
+                <select name="" id="smileDrop">
+                  <option value=""></option>
+                </select>
+                <button type="submit" id="smileBtn">Submit</button>
+              </div>
+            </div>
+            <div class="box">
+              <h4>Mission 4</h4>
+              <div class="box-body">
+                <select name="" id="mission4Drop">
+                  <option value="uncomplete">Not Complete</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <button type="submit" id="missionBtn">Submit</button>
+              </div>
+            </div>
+            <div class="box">
+              <h4>Puzzle</h4>
+              <div class="box-body">
+                <div class="Drops">
+                  <select name="" id="leftDrop">
+                    <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                  /
+                  <select name="" id="rightDrop">
+                    <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <button type="submit" id="puzzleBtn">Submit</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

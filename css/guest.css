@@ -1,3 +1,33 @@
+#loadingOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  visibility: hidden;
+}
+
+.overlay:hover {
+  cursor: pointer;
+}
+
+.overlay.show {
+  visibility: visible;
+}
+
 /* ===== Graffiti / Street Sticker Skin (CSS-only) ===== */
 :root{
   --font-serif-latin: Cambria, Georgia, Times, serif;
@@ -16,7 +46,6 @@
   --btn-radius: 12px;
   --table-max: 360px;
   
-
   /* ✅ 不再扣 padding/border，避免两侧多出空带 */
   /* --frame-x: 24px;  // 这行可以直接删掉 */
   --table-size: min(calc(100svw - 2 * var(--gutter)), var(--table-max));
@@ -26,6 +55,7 @@
   /* 用于边缘定位的辅助变量，可以根据效果微调 */
   --edge-bleed: 0px; 
 }
+
 
 /* 背景噪点图层 (html::before) */
 html::before{
@@ -656,15 +686,131 @@ body.modal-open{
 }
 
 .popup .babies {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 8px; 
-    padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0 12px 12px;
 }
 
 .popup .babies h5{
-    margin: 0;
-    font-weight: normal;
+  margin: 0;
+  font-weight: normal;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+
+
+.right button{
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background: rgba(255,255,255,.35);
+    border: 1px solid black;
+    margin: 2px;
+}
+
+.bottom{
+    margin-top: 10px;
+}
+
+.bottom button{
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: rgba(255,255,255,.35);
+    border-radius: 20%;
+    border-color: rgb(36, 10, 71);
+}
+
+.btn-shutdown{
+  background-color: black !important;
+}
+
+.overlay-2 {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background: white;
+  padding: 20px;
+  width: 200px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  z-index: 10;
+  visibility: hidden;
+}
+
+.popup.show {
+  visibility: visible;
+}
+
+.popup .babies {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+/* --------Over Layer------------ */
+
+.table-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+html, body {
+  height: 100%;
+}
+
+body.zoomed {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.zoomed .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(2.0);
+  transform-origin: center center;
+}
+
+body.zoomed .right,
+body.zoomed .bottom {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body.zoomed .container { transform: none; }
+  #t1 { width: min(96vw, 320px); } 
+  #t1 button { font-size: clamp(14px, 5vw, 22px); }
 }
