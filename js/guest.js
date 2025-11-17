@@ -366,7 +366,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// 其他函数保持不变...
 function highlightCorrectStations(teamId, tableButtons) {
   firebase
     .firestore()
@@ -395,11 +394,11 @@ function highlightCorrectStations(teamId, tableButtons) {
           const topTeams = stationTopTeamsMap.get(stationNumber);
 
           if (topTeams && topTeams.includes(teamId)) {
-            btn.style.backgroundColor = "green";
-            btn.style.color = "white";
+            btn.style.background = "linear-gradient(180deg, #0A4618FF, #1EFF00FF)";
+            btn.style.color = "#FFFFFFFF";
           } else {
-            btn.style.backgroundColor = "white";
-            btn.style.color = "black";
+            btn.style.background = "linear-gradient(180deg,#fff,#f1f1f1)";
+            btn.style.color = "#0b0b0b";
           }
         });
       },
