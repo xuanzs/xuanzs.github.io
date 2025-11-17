@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root {
+  --ink: #0b0613;
+  --purple: #5a23a1;
+  --purple-deep: #3a1574;
+  --ice: #7cf2ff;
+  --chalk: #f3f3f3;
+  --gold: #ffd700;
+}
+
+/* Background noise layer */
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9InRhYmxlIiB0YWJsZVZhbHVlcz0iMCAwIDAgMC4wOCAuMTUgMCIvPjwvZmVDb21wb25lbnRUcmFuc2Zlcj48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
+  mix-blend-mode: overlay;
+}
+
+/* Floating particles */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
+  50% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+}
+
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, var(--ice), transparent),
+    radial-gradient(2px 2px at 60% 70%, var(--ice), transparent),
+    radial-gradient(1px 1px at 50% 50%, var(--ice), transparent),
+    radial-gradient(1px 1px at 80% 10%, var(--ice), transparent),
+    radial-gradient(2px 2px at 90% 60%, var(--ice), transparent),
+    radial-gradient(1px 1px at 33% 80%, var(--ice), transparent);
+  background-size: 200% 200%;
+  animation: float 8s ease-in-out infinite;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  
+  color: var(--chalk);
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
+    linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
+    linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%);
+  background-attachment: fixed;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  margin: 10px 0 30px 0;
+  font-size: 3em;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--ice), var(--chalk), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(124, 242, 255, 0.3);
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3); }
+}
+
+h3 {
+  margin: 10px 0 30px 0;
+  font-size: 1.3em;
+  font-weight: 300;
+  color: var(--ice);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  width: 100%;
+  perspective: 2000px;
+  align-items: start;
+}
+
+.flip-box {
+  background-color: transparent;
+  width: 100%;
+  aspect-ratio: 2/3;
+  perspective: 1000px;
+  cursor: pointer;
+  max-height: 36vh;
+  border-radius: 12px;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect - subtle glow only, no movement */
+.flip-box:hover {
+  box-shadow: 
+    0 0 15px rgba(124, 242, 255, 0.4),
+    0 0 30px rgba(124, 242, 255, 0.2);
+}
+
+/* Glow border effect on hover */
+.flip-box::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--ice), var(--purple), var(--gold));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.flip-box:hover::before {
+  opacity: 0.6;
+  animation: rotateBorder 3s linear infinite;
+}
+
+@keyframes rotateBorder {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* Removed glowing shadow */
+
+.flip-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-style: preserve-3d;
+}
+
+.flip-box.flipped .flip-box-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-box-front, .flip-box-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  border-radius: 12px;
+}
+
+.flip-box-front {
+  background: linear-gradient(135deg, rgba(58, 21, 116, 0.5), rgba(90, 35, 161, 0.3));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(124, 242, 255, 0.2);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine effect on front */
+.flip-box-front::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -200%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: left 0.6s ease;
+}
+
+.flip-box:hover .flip-box-front::after {
+  left: 100%;
+}
+
+.flip-box-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.9) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.flip-box:hover .flip-box-front img {
+  filter: brightness(1.05) contrast(1.15);
+}
+
+.flip-box-back {
+  background: 
+    linear-gradient(135deg, 
+      rgba(90, 35, 161, 0.98) 0%, 
+      rgba(124, 50, 200, 0.98) 50%,
+      rgba(58, 21, 116, 0.98) 100%
+    );
+  backdrop-filter: blur(10px);
+  transform: rotateY(180deg);
+  padding: 20px;
+  border: 2px solid rgba(124, 242, 255, 0.6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 60px rgba(124, 242, 255, 0.1);
+  box-sizing: border-box;
+}
+
+.flip-box-back h2 {
+  margin: 0 0 15px 0;
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 
+    0 0 30px rgba(124, 242, 255, 1),
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 1px;
+  z-index: 10;
+  position: relative;
+}
+
+.flip-box-back p {
+  margin: 0;
+  font-size: 1.3em;
+  color: #ffffff;
+  line-height: 1.6;
+  text-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.9),
+    0 0 5px rgba(124, 242, 255, 0.5);
+  font-weight: 600;
+  text-align: center;
+  z-index: 10;
+  position: relative;
+}
+
+/* Removed staggered animation that affects positioning */
+
+/* Responsive design */
+@media (max-width: 1400px) {
+  .flip-box {
+    max-height: 32vh;
+  }
+  h1 {
+    font-size: 2.5em;
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .flip-box {
+    max-height: 30vh;
+  }
+  h1 {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .flip-box {
+    max-height: 28vh;
+  }
+  h1 {
+    font-size: 1.8em;
+  }
+  .flip-box-back h2 {
+    font-size: 1.5em;
+  }
+  .flip-box-back p {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .flip-box {
+    max-height: none;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>愿赌服输!</h1>
+
+  <div class="grid-container">
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Paris</h2>
+          <p>What an amazing city</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 2</h2>
+          <p>Description for card 2</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 3</h2>
+          <p>Description for card 3</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 4</h2>
+          <p>Description for card 4</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 5</h2>
+          <p>Description for card 5</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 6</h2>
+          <p>Description for card 6</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 7</h2>
+          <p>Description for card 7</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 8</h2>
+          <p>Description for card 8</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 9</h2>
+          <p>Description for card 9</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 10</h2>
+          <p>Description for card 10</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 11</h2>
+          <p>Description for card 11</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 12</h2>
+          <p>Description for card 12</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 13</h2>
+          <p>Description for card 13</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-box" onclick="flipCard(this)">
+      <div class="flip-box-inner">
+        <div class="flip-box-front">
+          <img src="nie.png" alt="nie">
+        </div>
+        <div class="flip-box-back">
+          <h2>Card 14</h2>
+          <p>Description for card 14</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function flipCard(clickedCard) {
+  // Simply toggle the clicked card
+  clickedCard.classList.toggle('flipped');
+}
+</script>
+
+</body>
+</html>
