@@ -1,3 +1,42 @@
+:root{
+  --ink:#0b0613;
+  --purple:#5a23a1;
+  --purple-deep:#3a1574;
+  --ice:#7cf2ff;
+  --chalk:#f3f3f3;
+}
+
+html::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9InRhYmxlIiB0YWJsZVZhbHVlcz0iMCAwIDAgMC4wOCAuMTUgMCIvPjwvZmVDb21wb25lbnRUcmFuc2Zlcj48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
+  mix-blend-mode: overlay;
+}
+
+html, body{
+  height:100%;
+  margin:0;
+}
+
+body{
+  color: var(--chalk);
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
+    linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
+    linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%) !important;
+  background-attachment: fixed;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  max-height:100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
 .container {
   visibility: hidden;
   display: flex;
@@ -29,7 +68,7 @@
 .smilePic,
 .mission4,
 .searchPuzzle {
-  padding: 10px 10px;
+  padding: 10px;
 }
 
 .anabelle-checkin button,
@@ -41,18 +80,97 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  font-size: clamp(18px, 4vw, 32px);
-  max-width: 500px;
-  border: 1px solid black;
-  /* box-shadow: 3px 3px grey; */
-  background: white;
+
   width: 85vw;
-  height: 10vh;
+  max-width: 500px;
+  height: 8vh;
+  padding: 20px 0;
+  margin: 10px 0;
+
+  font-size: clamp(18px, 4vw, 32px);
+  letter-spacing: 0.03em;
+  border: none;
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: #fdfdfd;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    letter-spacing 0.15s ease;
 }
 
+.anabelle-checkin button:hover,
+.npcPic button:hover,
+.smilePic button:hover,
+.mission4 button:hover,
+.searchPuzzle button:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.32);
+  letter-spacing: 0.06em;
+}
+
+.anabelle-checkin button:active,
+.npcPic button:active,
+.smilePic button:active,
+.mission4 button:active,
+.searchPuzzle button:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.26);
+}
+
+.anabelle-checkin button {
+  color: rgba(255, 179, 193);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 179, 193, 0.6);
+}
+
+.npcPic button {
+  color: rgba(176, 213, 255);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(176, 213, 255, 0.6);
+}
+
+.smilePic button {
+  color: rgba(182, 255, 182);
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(182, 255, 182, 0.6);
+}
+
+.mission4 button {
+  color: #ffe7a4;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 231, 164, 0.6);
+}
+
+.searchPuzzle button {
+  color: #b5fff8;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(181, 255, 248, 0.6);
+}
+
+
 .anabelle-checkin {
-  position: relative; /* allows the tick to position inside this div */
+  position: relative;
   display: inline-block;
 }
 
@@ -130,7 +248,6 @@
 }
 
 
-/* NPC 合照 */
 
 .npcMainPage {
   display: flex;
@@ -155,12 +272,24 @@
 }
 
 .selfieMainBackBtn button {
-  padding: 20px;
-  background: white;
+  margin: 12px 16px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fdfdfd;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.25);
+  cursor: pointer;
 }
 
+
 .selfieMainTitle {
+  font-family: 'Courier New', Courier, monospace;
   font-size: 30px;
+  text-align: center;
 }
 
 ._14Btn {
@@ -174,23 +303,45 @@
 }
 
 ._14Btn button {
-  cursor: pointer;
-  flex: 1 1 calc(33% - 20px);
+  font-family: 'Courier New', Courier, monospace;
   height: 80px;
-  margin: 10px;
-  font-size: 30px;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 3px 3px gray;
   padding: 20px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 10px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+
+  /* 玻璃感背景 */
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 15px;
+  color: #fdfdfd;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+              background 0.15s ease, letter-spacing 0.15s ease;
+  cursor: pointer;
 }
 
 ._14Btn button:hover {
-  background: gray;
+  background: #ffffff;
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.04em;
+}
+
+._14Btn button:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
 @media (max-width: 1024px) {
@@ -207,6 +358,51 @@
     padding: 15px;
   }
 }
+
+._14Btn button.npc-red {
+  color: #ffd0d8;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 96, 125, 0.8);
+}
+
+._14Btn button.npc-blue {
+  color: #c9ddff;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(110, 162, 255, 0.8);
+}
+
+._14Btn button.npc-cyan {
+  color: #c4fff7;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(124, 242, 255, 0.9);
+}
+
+._14Btn button.npc-green {
+  color: #c4ffce;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(124, 255, 152, 0.9);
+}
+
+._14Btn button.npc-orange {
+  color: #ffe4c4;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 183, 124, 0.9);
+}
+
+._14Btn button.npc-yellow {
+  color: #f6ffc4;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(253, 255, 124, 0.9);
+}
+
+
+
 
 .npcPic {
   position: relative; /* allows the tick to position inside this div */
