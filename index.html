@@ -391,7 +391,7 @@
 
             if (enteredId === correctId && enteredPw === correctPw) {
               alert("Welcome!");
-              location.href = "admin.html";
+              location.href = "./htmls/admin.html";
               return;
             } else if (enteredId !== correctId && enteredPw === correctPw) {
               alert("Id incorrect!");
@@ -434,7 +434,7 @@
               if (account.password === enteredPw) {
                 alert("Welcome GM" + enteredId);
 
-                location.href = `gm.html?id=${enteredId}`;
+                location.href = `../htmls/gm.html?id=${enteredId}`;
                 return;
               } else {
                 alert("Incorrect password");
@@ -494,7 +494,7 @@
 
       // Example: Redirect or handle logic
       alert("Selected team: " + team);
-      location.href = `guest.html?team=${team}`;
+      location.href = `../htmls/guest.html?team=${team}`;
     }
   </script>
   <script src="dbInsert.js"></script>
