@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
   } else {
     alert("No team selected");
-    location.href = "index.html";
+    location.href = "../index.html";
   }
 
   // ⭐ 核心变量

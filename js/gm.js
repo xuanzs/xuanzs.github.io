@@ -5,7 +5,7 @@ const MAX_ROWS = 4;
 const MAX_PAIRS = 5;
 
 const urlParams = new URLSearchParams(window.location.search);
-const station = urlParams.get("id");
+const stationId = urlParams.get("id");
 
 const element = document.querySelector(".container");
 const stationName = document.querySelector(".left h1");
@@ -14,11 +14,11 @@ const gmDocRef = db.collection("authentication").doc("gamemaster");
 // ===========================
 // INITIALIZATION
 // ===========================
-if (!station) {
+if (!stationId) {
   alert("No GM selected!");
-  location.href = "index.html";
+  location.href = "../index.html";
 } else {
-  stationName.textContent = "Station " + station;
+  stationName.textContent = "Station " + stationId;
   initializeApp();
 }
 
@@ -70,12 +70,12 @@ function setupFreezeListener() {
 
 function setupShutdownListener() {
   db.collection("skills")
-    .doc("shutdown")
+    .doc("pause")
     .onSnapshot((doc) => {
       const data = doc.data();
       const shutStation = data.station;
 
-      if (station === shutStation) {
+      if (stationId === shutStation) {
         alert("Your station is SHUTDOWN");
         playSound("/sound/alarm2.mp3")
           .then(() => console.log("Sound played successfully"))
@@ -102,7 +102,7 @@ function setOccupiedStatus() {
 function updateStationStatus(status) {
   gmDocRef.set({
     accounts: {
-      [`gm${station}`]: { status }
+      [`gm${stationId}`]: { status }
     }
   }, { merge: true });
 }
@@ -137,7 +137,7 @@ function fillTeamDropdowns() {
         select.addEventListener("change", () => fillBabyDropdown(select));
       });
     })
-    .catch((error) => console.error("Error loading teams:", error));
+    // .catch((error) => console.error("Error loading teams:", error));
 }
 
 function fillBabyDropdown(teamSelect) {
@@ -176,7 +176,7 @@ function fillBabyDropdown(teamSelect) {
 function loadSubmissionData() {
   // Listen to station submission data
   db.collection("stationSubmission")
-    .doc(`station${station}`)
+    .doc(`station${stationId}`)
     .onSnapshot((doc) => {
       if (!doc.exists) {
         // No data yet, check gamemaster status to determine if dropdowns should be enabled
@@ -245,7 +245,7 @@ function checkGamemasterStatusAndUpdateDropdowns() {
     }
 
     const data = doc.data();
-    const gmData = data.accounts?.[`gm${station}`];
+    const gmData = data.accounts?.[`gm${stationId}`];
     const status = gmData?.status;
 
     if (status === "occupied") {
@@ -465,7 +465,7 @@ async function logSubmission(row, col, teamValue, babyValue) {
   try {
     await db
       .collection("submissionHistory")
-      .doc(`station${station}`)
+      .doc(`station${stationId}`)
       .collection("entries")
       .add({
         team: teamValue,
@@ -480,7 +480,7 @@ async function logSubmission(row, col, teamValue, babyValue) {
 }
 
 async function updateStationSubmission(row, col, teamValue, babyValue) {
-  const docRef = db.collection("stationSubmission").doc(`station${station}`);
+  const docRef = db.collection("stationSubmission").doc(`station${stationId}`);
 
   try {
     const docSnap = await docRef.get();
