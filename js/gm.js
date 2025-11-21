@@ -114,7 +114,7 @@ function fillTeamDropdowns() {
   const teamSelects = document.querySelectorAll(".top select");
 
   db.collection("assignments")
-    .onSnapshot((querySnapshot) => {
+    .get().then((querySnapshot) => {
       // Clear existing options first (except the empty option)
       teamSelects.forEach((select) => {
         // Keep only the first empty option if it exists
