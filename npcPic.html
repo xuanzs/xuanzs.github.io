@@ -24,7 +24,15 @@
             <h3></h3>
             <h5>Upload Image (Max 3)</h5>
         </div>
-        <input type="file" accept="image/*" id="fileInput">
+        <div class="file-upload">
+  <input type="file" accept="image/*" id="fileInput" class="file-input">
+  <label for="fileInput" class="file-btn">
+    <span class="file-icon">📷</span>
+    <span class="file-text">Choose photo</span>
+  </label>
+  <span id="fileName" class="file-name">No file chosen</span>
+</div>
+
         <br><br>
         
         <div id="imagePreview"></div>
