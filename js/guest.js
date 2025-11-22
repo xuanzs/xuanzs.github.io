@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("No team selected");
     location.href = "../index.html";
   }
+  
 
   mapBtn.addEventListener("click", () => {
     sessionStorage.setItem('guestId', `${team}`);

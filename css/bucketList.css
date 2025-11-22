@@ -193,6 +193,15 @@ body{
   cursor: pointer;
 }
 
+.mainPage .fa-bell{
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
 .notification-badge {
   position: absolute;
   top: -8px;
@@ -212,6 +221,7 @@ body{
   justify-content: center;
   align-items: center;
   position: fixed;
+  color: #0b0613;
   background: white;
   padding: 20px;
   width: 300px;

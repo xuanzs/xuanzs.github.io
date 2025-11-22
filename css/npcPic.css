@@ -112,40 +112,159 @@ body{
 }
 
 .selfieTitle {
-    font-size: 30px;
+  text-align: center;
+  font-size: 30px;
 }
 
 .remove-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 14px;
-    cursor: pointer;
-    display: block;
-    z-index: 5;
-    text-align: center;
-    line-height: 20px;
+  position: absolute;
+  top: -10px;
+  right: -10px; 
+  background-color: rgba(238, 0, 0, 0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px; 
+  height: 28px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 10;
+  text-align: center;
+  line-height: 28px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.35);
 }
 
-.img-container {
-    position: relative;
-    display: inline-block;
-    margin: 10px;
+#imagePreview{
+  display:flex;
+  flex-direction: column; 
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  align-items: center;
+  overflow-y: auto;
 }
 
-img {
-    max-width: 100px;
-    margin: 10px;
+.img-container{
+  position: relative;
+  max-width: 420px;
+  
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
 }
 
-#imagePreview {
+.img-container img{
+  max-width: 205px;
+  height: auto;
+  align-items: center;
+  max-height: 45vh; 
+  object-fit: contain; 
+  border-radius: 12px;
+  display: block;
+  background: rgba(0,0,0,0.15);
+}
+
+.img-name{
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.25);
+  padding: 6px 10px;
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+
+  #imagePreview,
+  #images {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  /* ======= Pretty file upload ======= */
+.file-upload{
+  width: 100%;
+  max-width: 520px;
+  padding: 0 12px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+/* hide native input */
+.file-input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+/* custom button */
+.file-btn{
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: none;
+
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  color: #fdfdfd;
+  background: rgba(255,255,255,0.14);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.22);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+}
+
+.file-btn:hover{
+  background: rgba(255,255,255,0.22);
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(255,255,255,0.35);
+}
+
+.file-btn:active{
+  transform: translateY(0);
+}
+
+/* file name */
+.file-name{
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.25);
+  padding: 10px 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* small screens */
+@media (max-width: 480px){
+  .file-upload{
+    grid-template-columns: 1fr;
+  }
 }

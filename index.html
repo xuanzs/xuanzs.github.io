@@ -21,11 +21,13 @@
     margin: 0;
     font-family: 'Times New Roman', Times, serif;
 
-    background: radial-gradient(circle at top,
-      #5a23a1 0%,
-      #3a1574 40%,
-      #18071f 100%);
-    color: #fdfdfd;
+    background:
+        url("public/background/background.png") no-repeat center/cover,
+        radial-gradient(circle at top,
+          #5a23a1 0%,
+          #3a1574 40%,
+          #18071f 100%);
+      color: #fdfdfd;
   }
 
     .btns {
@@ -36,7 +38,6 @@
       z-index: 1;
     }
 
-    /* 主按钮样式 */
     .btns button {
       width: 220px;
       padding: 20px 0;
@@ -48,13 +49,13 @@
 
       /* 玻璃感背景 */
       background: rgba(255, 255, 255, 0.12);
-      border-radius: 999px;
+      border-radius: 10px;
       color: #fdfdfd;
       box-shadow:
         0 14px 28px rgba(0, 0, 0, 0.35),
         0 0 0 1px rgba(255, 255, 255, 0.18);
 
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(8px);
 
       transition: transform 0.15s ease, box-shadow 0.15s ease,
@@ -113,9 +114,13 @@
       z-index: 5;
     }
 
-    .overlay.show {
-      visibility: visible;
-    }
+.overlay.show{
+  visibility: visible;
+  background: rgba(5, 3, 12, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background .2s ease;
+}
 
     .adminPopup{
       display: flex;
@@ -153,119 +158,309 @@
       visibility: hidden;
     }
 
-    .guestPopup {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: center;
-      min-width: 260px;
-      max-width: 320px;
-      background: #fdfdfd;
-      border-radius: 16px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px 18px 16px;
-      gap: 12px;
-      z-index: 10;
-      visibility: hidden;
-      box-shadow:
-        0 14px 28px rgba(0,0,0,0.25),
-        0 10px 10px rgba(0,0,0,0.22);
-    }
+.guestPopup{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+
+  min-width: 280px;
+  max-width: 340px;
+  width: 86vw;
+
+  padding: 18px 18px 16px;
+  border-radius: 20px;
+
+  /* 玻璃紫卡片 */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,255,0.96));
+  border: 1px solid rgba(255,255,255,0.9);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(124,242,255,0.15);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.96);
+  z-index: 10;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.adminPopup,
+.gmPopup{
+  display:flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+
+  min-width: 260px;
+  max-width: 320px;
+  width: 86vw;
+
+  padding: 18px;
+  border-radius: 18px;
+
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,255,0.96));
+  border: 1px solid rgba(255,255,255,0.9);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(124,242,255,0.15);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.96);
+  z-index: 10;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+/* ✅ open-popup 时显示 + 动画 */
+.adminPopup.open-popup,
+.gmPopup.open-popup{
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* inputs 统一好看一点 */
+.adminPopup input,
+.gmPopup input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #d8d3e6;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.popupBtns button{
+  flex: 1;
+  height: 36px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+/* 第一个按钮当 Cancel */
+.popupBtns button:first-child{
+  background: #f2f2f6;
+  color: #333;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+.popupBtns button:first-child:hover{
+  background: #e9e9ef;
+  transform: translateY(-1px);
+}
+
+/* 第二个按钮当 OK */
+.popupBtns button:last-child{
+  color: white;
+  background: linear-gradient(90deg, #5a23a1, #3b7bff);
+  box-shadow: 0 8px 18px rgba(90,35,161,0.35);
+}
+.popupBtns button:last-child:hover{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.popupBtns button:active{
+  transform: translateY(1px);
+}
+.adminPopup,
+.gmPopup{
+  color: #1a102a;   /* ✅ 黑/深紫 */
+}
+
+/* label 单独再压深一点也可以 */
+.adminPopup label,
+.gmPopup label{
+  color: #1a102a;
+  font-weight: 700;
+}
+
+.adminPopup input,
+.gmPopup input{
+  color: #111;
+}
+
+.adminPopup input::placeholder,
+.gmPopup input::placeholder{
+  color: #888;
+}
+
+.adminPopup input:focus,
+.gmPopup input:focus{
+  border-color: #7cf2ff;
+  box-shadow: 0 0 0 3px rgba(124,242,255,.25);
+}
+
+.guestPopup.open-popup,
+.adminPopup.open-popup,
+.gmPopup.open-popup{
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
     /* 标题 */
-    .guestPopup .popup-title {
-      margin: 0 0 4px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #222;
-      text-align: center;
-    }
+.guestPopup .popup-title{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: #1a102a;
+  text-align: center;
+}
+.guestPopup .popup-label{
+  font-size: 13px;
+  font-weight: 600;
+  color: #3b3350;
+  margin-top: 6px;
+}
 
-    /* Label */
-    .guestPopup .popup-label {
-      font-size: 14px;
-      margin-bottom: 4px;
-      color: #444;
-    }
+.guestPopup .popup-select{
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1.5px solid #d8d3e6;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
 
-    /* Select */
-    .guestPopup .popup-select {
-      width: 100%;
-      padding: 6px 10px;
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      outline: none;
-      box-sizing: border-box;
-    }
+  transition: border .15s ease, box-shadow .15s ease;
+}
 
-    .guestPopup .popup-select:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, .15);
-    }
+.guestPopup .popup-select:focus{
+  border-color: #7cf2ff;
+  box-shadow: 0 0 0 3px rgba(124,242,255,.25);
+}
 
-    /* 底部按钮区域 */
-    .popupBtns {
-      display: flex;
-      justify-content: center;   /* ✅ 居中 */
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
+ .popupBtns{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
 
-    .popupBtns .popup-btn {
-      flex: 0 0 90px;            /* ✅ 固定宽度，两边一样宽 */
-      height: 32px;
-      border-radius: 999px;      /* 圆角 pill */
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      box-shadow: 0 3px 0 rgba(0,0,0,0.2);
-      transition: background .15s, transform .1s, box-shadow .1s;
-    }
+.popupBtns .popup-btn{
+  flex: 1;
+  height: 36px;
+  border-radius: 999px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
 
-    /* 按钮通用样式 */
-    .popupBtns button {
-      padding: 6px 16px;
-      border-radius: 999px;
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background .15s, transform .1s, box-shadow .1s;
-    }
+/* Cancel：灰白玻璃 */
+.popupBtns .popup-btn-cancel{
+  background: #f2f2f6;
+  color: #333;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+.popupBtns .popup-btn-cancel:hover{
+  background: #e9e9ef;
+  transform: translateY(-1px);
+}
 
-    .popupBtns .popup-btn-cancel {
-      background: #f2f2f2;
-      color: #333;
-    }
+/* OK：紫蓝渐层 */
+.popupBtns .popup-btn-ok{
+  color: white;
+  background: linear-gradient(90deg, #5a23a1, #3b7bff);
+  box-shadow: 0 8px 18px rgba(90,35,161,0.35);
+}
+.popupBtns .popup-btn-ok:hover{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
 
-    .popupBtns .popup-btn-cancel:hover {
-      background: #e4e4e4;
-    }
+.popupBtns .popup-btn:active{
+  transform: translateY(1px);
+}
+    .msgOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .15s ease;
+  z-index: 20;
+}
 
-    /* OK：蓝色 */
-    .popupBtns .popup-btn-ok {
-      background: #007bff;
-      color: #fff;
-    }
+.msgModal{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.98);
+  min-width: 220px;
+  max-width: 320px;
+  padding: 18px 16px;
+  border-radius: 16px;
 
-    .popupBtns .popup-btn-ok:hover {
-      background: #0065d1;
-    }
+  background: rgba(255,255,255,0.95);
+  color: #111;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
 
-    /* 按下去的手感 */
-    .popupBtns .popup-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-    }
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.7);
 
-    .open-popup {
-      visibility: visible;
-    }
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .15s ease, transform .15s ease;
+  z-index: 21;
+}
+
+.msgModal.show{
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.msgOverlay.show{
+  visibility: visible;
+  opacity: 1;
+}
+
+.msgBtns{
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.msgBtns button{
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.25);
+}
+
+.msgBtns button:active{
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.25);
+}
 
 
   </style>
@@ -335,6 +530,15 @@
     </div>
   </div>
 
+  <div class="msgOverlay" id="msgOverlay"></div>
+
+  <div class="msgModal" id="msgModal">
+    <p id="msgText">Message here</p>
+    <div class="msgBtns">
+      <button id="msgOkBtn">OK</button>
+    </div>
+  </div>
+
 
   <script>
     const adminId = document.getElementById("adminId");
@@ -347,6 +551,35 @@
     const popupGM = document.getElementById("popupGM");
     const popupGuest = document.getElementById("popupGuest");
     const overlay = document.getElementById("overlay");
+
+    const msgOverlay = document.getElementById("msgOverlay");
+    const msgModal = document.getElementById("msgModal");
+    const msgText = document.getElementById("msgText");
+    const msgOkBtn = document.getElementById("msgOkBtn");
+
+    let msgOkCallback = null;
+
+    function showMsg(message, onOk){
+      msgText.textContent = message;
+      msgOkCallback = onOk || null;
+
+      msgOverlay.classList.add("show");
+      msgModal.classList.add("show");
+    }
+
+    function closeMsg(){
+      msgOverlay.classList.remove("show");
+      msgModal.classList.remove("show");
+
+      if (msgOkCallback){
+        const cb = msgOkCallback;
+        msgOkCallback = null;
+        cb();
+      }
+    }
+
+    msgOkBtn.addEventListener("click", closeMsg);
+    msgOverlay.addEventListener("click", closeMsg);
 
     function openAdminPopup() {
       popupAdmin.classList.add("open-popup");
@@ -390,11 +623,12 @@
             const correctPw = data.password;
 
             if (enteredId === correctId && enteredPw === correctPw) {
-              alert("Welcome!");
-              location.href = "./htmls/admin.html";
+              showMsg("Welcome!", () => {
+                location.href = "admin.html";
+              });
               return;
             } else if (enteredId !== correctId && enteredPw === correctPw) {
-              alert("Id incorrect!");
+              showMsg("Id incorrect!");
             } else if (enteredId === correctId && enteredPw !== correctPw) {
               alert("Password incorrect!");
             } else {
@@ -415,7 +649,7 @@
       const enteredPw = gmPw.value.trim();
 
       if (!enteredId || !enteredPw) {
-        alert("Please enter both ID and password.");
+        showMsg("Please enter both ID and password.");
         return;
       }
 
@@ -432,7 +666,9 @@
             const account = accounts[key];
             if (account.id === enteredId) {
               if (account.password === enteredPw) {
-                alert("Welcome GM" + enteredId);
+                showMsg("Welcome GM " + enteredId, () => {
+                  location.href = `gm.html?id=${enteredId}`;
+                });
 
                 location.href = `../htmls/gm.html?id=${enteredId}`;
                 return;
@@ -488,13 +724,13 @@
     function submitTeam() {
       const team = document.getElementById("teams").value;
       if (!team) {
-        alert("Please select a team.");
+        showMsg("Please select a team.");
         return;
       }
 
-      // Example: Redirect or handle logic
-      alert("Selected team: " + team);
-      location.href = `../htmls/guest.html?team=${team}`;
+      showMsg("Selected team: " + team, () => {
+        location.href = `guest.html?team=${team}`;
+      });
     }
   </script>
   <script src="dbInsert.js"></script>
