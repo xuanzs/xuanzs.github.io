@@ -623,9 +623,8 @@
             const correctPw = data.password;
 
             if (enteredId === correctId && enteredPw === correctPw) {
-              showMsg("Welcome!", () => {
-                location.href = "admin.html";
-              });
+              alert("Welcome!");
+              location.href = "./htmls/admin.html";
               return;
             } else if (enteredId !== correctId && enteredPw === correctPw) {
               showMsg("Id incorrect!");
@@ -728,9 +727,9 @@
         return;
       }
 
-      showMsg("Selected team: " + team, () => {
-        location.href = `guest.html?team=${team}`;
-      });
+      // Example: Redirect or handle logic
+      alert("Selected team: " + team);
+      location.href = `../htmls/guest.html?team=${team}`;
     }
   </script>
   <script src="dbInsert.js"></script>
