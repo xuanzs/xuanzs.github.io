@@ -27,7 +27,8 @@ function initializeApp() {
   setupShutdownListener();
   fillTeamDropdowns();
   loadSubmissionData();
-  setVacantStatus();
+  // setVacantStatus();
+  getStatus();
 }
 
 // ===========================
@@ -87,6 +88,24 @@ function setupShutdownListener() {
 // ===========================
 // STATUS MANAGEMENT
 // ===========================
+function getStatus() {
+  gmDocRef.onSnapshot((doc) => {
+    if (!doc.exists) return;
+
+    const data = doc.data();
+    const gmData = data.accounts?.[`gm${stationId}`];
+    const status = gmData?.status;
+
+    if (status === "vacant") {
+      setVacantStatus();
+    } else if (status === "occupied") {
+      setOccupiedStatus();
+    } else {
+      console.error("Error getting status");
+    }
+  })
+}
+
 function setVacantStatus() {
   element.style.backgroundColor = "green";
   updateStationStatus("vacant");
