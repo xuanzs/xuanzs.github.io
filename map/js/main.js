@@ -96,7 +96,9 @@
 		// main container
 		containerEl = document.querySelector('.container'),
 		// close search ctrl
-		closeSearchCtrl = spacesListEl.querySelector('button.close-search');
+		closeSearchCtrl = spacesListEl.querySelector('button.close-search'),
+
+		backBtn = document.querySelector(".codrops-icon--prev");
 
 	function init() {
 		// init/bind events
@@ -191,7 +193,169 @@
 		closeSearchCtrl.addEventListener('click', function() {
 			closeSearch();
 		});
+
+		// pins.forEach((pin) => {
+		// 	let dataSpace = pin.getAttribute('data-space');
+		// 	if (dataSpace === "6.03") {
+		// 		pin.setAttribute("data-category", "3");
+		// 	}
+		// });
+
+		initStatusListener();
+
+		backBtn.addEventListener("click", () => {
+			const guestId = sessionStorage.getItem('guestId');
+			if (guestId) {
+				window.location.href = `../htmls/guest.html?team=${guestId}`;
+			}
+		});
 	}
+
+	function initStatusListener() {
+		const map = {
+			'13' : '3.01',
+			'12' : '3.02',
+			'11' : '3.03',
+			'22' : '3.04',
+			'24' : '3.05',
+			'19' : '3.06',
+			'8' : '3.07',
+			'25' : '4.01',
+			'9' : '4.02',
+			'18' : '4.03',
+			'1' : '4.04',
+			'14' : '5.01',
+			'5' : '5.02',
+			'20' : '5.03',
+			'10' : '5.04',
+			'7' : '6.01',
+			'6' : '6.02',
+			'16' : '6.03',
+			'3' : '6.04',
+			'23' : '7.01',
+			'4' : '7.02',
+			'21' : '7.03',
+			'17' : '8.01',
+			'2' : '8.02',
+			'15' : '8.03'
+		};
+	
+		db.collection("authentication").doc("gamemaster")
+		  .onSnapshot((doc) => {
+			if (doc.exists) {
+				const accounts = doc.data().accounts;
+	
+				// Loop through all accounts
+				Object.keys(accounts).forEach(accountKey => {
+					const acc = accounts[accountKey];
+					const id = acc.id;
+					const status = acc.status;
+	
+					// Determine category based on status
+					const category = (status === "vacant") ? "1" : "3";
+	
+					if (map[id]) {
+						const mappedSpace = map[id];
+	
+						updateElements(mappedSpace, category);
+					}
+				});
+			}
+		}, (err) => {
+			console.error("Error fetching gamemaster doc:", err);
+		});
+	}
+	
+	// This function updates DOM elements
+	function updateElements(space, category) {
+		// Update Pins
+		const pinElements = document.querySelectorAll(`.pin[data-space="${space}"]`);
+		pinElements.forEach(pin => pin.setAttribute("data-category", category));
+	
+		// Update List Items
+		const listItems = document.querySelectorAll(`.list__item[data-space="${space}"]`);
+		listItems.forEach(li => li.setAttribute("data-category", category));
+	
+		// Update Content Items
+		const contentItems = document.querySelectorAll(`.content__item[data-space="${space}"]`);
+		contentItems.forEach(ci => ci.setAttribute("data-category", category));
+
+		sortListByCategoryLevelAndSpace();
+	
+		// Refresh category headers
+		document.querySelectorAll('.list__item.is-category-header').forEach(el => el.classList.remove('is-category-header'));
+		markCategoryHeaders();
+	
+		console.log(`Updated elements for space ${space} → category ${category}`);
+	}
+	
+	// Mark the first occurrence of each category
+	function markCategoryHeaders() {
+		const categoriesFound = new Set();
+	
+		document.querySelectorAll('.list__item').forEach(item => {
+			const cat = item.dataset.category;
+	
+			if (!categoriesFound.has(cat)) {
+				item.classList.add('is-category-header');
+				categoriesFound.add(cat);
+			}
+		});
+	}
+
+	function applyDisplayLevelOffset() {
+		const LEVEL_OFFSET = 2;
+	
+		document.querySelectorAll('.list__item').forEach(item => {
+			const realLevel = parseInt(item.dataset.level);
+			const displayLevel = realLevel + LEVEL_OFFSET;
+	
+			// Add visual-only display level
+			item.dataset.displayLevel = displayLevel;
+		});
+	}	
+
+	function sortListByCategoryLevelAndSpace() {
+		const LEVEL_OFFSET = 2;
+		const list = document.querySelector('.list');
+	
+		// Only sort real list items, no headers
+		const items = Array.from(list.querySelectorAll('.list__item[data-category]'));
+	
+		items.sort((a, b) => {
+			const catA = parseInt(a.dataset.category);
+			const catB = parseInt(b.dataset.category);
+	
+			// CATEGORY ALWAYS FIRST PRIORITY
+			if (catA !== catB) return catA - catB;
+	
+			// Same category → compare level
+			const levelA = parseInt(a.dataset.level) + LEVEL_OFFSET;
+			const levelB = parseInt(b.dataset.level) + LEVEL_OFFSET;
+	
+			if (levelA !== levelB) return levelA - levelB;
+	
+			// Same category, same level → NOW compare space
+			const spaceA = parseFloat(a.dataset.space);
+			const spaceB = parseFloat(b.dataset.space);
+	
+			if (spaceA !== spaceB) return spaceA - spaceB;
+	
+			// Final alphabetical fallback
+			const nameA = a.querySelector('.list__link').textContent.trim();
+			const nameB = b.querySelector('.list__link').textContent.trim();
+			return nameA.localeCompare(nameB);
+		});
+	
+		// Reset list and re-append sorted items
+		list.innerHTML = "";
+		items.forEach(item => list.appendChild(item));
+	
+		applyDisplayLevelOffset();
+		markCategoryHeaders();
+	}
+	
+	
 
 	/**
 	 * Opens a level. The current level moves to the center while the other ones move away.
@@ -230,6 +394,13 @@
 
 		// filter the spaces for this level
 		showLevelSpaces();
+
+		// FILTERRR
+		sortListByCategoryLevelAndSpace();
+	
+		// refresh category headers
+		document.querySelectorAll('.list__item.is-category-header').forEach(el => el.classList.remove('is-category-header'));
+		markCategoryHeaders();
 	}
 
 	/**
@@ -257,6 +428,13 @@
 		// show back the complete list of spaces
 		spacesList.filter();
 
+		// FILTERRR
+		sortListByCategoryLevelAndSpace();
+	
+		// refresh category headers
+		document.querySelectorAll('.list__item.is-category-header').forEach(el => el.classList.remove('is-category-header'));
+		markCategoryHeaders();
+
 		// close content area if it is open
 		if( isOpenContentArea ) {
 			closeContentArea();
@@ -266,11 +444,59 @@
 	/**
 	 * Shows all spaces for current level
 	 */
+	// function showLevelSpaces() {
+	// 	spacesList.filter(function(item) { 
+	// 		return item.values().level === selectedLevel.toString(); 
+	// 	});
+	// }
+
 	function showLevelSpaces() {
-		spacesList.filter(function(item) { 
-			return item.values().level === selectedLevel.toString(); 
+		// Filter by the selected level
+		spacesList.filter(item => item.values().level === selectedLevel.toString());
+	
+		// Sort filtered items: first by category, then by level
+		spacesList.sort((a, b) => {
+			const catA = parseInt(a.values().category);
+			const catB = parseInt(b.values().category);
+			if (catA !== catB) return catA - catB;
+	
+			const levelA = parseInt(a.values().level);
+			const levelB = parseInt(b.values().level);
+			return levelA - levelB;
 		});
+	
+		// FILTERRR
+		sortListByCategoryLevelAndSpace();
+	
+		// refresh category headers
+		document.querySelectorAll('.list__item.is-category-header').forEach(el => el.classList.remove('is-category-header'));
+		markCategoryHeaders();
 	}
+	
+
+	// function showLevelSpaces() {
+	// 	// Filter by current level
+	// 	const filteredItems = spacesList.filter(item => item.values().level === selectedLevel.toString());
+	
+	// 	// Sort filtered items by category first, then by level
+	// 	const sortedItems = filteredItems.sort((a, b) => {
+	// 		const catA = parseInt(a.el.dataset.category);
+	// 		const catB = parseInt(b.el.dataset.category);
+	// 		if (catA !== catB) return catA - catB;
+	
+	// 		const levelA = parseInt(a.el.dataset.level);
+	// 		const levelB = parseInt(b.el.dataset.level);
+	// 		return levelA - levelB;
+	// 	});
+	
+	// 	// Apply the sorted & filtered items to the list
+	// 	spacesList.show(sortedItems.map(item => item.el));
+	
+	// 	// Refresh category headers
+	// 	document.querySelectorAll('.list__item.is-category-header').forEach(el => el.classList.remove('is-category-header'));
+	// 	markCategoryHeaders();
+	// }
+	
 
 	/**
 	 * Shows the level´s pins
@@ -415,8 +641,11 @@
 		if( activeItem ) {
 			classie.remove(activeItem, 'list__item--active');
 		}
-		// list item gets class active
-		classie.add(spacesEl.querySelector('li[data-space="' + spacerefval + '"]'), 'list__item--active');
+		// list item gets class active (if the list item is currently shown in the list)
+		var listItem = spacesEl.querySelector('li[data-space="' + spacerefval + '"]')
+		if( listItem ) {
+			classie.add(listItem, 'list__item--active');
+		}
 
 		// remove class selected (if any) from current space
 		var activeSpaceArea = mallLevels[selectedLevel - 1].querySelector('svg > .map__space--selected');
@@ -520,6 +749,5 @@
 	}
 	
 	init();
-
 
 })(window);
