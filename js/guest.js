@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const clearAllButtons = document.querySelectorAll(".bottom .Clear");
   const deleteButtons = document.querySelectorAll(".bottom .Delete");
   const submitButton = document.querySelector(".bottom .Submit");
+  const mapBtn = document.querySelector("i");
 
   const urlParams = new URLSearchParams(window.location.search);
   const team = urlParams.get("team");
@@ -21,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("onSnapshot fired!");
 
           if (doc.exists) {
+            mapBtn.classList.add("active");
+
             const data = doc.data();
             console.log("Data received:", data);
             let assignments = data.assignments;
@@ -167,6 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("No team selected");
     location.href = "../index.html";
   }
+
+  mapBtn.addEventListener("click", () => {
+    sessionStorage.setItem('guestId', `${team}`);
+    window.location.href="../map/index.html";
+  });
 
   // ⭐ 核心变量
   let selectedTableButton = null;
