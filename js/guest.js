@@ -167,6 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("No team selected");
     location.href = "index.html";
   }
+  
 
   // ⭐ 核心变量
   let selectedTableButton = null;
