@@ -28,6 +28,15 @@
   opacity: 1;
   pointer-events: auto;  /* 拦截底下的点击 */
 }
+
+.fa-map {
+  visibility: hidden;
+}
+
+.fa-map.active {
+  visibility: visible;
+}
+
 /* ===== Graffiti / Street Sticker Skin (CSS-only) ===== */
 :root{
   --font-serif-latin: Cambria, Georgia, Times, serif;
