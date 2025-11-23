@@ -577,7 +577,7 @@ button:focus {
 	transition: transform 0.8s;
 	-webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
 	transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 .content--open .content__item {
@@ -660,7 +660,7 @@ button:focus {
 
 .content__desc {
 	text-align: center;
-	margin: 3vmin 0 0 0;
+	margin: 3vmin 0 30vmin 0;
 	font-size: 30px;
 }
 
