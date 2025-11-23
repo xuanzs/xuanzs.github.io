@@ -649,7 +649,7 @@ button:focus {
 	margin: -3vmin 0 0 0;
 	padding: 0 2px;
 	/* color: ; */
-	font-size: 60px;
+	font-size: 50px;
 }
 
 .content__meta .icon {
@@ -1004,11 +1004,11 @@ button:focus {
 /* Pins for floor 5 */
 .pin--3-1 { top: 57.5vmin; left: 23.7vmin; }
 .pin--3-2 { top: 31.3vmin; left: 77.7vmin; }
-.pin--3-3 { top: 61vmin; left: 92vmin; }
-.pin--3-4 { top: 72.3vmin; left: 89.7vmin; }
+.pin--3-3 { top: 50.8vmin; left: 85.8vmin; }
+.pin--3-4 { top: 60.3vmin; left: 83.7vmin; }
 
 /* Pins for floor 6 */
-.pin--4-1 { top: 68vmin; left: 17vmin; }
+.pin--4-1 { top: 57.5vmin; left: 23.7vmin; }
 .pin--4-2 { top: 75vmin; left: 46vmin; }
 .pin--4-3 { top: 48vmin; left: 58vmin; }
 .pin--4-4 { top: 67vmin; left: 96vmin; }
