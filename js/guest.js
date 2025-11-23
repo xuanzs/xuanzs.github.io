@@ -444,6 +444,19 @@ function getTop5Teams(stationData) {
 }
 
 let unsubscribeStationPopup = null;
+const teamNameMap = new Map();
+
+firebase.firestore()
+  .collection("assignments")
+  .onSnapshot((snap) => {
+    teamNameMap.clear();
+    snap.forEach(doc => {
+      const data = doc.data() || {};
+      // doc.id: "team1"..."team15"
+      teamNameMap.set(doc.id, data.name || doc.id);
+    });
+    console.log("teamNameMap updated", Array.from(teamNameMap.entries()));
+  });
 
 function showTop5PairsAndBabyForStation(stationLabel) {
   if (!stationLabel) return;
@@ -501,14 +514,58 @@ function showTop5PairsAndBabyForStation(stationLabel) {
 
         document.querySelector(".popup h4").textContent = `Station ${stationNumber}`;
         
-        const h5Elements = document.querySelectorAll(".babies h5");
-        top5Pairs.forEach(({ team, baby }, index) => {
-          if (h5Elements[index]) {
-            h5Elements[index].textContent = team
-              ? `#${index + 1}: Baby ${baby} -${team}`
-              : `#${index + 1}: [No data]`;
+        const babiesWrap = document.querySelector(".popup .babies");
+
+        const rankedPairs = top5Pairs
+          .filter(p => p.team && isFinite(p.baby))
+          .sort((a, b) => b.baby - a.baby);
+
+        while (rankedPairs.length < 5) {
+          rankedPairs.push({ team: null, baby: null });
+        }
+        babiesWrap.innerHTML = "";
+
+        const sizeMap = { 4: 40, 3: 30, 2: 20, 1: 15 };
+
+        rankedPairs.forEach(({ team, baby }, index) => {
+          const row = document.createElement("div");
+          row.className = "baby-row";
+
+          if (!team) {
+            row.classList.add("empty");
+            row.innerHTML = `
+              <span class="rank">#${index + 1}</span>
+              <span class="no-data">No data</span>
+            `;
+            babiesWrap.appendChild(row);
+            return;
           }
+
+          const m = String(team).match(/(\d+)/);
+          const teamNum = m ? m[1] : null;
+
+          const babyVal = Number(baby);
+          const iconSize = sizeMap[babyVal] || 26;
+
+          const teamKey = String(team).toLowerCase();
+          const teamDisplayName = teamNameMap.get(teamKey) || team;
+
+          const iconHTML = teamNum
+            ? `<img class="team-icon"
+                    src="../public/groupicon/team${teamNum}.png"
+                    alt="Team ${teamNum}"
+                    style="width:${iconSize}px;height:${iconSize}px"
+                    onerror="this.style.display='none'">`
+            : "";
+
+          row.innerHTML = `
+            ${iconHTML}
+            <span class="team-label">${teamDisplayName}</span>
+          `;
+
+          babiesWrap.appendChild(row);
         });
+
       }
     );
 }

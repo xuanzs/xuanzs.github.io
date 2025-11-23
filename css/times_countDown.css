@@ -1,0 +1,146 @@
+/* ✅ 线上七段数码字体（不用本地文件） */
+@import url("https://db.onlinewebfonts.com/c/624871e1b6172da8c089029daf0c632e?family=Seven+Segment");
+
+:root{
+  --font-digital: "Seven Segment", system-ui, sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:#000;
+  color:#fff;
+  font-family: system-ui, -apple-system, "Noto Sans SC", sans-serif;
+  display:grid;
+  place-items:center;
+}
+
+/* app 容器（只放标题和确认面板） */
+.app{
+  width:min(92vw, 900px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 28px;
+  padding: 28px 16px 40px;
+}
+
+/* 标题 */
+.title{
+  color:#ff3b3b;
+  letter-spacing:.25em;
+  font-weight:900;
+  font-size: clamp(22px, 4vw, 36px);
+  text-align:center;
+}
+
+/* ✅ Start 面板 */
+.input-panel{
+  width:min(90vw, 520px);
+  background:#160000;
+  border:2px solid #7a0000;
+  border-radius:16px;
+  padding:22px 20px;
+  text-align:center;
+  box-shadow:0 0 30px rgba(255,0,0,.12) inset;
+}
+
+.default-text{
+  font-size: clamp(14px, 2.4vw, 18px);
+  opacity:.9;
+  margin-bottom:14px;
+}
+
+.start-btn{
+  width:100%;
+  height: clamp(46px, 7vw, 58px);
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(180deg, #9b1c1c, #5a0b0b);
+  color:#000;
+  font-weight:900;
+  letter-spacing:.2em;
+  font-size: clamp(14px, 2.8vw, 18px);
+  cursor:pointer;
+  box-shadow:0 6px 0 rgba(0,0,0,.6);
+}
+.start-btn:active{
+  transform: translateY(2px);
+  box-shadow:0 4px 0 rgba(0,0,0,.6);
+}
+
+.hint{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.7;
+}
+
+/* ✅ 倒计时器：全屏层，初始 hidden */
+.timer-wrap{
+  position: fixed;
+  inset: 0;
+  width:100vw;
+  height:100vh;
+  background:#000;
+  z-index: 10;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap: clamp(10px, 3vh, 20px);
+  padding: clamp(10px, 3vw, 40px);
+}
+
+/* 数字：一排、不准换行、跟屏幕放到最大 */
+.timer{
+  display:flex;
+  justify-content:center;
+  align-items:baseline;
+  white-space: nowrap;              /* ✅ 不换行 */
+  gap: clamp(6px, 2vw, 18px);
+
+  font-family: var(--font-digital); /* ✅ 用七段字体 */
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: .04em;
+  color:#ff2b2b;
+  text-shadow:
+    0 0 12px rgba(255,0,0,.75),
+    0 0 30px rgba(255,0,0,.55);
+
+  /* ✅ 关键：字体按视口最小边放到极限 */
+  font-size: clamp(120px, min(30vw, 30vh), 720px);
+}
+
+.timer span{
+  display:inline-block;
+  min-width: 2ch;   /* HH/MM/SS 稳定宽度 */
+  text-align:center;
+}
+
+.timer .colon{
+  min-width: 1ch;
+  opacity:.9;
+  transform: translateY(-0.06em);
+}
+
+.status{
+  font-size: clamp(12px, 2vw, 16px);
+  letter-spacing:.4em;
+  opacity:.8;
+}
+
+/* 初始隐藏 */
+.hidden{ display:none !important; }
+
+/* 超小屏保险（避免挤爆） */
+@media (max-width: 420px){
+  .timer{
+    letter-spacing:.02em;
+    gap: 6px;
+    font-size: clamp(72px, 22vw, 240px);
+  }
+}
