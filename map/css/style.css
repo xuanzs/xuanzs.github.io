@@ -530,6 +530,18 @@ button:focus {
 	fill: #a2bbdd;
 }
 
+.map__staircase {
+	fill: #ddc8a2;
+}
+
+.map__lift {
+	fill: #bda2dd;
+}
+
+.map__toilet {
+	fill: #7386d2;
+}
+
 .map__space {
 	-webkit-transition: fill-opacity 0.8s;
 	transition: fill-opacity 0.8s;
@@ -579,7 +591,7 @@ button:focus {
 
 .content__item-title {
 	font-size: 2.5em;
-	margin: -1vmin 0 0 0;
+	margin: -2vmin 0 0 0;
 	padding: 0 0 0.75em 0;
 	pointer-events: none;
 	font-weight: normal;
@@ -634,7 +646,7 @@ button:focus {
 
 .content__meta-item {
 	display: inline-block;
-	margin: 0.5vmin 0 0 0;
+	margin: -3vmin 0 0 0;
 	padding: 0 2px;
 	/* color: ; */
 	font-size: 60px;
@@ -647,7 +659,7 @@ button:focus {
 
 .content__desc {
 	text-align: center;
-	margin: 3vmin 0 0 0;
+	margin: 2vmin 0 0 0;
 	font-size: 30px;
 }
 
@@ -984,14 +996,14 @@ button:focus {
 .pin--1-7 { top: 48.4vmin; left: 108.3vmin; }
 
 /* Pins for floor 4 */
-.pin--2-1 { top: 56.7vmin; left: 23.7vmin; }
+.pin--2-1 { top: 57.5vmin; left: 23.7vmin; }
 .pin--2-2 { top: 28vmin; left: 29vmin; }
 .pin--2-3 { top: 56.2vmin; left: 75.2vmin; }
 .pin--2-4 { top: 45.7vmin; left: 87.8vmin; }
 
 /* Pins for floor 5 */
-.pin--3-1 { top: 68vmin; left: 17vmin; }
-.pin--3-2 { top: 37.4vmin; left: 82.4vmin; }
+.pin--3-1 { top: 57.5vmin; left: 23.7vmin; }
+.pin--3-2 { top: 31.3vmin; left: 77.7vmin; }
 .pin--3-3 { top: 61vmin; left: 92vmin; }
 .pin--3-4 { top: 72.3vmin; left: 89.7vmin; }
 
