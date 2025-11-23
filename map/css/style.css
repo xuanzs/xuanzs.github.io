@@ -578,8 +578,8 @@ button:focus {
 }
 
 .content__item-title {
-	font-size: 3em;
-	margin: 0;
+	font-size: 2.5em;
+	margin: -1vmin 0 0 0;
 	padding: 0 0 0.75em 0;
 	pointer-events: none;
 	font-weight: normal;
@@ -634,7 +634,7 @@ button:focus {
 
 .content__meta-item {
 	display: inline-block;
-	margin: 2vmin 0 0 0;
+	margin: 0.5vmin 0 0 0;
 	padding: 0 2px;
 	/* color: ; */
 	font-size: 60px;
@@ -647,7 +647,7 @@ button:focus {
 
 .content__desc {
 	text-align: center;
-	margin: 6vmin 0 0 0;
+	margin: 3vmin 0 0 0;
 	font-size: 30px;
 }
 
