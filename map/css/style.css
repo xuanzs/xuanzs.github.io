@@ -542,6 +542,10 @@ button:focus {
 	fill: #7386d2;
 }
 
+.map__foh {
+	fill: #000000;
+}
+
 .map__space {
 	-webkit-transition: fill-opacity 0.8s;
 	transition: fill-opacity 0.8s;
@@ -605,8 +609,12 @@ button:focus {
 	color: #7cbf7f;
 }
 
-.content__item[data-category='2'] .content__item-title {
+/* .content__item[data-category='2'] .content__item-title {
 	color: #6584c7;
+} */
+
+.content__item[data-category='2'] .content__item-title {
+	color: #000000;
 }
 
 .content__item[data-category='3'] .content__item-title {
@@ -950,8 +958,11 @@ button:focus {
 .pin[data-category='1'] .icon--pin {
 	fill: #7cbf7f;
 }
-.pin[data-category='2'] .icon--pin {
+/* .pin[data-category='2'] .icon--pin {
 	fill: #6584c7;
+} */
+.pin[data-category='2'] .icon--pin {
+	fill: #000000;
 }
 .pin[data-category='3'] .icon--pin {
 	fill: #dc4b7c;
@@ -995,6 +1006,7 @@ button:focus {
 .pin--1-5 { top: 52.4vmin; left: 78.5vmin; }
 .pin--1-6 { top: 38vmin; left: 103.6vmin; }
 .pin--1-7 { top: 48.4vmin; left: 108.3vmin; }
+.pin--1-8 { top: 53vmin; left: 85.5vmin; }
 
 /* Pins for floor 4 */
 .pin--2-1 { top: 57.5vmin; left: 23.7vmin; }
