@@ -1010,19 +1010,19 @@ button:focus {
 
 /* Pins for floor 6 */
 .pin--4-1 { top: 57.5vmin; left: 23.7vmin; }
-.pin--4-2 { top: 75vmin; left: 46vmin; }
-.pin--4-3 { top: 48vmin; left: 58vmin; }
-.pin--4-4 { top: 67vmin; left: 96vmin; }
+.pin--4-2 { top: 62.2vmin; left: 47.9vmin; }
+.pin--4-3 { top: 40vmin; left: 58vmin; }
+.pin--4-4 { top: 56vmin; left: 89vmin; }
 
 /* Pins for floor 7 */
-.pin--5-1 { top: 68vmin; left: 17vmin; }
-.pin--5-2 { top: 75vmin; left: 47vmin; }
-.pin--5-3 { top: 68.1vmin; left: 97vmin; }
+.pin--5-1 { top: 57.5vmin; left: 23.7vmin; }
+.pin--5-2 { top: 62.1vmin; left: 48.7vmin; }
+.pin--5-3 { top: 56.7vmin; left: 90vmin; }
 
 /* Pins for floor 8 */
-.pin--6-1 { top: 50vmin; left: 25vmin; }
-.pin--6-2 { top: 76.6vmin; left: 63.4vmin; }
-.pin--6-3 { top: 69vmin; left: 99vmin; }
+.pin--6-1 { top: 42vmin; left: 30vmin; }
+.pin--6-2 { top: 63.5vmin; left: 62.3vmin; }
+.pin--6-3 { top: 57.7vmin; left: 91.4vmin; }
 
 /* Mobile compatability */
 .open-search,
