@@ -939,10 +939,10 @@
             return topPairs.map(pair => pair.team).filter(Boolean);
         }
 
-        const countdownTarget = new Date("2025-10-07T20:00:00").getTime();
+        const countdownTarget = new Date("2025-11-23T00:14:00").getTime();
         const overlay = document.getElementById("overlay");
         const popup = document.getElementById("popup");
-        const alarm = new Audio('alarm.mp3');
+        const alarm = new Audio('../sound/alarm.mp3');
 
         let animationIntervalId = null;
         let countdownIntervalId = null;
@@ -985,8 +985,8 @@
             
             if (distance < 0) {
                 document.getElementById("countdown").style.visibility = "hidden";
-                // overlay.style.visibility = "visible";
-                // popup.style.visibility = "visible";
+                overlay.style.visibility = "visible";
+                popup.style.visibility = "visible";
 
                 clearInterval(countdownIntervalId);
 
@@ -994,12 +994,12 @@
                 //     console.warn("Audio play was prevented:", e);
                 // });
 
-                // startAnimation();
+                startAnimation();
 
-                // if (!animationStarted) {
-                //     animationStarted = true;
-                //     animate();
-                // }
+                if (!animationStarted) {
+                    animationStarted = true;
+                    animate();
+                }
                 return;
             }
 
