@@ -242,8 +242,8 @@ button:focus {
 	line-height: 0;
 	position: absolute;
 	z-index: 100;
-	top: -1.7em;
-    left: 18em;
+	top: -3.3em;
+    left: 20.5em;
 	white-space: nowrap;
 	color: #7d7d86;
 	-webkit-transform: rotateZ(45deg) rotateX(-70deg) translateZ(5vmin);
@@ -578,7 +578,7 @@ button:focus {
 }
 
 .content__item-title {
-	font-size: 1.85em;
+	font-size: 3em;
 	margin: 0;
 	padding: 0 0 0.75em 0;
 	pointer-events: none;
@@ -648,7 +648,7 @@ button:focus {
 .content__desc {
 	text-align: center;
 	margin: 6vmin 0 0 0;
-	font-size: 20px;
+	font-size: 30px;
 }
 
 .content__button {
@@ -975,19 +975,19 @@ button:focus {
 }
 
 /* Pins for floor 3 */
-.pin--1-1 { top: 56.6vmin; left: 20.3vmin; }
-.pin--1-2 { top: 40vmin; left: 43vmin; }
-.pin--1-3 { top: 73.3vmin; left: 49.5vmin; }
-.pin--1-4 { top: 18vmin; left: 75.4vmin; }
-.pin--1-5 { top: 63vmin; left: 83vmin; }
-.pin--1-6 { top: 45.7vmin; left: 113.3vmin; }
-.pin--1-7 { top: 58.3vmin; left: 119vmin; }
+.pin--1-1 { top: 47.3vmin; left: 26.4vmin; }
+.pin--1-2 { top: 35vmin; left: 46vmin; }
+.pin--1-3 { top: 61vmin; left: 50.7vmin; }
+.pin--1-4 { top: 15.4vmin; left: 72vmin; }
+.pin--1-5 { top: 52.4vmin; left: 78.5vmin; }
+.pin--1-6 { top: 38vmin; left: 103.6vmin; }
+.pin--1-7 { top: 48.4vmin; left: 108.3vmin; }
 
 /* Pins for floor 4 */
-.pin--2-1 { top: 68vmin; left: 17vmin; }
-.pin--2-2 { top: 34vmin; left: 23.5vmin; }
-.pin--2-3 { top: 67.6vmin; left: 79.1vmin; }
-.pin--2-4 { top: 55vmin; left: 94.3vmin; }
+.pin--2-1 { top: 56.7vmin; left: 23.7vmin; }
+.pin--2-2 { top: 28vmin; left: 29vmin; }
+.pin--2-3 { top: 56.2vmin; left: 75.2vmin; }
+.pin--2-4 { top: 45.7vmin; left: 87.8vmin; }
 
 /* Pins for floor 5 */
 .pin--3-1 { top: 68vmin; left: 17vmin; }
