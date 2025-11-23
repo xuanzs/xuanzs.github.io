@@ -634,7 +634,7 @@ button:focus {
 
 .content__meta-item {
 	display: inline-block;
-	margin: 6vmin 0 0 0;
+	margin: 2vmin 0 0 0;
 	padding: 0 2px;
 	/* color: ; */
 	font-size: 60px;
