@@ -523,10 +523,12 @@ body.submitted h1{
   transition: opacity .2s ease, transform .2s ease, visibility 0s .2s;
 }
 
+/* 显示 */
 .popup.show{
   visibility: visible;
   opacity:1;
   transform: translate(-50%, -50%);
+  transition: opacity .2s ease, transform .2s ease;
 }
 
 /* 标题 */
@@ -535,16 +537,16 @@ body.submitted h1{
   font-size: 20px;
   font-weight: 900;
   text-align: center;
-    font-family: var(--font-title);
+  font-family: var(--font-title);
   letter-spacing: .06em;
-  transform: rotate(-1deg); /* 贴纸感 */
+  transform: rotate(-1deg);
   -webkit-text-stroke: 1.5px #000;
   text-shadow:
     0 3px 0 rgba(0,0,0,.65),
     0 0 10px rgba(0,0,0,.12);
 }
 
-/* 关闭按钮更圆润 */
+/* 关闭按钮 */
 .popup .popup-close{
   position:absolute;
   top:10px; right:10px;
@@ -563,50 +565,60 @@ body.submitted h1{
   padding: 4px 2px 6px;
 }
 
-/* 每一行 */
+/* 每一行：Grid 三栏（左 icon / 中文字 / 右 pill） */
 .popup .baby-row{
-  display:flex;
+  display:grid;
+  grid-template-columns: var(--icon-slot, 48px) 1fr auto;
   align-items:center;
   gap:10px;
+
   padding:10px 12px;
   border-radius:14px;
-  background: #f6f6f8;
+  background:#f6f6f8;
   box-shadow: inset 0 0 0 1px #eee;
-  font-size: 17px;        /* 手机更大更清楚 */
-  font-weight: 800;
-  justify-content: center !important;
+
+  font-size:17px;
+  font-weight:800;
+  text-align:center;
 }
 
-/* 排名 */
+/* 排名（如果你有 rank） */
 .popup .baby-row .rank{
+  min-width: 34px;
   font-weight: 900;
   color:#666;
-  min-width: 34px;
+  justify-self: start;
 }
 
-/* team icon */
+/* team icon：固定最左、用真实 size 放大 */
 .popup .baby-row .team-icon{
+  width: var(--icon-size, 28px);
+  height: var(--icon-size, 28px);
   object-fit: contain;
   flex: 0 0 auto;
+  justify-self: start;
+  align-self: center;
   filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+  transform: none; /* 不用 scale，避免不占位 */
 }
 
-/* team 名称 */
+/* team 名称：永远居中 */
 .popup .baby-row .team-label{
   font-weight: 900;
-  flex: 0 0 auto !important;
+  justify-self: center;
   text-align: center;
 }
 
-/* baby 小胶囊 */
+/* baby 小胶囊：靠右 */
 .popup .baby-row .baby-pill{
-  font-size: 13px;
-  font-weight: 900;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: #111;
+  font-size:13px;
+  font-weight:900;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#111;
   color:#fff;
   letter-spacing:.02em;
+  justify-self: end;
 }
 
 /* No data 行 */
@@ -617,6 +629,7 @@ body.submitted h1{
 }
 .popup .baby-row .no-data{
   font-size:15px;
+  justify-self: center;
 }
 
 @media (max-width: 480px){
@@ -874,26 +887,175 @@ body.submitted .mapWrap{
 }
 
 
-/* ✅ iPad 横屏更宽时恢复两列（cover Pro 横屏） */
-@media (min-width: 900px) and (max-width: 1366px) and (orientation: landscape){
-  
-    :root{
-      --table-max: 560px; /* 横屏 table 再大一点 */
-    }
+@media (orientation: landscape) and (min-width: 768px){
 
-  .container{
-    display:grid;
-    grid-template-columns: var(--table-size) minmax(0, 1fr);
-    column-gap: clamp(12px, 3vw, 24px);
-    align-items:start;
-    max-width: calc(var(--table-size) + clamp(12px, 3vw, 24px) + min(420px, 40vw));
+  /* ✅ 横屏背景：用真实文件名 */
+  body:not(.submitted){
+    background: url("../public/background/ipadhorizontalbackgrounds.png")
+                no-repeat center/cover fixed !important;
   }
-  .table{ grid-column:1; }
-  .right{ grid-column:2; width:100%; max-width:min(420px, 40vw); }
-  .bottom{ grid-column:1 / span 2; }
+  body.submitted{
+    background: url("../public/background/ipadhorizontalbackgrounds.png")
+                no-repeat center/cover fixed !important;
+  }
 
-    .popup{
-    width: min(80vw, 520px);
+  /* ✅ 横屏整体变量：让 Bingo 变大 */
+  :root{
+    /* 用 vh 控制上限，横屏高度才是关键 */
+    --table-max: min(78vh, 820px);
+    --btn-size: clamp(56px, 6vw, 74px);
+    --cell-gap: clamp(8px, 1.4vw, 14px);
+    --block-gap: clamp(8px, 1.6vw, 16px);
+    --gutter: clamp(12px, 2vw, 20px);
+
+    /* 🔥 关键：横屏重算 table-size（不要再用 vw 上限） */
+    --table-size: min(calc(100vh - 2 * var(--gutter)), var(--table-max));
+    --table-size: min(calc(100svh - 2 * var(--gutter)), var(--table-max));
+  }
+
+  /* ✅ 横屏强制单列置中（压掉你原本 desktop grid） */
+  .container{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    max-width:none !important;
+    gap: var(--block-gap) !important;
+  }
+
+  /* ✅ 排序：地图在上、名字在地图下、Bingo 再下面 */
+  .mapWrap{ order: 0; margin: 0 0 6px 0 !important; }
+  h1, .team-title, .teamNameWrap{ order: 1; margin: 0 0 10px 0 !important; }
+  .table{ order: 2; }
+
+  /* ✅ Bingo 外框放大 + 置中 */
+  .table{
+    width: var(--table-size) !important;
+    margin-inline:auto !important;
+    padding: clamp(12px, 1.4vw, 18px) !important;
+    border-radius: 22px !important;
+  }
+
+  #t1{
+    width:100% !important;
+    margin-inline:auto !important;
+  }
+
+  /* ✅ 格子数字跟着放大 */
+  #t1 button{
+    font-size: clamp(32px, 4.8vw, 54px) !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+  }
+
+  /* ✅ 横屏时名字 / 地图别跟着一起变超大 */
+  #teamName{
+    width: min(60vw, 320px) !important;
+    height: clamp(38px, 5vh, 48px) !important;
+    font-size: clamp(14px, 2.2vw, 18px) !important;
+    margin-bottom: 8px !important;
+  }
+
+  body.submitted h1{
+    font-size: clamp(20px, 3vw, 28px) !important;
+    margin-top: 4px !important;
+  }
+
+  .mapBtn{
+    width: clamp(44px, 5vh, 54px) !important;
+    height: clamp(44px, 5vh, 54px) !important;
+    font-size: clamp(18px, 2.4vw, 22px) !important;
+  }
+
+  /* 如果横屏还要显示 right/bottom，也对齐并居中 */
+  .right,
+  .bottom{
+    width: min(100%, var(--table-size)) !important;
+    max-width: var(--table-size) !important;
+    margin-inline:auto !important;
+  }
+  
+}
+
+@media (orientation: landscape) and (min-width: 768px){
+
+  /* 标题（Hw - T1）横屏放大 */
+  h1,
+  body.submitted h1,
+  .team-title{
+    display: block !important;
+    font-size: clamp(30px, 4.2vw, 44px) !important;
+    font-weight: 900 !important;
+    margin: 8px 0 14px !important;
+    text-align: center !important;
+    letter-spacing: .08em !important;
+  }
+
+  /* map 按钮横屏放大一圈（同时 cover #mapBtn 这种写法） */
+  .mapBtn,
+  #mapBtn{
+    width: clamp(70px, 9vh, 96px) !important;
+    height: clamp(70px, 9vh, 96px) !important;
+    font-size: clamp(26px, 3.2vh, 34px) !important;
+  }
+
+  .mapWrap{
+    margin-bottom: 6px !important;
   }
 }
 
+/* ✅ iPad 横屏：只放大 popout（请放到 CSS 最底部） */
+@media (orientation: landscape) and (min-width: 768px){
+
+
+  .popup{
+    width: min(96vw, 980px) !important;
+    padding: clamp(28px, 3vw, 44px) !important;
+    border-radius: clamp(24px, 2.5vw, 34px) !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    box-shadow: 0 26px 90px rgba(0,0,0,.6) !important;
+    --icon-scale: 2.5; 
+  }
+
+  .popup h4{
+    font-size: clamp(38px, 5vw, 60px) !important;
+    margin: 6px 0 22px !important;
+    -webkit-text-stroke: 2.6px #000 !important;
+  }
+
+  .popup .popup-close{
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 28px !important;
+    line-height: 60px !important;
+    top: 14px !important;
+    right: 14px !important;
+  }
+
+  .popup .babies{
+    gap: 18px !important;
+    padding: 10px 8px 12px !important;
+  }
+
+  .popup .baby-row{
+    font-size: clamp(30px, 3.8vw, 44px) !important;
+    padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.4vw, 30px) !important;
+    border-radius: 18px !important;
+  }
+
+  .popup .baby-row .rank,
+  .popup .baby-row .team-label,
+  .popup .baby-row .no-data{
+    font-size: inherit !important;
+    font-weight: 900 !important;
+  }
+
+  /* ✅ 关键：横屏只“视觉放大”图标，不碰 width/height */
+  .popup .baby-row .team-icon{
+    transform: scale(var(--icon-scale)) !important;
+    transform-origin: center center !important;
+    will-change: transform;
+  }
+}
