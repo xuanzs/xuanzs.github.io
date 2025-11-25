@@ -606,16 +606,16 @@ button:focus {
 }
 
 .content__item[data-category='1'] .content__item-title {
+	color: #000000;
+}
+
+.content__item[data-category='2'] .content__item-title {
 	color: #7cbf7f;
 }
 
 /* .content__item[data-category='2'] .content__item-title {
 	color: #6584c7;
 } */
-
-.content__item[data-category='2'] .content__item-title {
-	color: #000000;
-}
 
 .content__item[data-category='3'] .content__item-title {
 	color: #dc4b7c;
@@ -805,13 +805,13 @@ button:focus {
 } */
 
 .list__item.is-category-header[data-category="1"]::before {
-	content: "Vacant";
-	color: #7cbf7f;
+	content: "FOH";
+	color: #000000;
 }
 
 .list__item.is-category-header[data-category="2"]::before {
-	content: "Learn & Create";
-	color: #6584c7;
+	content: "Vacant";
+	color: #7cbf7f;
 }
 
 .list__item.is-category-header[data-category="3"]::before {
@@ -956,14 +956,14 @@ button:focus {
 }
 
 .pin[data-category='1'] .icon--pin {
+	fill: #000000;
+}
+.pin[data-category='2'] .icon--pin {
 	fill: #7cbf7f;
 }
 /* .pin[data-category='2'] .icon--pin {
 	fill: #6584c7;
 } */
-.pin[data-category='2'] .icon--pin {
-	fill: #000000;
-}
 .pin[data-category='3'] .icon--pin {
 	fill: #dc4b7c;
 }

@@ -252,7 +252,7 @@
 					const status = acc.status;
 	
 					// Determine category based on status
-					const category = (status === "vacant") ? "1" : "3";
+					const category = (status === "vacant") ? "2" : "3";
 	
 					if (map[id]) {
 						const mappedSpace = map[id];
