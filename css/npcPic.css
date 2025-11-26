@@ -5,17 +5,6 @@
   --ice:#7cf2ff;
   --chalk:#f3f3f3;
 }
-
-html::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
-  background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9InRhYmxlIiB0YWJsZVZhbHVlcz0iMCAwIDAgMC4wOCAuMTUgMCIvPjwvZmVDb21wb25lbnRUcmFuc2Zlcj48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
-  mix-blend-mode: overlay;
-}
-
 html, body{
   height:100%;
   margin:0;
@@ -23,12 +12,7 @@ html, body{
 
 body{
   color: var(--chalk);
-  background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
-    linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-    linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%) !important;
-  background-attachment: fixed;
+  background:url("../public/background/bucketlistBackground.png") center/cover no-repeat fixed;
 
   display:flex;
   justify-content:center;
@@ -37,17 +21,42 @@ body{
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.selfiePage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
+.selfiePage{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: fixed;
+  inset: 0; 
+  transform: none;
+
+  width: 100%;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); 
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+}
+
+.selfieTitle h3{
+    display: block !important;
+    font-size: clamp(34px, 5.2vw, 50px) !important;
+    font-weight: 900 !important;
+    margin-top: 50px;
+    text-align: center !important;
+    letter-spacing: .08em;
+    text-shadow:
+      0 3px 0 rgba(0,0,0,.9),
+      0 0 10px rgba(124,242,255,.6),
+      0 0 18px rgba(90,35,161,.7);
+    font-family: var(--font-title);
+    -webkit-text-stroke: 2px #000;
+}
+
+.selfieTitle h5{
+  color: #32c025;
+  margin-top: auto;
 }
 
 .overlay {
@@ -189,82 +198,176 @@ body{
     overflow-y: auto;
   }
 
-  /* ======= Pretty file upload ======= */
+  /* ======= Pretty file upload ======= *//* =========================
+   ✅ File bar (跟你截图一样)
+========================= */
 .file-upload{
-  width: 100%;
-  max-width: 520px;
-  padding: 0 12px;
+  width: min(88vw, 520px);
+  padding: 10px 12px;
   box-sizing: border-box;
 
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
+  display: flex;
   align-items: center;
+  gap: 12px;
+
+  border-radius: 18px;
+  border: 1.6px solid rgba(255,255,255,0.20);
+  background: rgba(0,0,0,0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.45),
+              inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 /* hide native input */
 .file-input{
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 0;
-  height: 0;
+  position:absolute;
+  opacity:0;
+  width:0;
+  height:0;
+  pointer-events:none;
 }
 
-/* custom button */
 .file-btn{
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-radius: 999px;
   border: none;
 
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-
-  color: #fdfdfd;
-  background: rgba(255,255,255,0.14);
-  box-shadow:
-    0 10px 22px rgba(0,0,0,0.35),
-    0 0 0 1px rgba(255,255,255,0.22);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
-}
-
-.file-btn:hover{
-  background: rgba(255,255,255,0.22);
-  transform: translateY(-2px);
-  box-shadow:
-    0 14px 30px rgba(0,0,0,0.45),
-    0 0 0 1px rgba(255,255,255,0.35);
-}
-
-.file-btn:active{
-  transform: translateY(0);
-}
-
-/* file name */
-.file-name{
+  color: #fff;
+  font-weight: 800;
   font-size: 14px;
-  color: rgba(255,255,255,0.8);
-  background: rgba(0,0,0,0.25);
-  padding: 10px 14px;
-  border-radius: 12px;
+  letter-spacing: .02em;
+
+  background: rgba(0,0,0,0.55);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.45),
+              0 0 0 1px rgba(255,255,255,0.22);
+}
+
+.file-btn:hover{ background: rgba(0,0,0,0.68); }
+.file-btn:active{ transform: translateY(0); }
+
+.file-name{
+  flex:1;
+  font-size: 14px;
+  color: rgba(255,255,255,0.78);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* small screens */
-@media (max-width: 480px){
-  .file-upload{
-    grid-template-columns: 1fr;
-  }
+/* =========================
+   ✅ 横向左右滑动预览区（关键）
+========================= */
+#imagePreview, #images{
+  width: min(88vw, 520px);
+  min-height: 190px;
+  padding: 12px;
+  margin-top: 12px;
+
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  border-radius: 16px;
+  border: 1.6px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.45);
+
+  scroll-snap-type: x mandatory;
+}
+
+#imagePreview:empty, #images:empty{
+  align-items: center;
+  justify-content: center;
+}
+
+#imagePreview:empty::before, #images:empty::before{
+  content: "No preview yet";
+  color: rgba(255,255,255,0.55);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+}
+
+#imagePreview .img-container,
+#images .img-container{
+  height: 180px;
+}
+
+#imagePreview .img-container img,
+#images .img-container img{
+  width: 200px;
+  height: 100%;
+  object-fit: contain;
+}
+
+#imagePreview .img-container,
+#images .img-container{
+  background: transparent !important;
+}
+
+#imagePreview .img-container img,
+#images .img-container img{
+  background: transparent !important;
+}
+
+/* 移除按钮 */
+.remove-btn{
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: rgba(238, 0, 0, 0.85);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  z-index: 10;
+  line-height: 28px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.35);
+}
+
+/* ✅ Submit 按钮补上（避免你之前不见） */
+#npcSubmitBtn{
+  width: min(88vw, 520px);
+  height: 58px;
+  border-radius: 18px;
+  border: 1.8px solid rgba(182,255,182,0.70);
+  color: rgba(255,255,255,0.95);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  cursor: pointer;
+margin: 14px 0;
+  background: linear-gradient(180deg, rgba(182,255,182,0.28), rgba(76,176,102,0.58));
+  box-shadow: 0 16px 30px rgba(0,0,0,0.75),
+              0 0 0 1.5px rgba(182,255,182,0.65) inset,
+              0 0 22px rgba(115,255,90,0.55);
+}
+
+#npcSubmitBtn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: 0 12px 22px rgba(0,0,0,0.55);
+}
+
+.selfiePage::after{
+  content:"";
+  display:block;
+  height: calc(env(safe-area-inset-bottom, 0px) + 90px); /* 90px 你可调大/小 */
 }

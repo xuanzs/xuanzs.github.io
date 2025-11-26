@@ -79,12 +79,13 @@ body{
 
 /* ✅ 倒计时器：全屏层，初始 hidden */
 .timer-wrap{
-  position: fixed;
-  inset: 0;
-  width:100vw;
-  height:100vh;
+overflow: hidden;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
   background:#000;
-  z-index: 10;
+  z-index: 999999 !important;
 
   display:flex;
   flex-direction:column;
@@ -92,17 +93,25 @@ body{
   justify-content:center;
   gap: clamp(10px, 3vh, 20px);
   padding: clamp(10px, 3vw, 40px);
+
+  /* ✅ 防止任何祖先 transform 影响 fixed */
+  transform: none !important;
 }
 
-/* 数字：一排、不准换行、跟屏幕放到最大 */
+/* ✅ 让 timer 吃满 timer-wrap */
 .timer{
-  display:flex;
-  justify-content:center;
-  align-items:baseline;
-  white-space: nowrap;              /* ✅ 不换行 */
-  gap: clamp(6px, 2vw, 18px);
+  flex: 1;                 /* 占满 wrap 的剩余空间 */
+  width: 100%;
+  height: 100%;
+  display: flex;
 
-  font-family: var(--font-digital); /* ✅ 用七段字体 */
+  justify-content: center;
+  align-items: center;     /* 用 center 才能垂直铺满 */
+  white-space: nowrap;
+
+  /* 你原本的样式保留 */
+  gap: clamp(6px, 2vw, 18px);
+  font-family: var(--font-digital);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: .04em;
@@ -111,10 +120,8 @@ body{
     0 0 12px rgba(255,0,0,.75),
     0 0 30px rgba(255,0,0,.55);
 
-  /* ✅ 关键：字体按视口最小边放到极限 */
-  font-size: clamp(120px, min(30vw, 30vh), 720px);
+  font-size: min(42vw, 42vh) !important;
 }
-
 .timer span{
   display:inline-block;
   min-width: 2ch;   /* HH/MM/SS 稳定宽度 */

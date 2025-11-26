@@ -24,11 +24,7 @@ html, body{
 body{
   color: var(--chalk);
   background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
-    linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-    linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%) !important;
-  background-attachment: fixed;
+    url("../public/background/bucketlistBackground.png") center/cover no-repeat fixed;
 
   display:flex;
   justify-content:center;
@@ -63,6 +59,26 @@ body{
   height: 90%;
 }
 
+.mainPage h1{
+  display: block;                 /* 你原本 h1 是 display:none */
+  margin: 6px 0 14px;
+  padding: 0;
+
+  font-family: var(--font-title); /* 你有定义 Bungee 等 */
+  font-size: clamp(35px, 7vw, 42px);
+  font-weight: 900;
+  letter-spacing: .08em;
+  line-height: 1.05;
+  text-align: center;
+
+  color: #fff;
+  -webkit-text-stroke: 2px rgba(0,0,0,.85);
+  text-shadow:
+    0 4px 0 rgba(0,0,0,.80),
+    0 0 14px rgba(90,35,161,.55);
+}
+
+/* 外层 padding 保留 */
 .anabelle-checkin,
 .npcPic,
 .smilePic,
@@ -71,6 +87,7 @@ body{
   padding: 10px;
 }
 
+/* 所有任务按钮的共同底款（中性黑玻璃） */
 .anabelle-checkin button,
 .npcPic button,
 .smilePic button,
@@ -80,46 +97,64 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-
   width: 85vw;
-  max-width: 500px;
-  height: 8vh;
-  padding: 20px 0;
-  margin: 10px 0;
-
-  font-size: clamp(18px, 4vw, 32px);
-  letter-spacing: 0.03em;
-  border: none;
+  max-width: 520px;
+  height: clamp(56px, 8.5vh, 86px);
+  padding: 18px 22px;
+  margin: 12px 0;
+  font-size: clamp(18px, 3.8vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border: 1.8px solid rgba(255,255,255,0.20);
   outline: none;
+  color: rgba(255,255,255,0.95);
 
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  color: #fdfdfd;
+  background:
+    radial-gradient(140% 220% at 0% 0%,
+      rgba(255,255,255,0.10),
+      transparent 50%
+    ),
+    linear-gradient(180deg,
+      rgba(10,10,10,0.92),
+      rgba(0,0,0,0.98)
+    );
+  border-radius: 20px;
+  backdrop-filter: blur(10px) saturate(1.05);
+  -webkit-backdrop-filter: blur(10px) saturate(1.05);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.18);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
+    0 14px 26px rgba(0,0,0,0.70),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    background 0.15s ease,
-    letter-spacing 0.15s ease;
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
+    letter-spacing 0.16s ease;
 }
 
+/* hover：整体亮一点，但还是中性 */
 .anabelle-checkin button:hover,
 .npcPic button:hover,
 .smilePic button:hover,
 .mission4 button:hover,
 .searchPuzzle button:hover {
-  background: rgba(255, 255, 255, 0.22);
   transform: translateY(-3px);
-  box-shadow:
-    0 18px 35px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.32);
   letter-spacing: 0.06em;
+  border-color: rgba(255,255,255,0.35);
+
+  background:
+    radial-gradient(140% 220% at 0% 0%,
+      rgba(255,255,255,0.16),
+      transparent 52%
+    ),
+    linear-gradient(180deg,
+      rgba(25,25,25,0.96),
+      rgba(5,5,5,1)
+    );
+
+  box-shadow:
+    0 18px 34px rgba(0,0,0,0.80),
+    inset 0 0 0 1px rgba(255,255,255,0.10);
 }
 
 .anabelle-checkin button:active,
@@ -129,44 +164,80 @@ body{
 .searchPuzzle button:active {
   transform: translateY(-1px);
   box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.26);
+    0 10px 20px rgba(0,0,0,0.70),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
 }
 
-.anabelle-checkin button {
-  color: rgba(255, 179, 193);
+/* =========================
+   ✅ 只有这两个任务有颜色
+========================= */
+
+/* 1) 每组至少和3位npc合照 (0/14) —— 冰蓝发光 */
+.npcPic button{
+  color: #d7ecff;
+  border-color: rgba(176,213,255,0.95);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 179, 193, 0.6);
+    0 18px 34px rgba(0,0,0,0.85),
+    0 0 0 1.5px rgba(176,213,255,0.9) inset,
+    0 0 20px rgba(124,242,255,0.55);
+
+  background:
+    linear-gradient(180deg,
+      rgba(176,213,255,0.32),
+      rgba(74,121,192,0.55)
+    ),
+    radial-gradient(140% 220% at 0% 0%,
+      rgba(255,255,255,0.20),
+      transparent 55%
+    );
 }
 
-.npcPic button {
-  color: rgba(176, 213, 255);
+.npcPic button:hover{
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(176, 213, 255, 0.6);
+    0 22px 40px rgba(0,0,0,0.9),
+    0 0 0 2px rgba(176,213,255,1) inset,
+    0 0 28px rgba(124,242,255,0.7);
 }
 
-.smilePic button {
-  color: rgba(182, 255, 182);
+/* 2) 集齐100个笑容 (0/100) —— 酸绿发光 */
+.smilePic button{
+  color: #e5ffe9;
+  border-color: rgba(182,255,182,0.98);
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(182, 255, 182, 0.6);
+    0 18px 34px rgba(0,0,0,0.85),
+    0 0 0 1.5px rgba(182,255,182,0.95) inset,
+    0 0 22px rgba(115,255,90,0.65);
+
+  background:
+    linear-gradient(180deg,
+      rgba(182,255,182,0.32),
+      rgba(76,176,102,0.60)
+    ),
+    radial-gradient(140% 220% at 0% 0%,
+      rgba(255,255,255,0.22),
+      transparent 55%
+    );
 }
 
-.mission4 button {
-  color: #ffe7a4;
+.smilePic button:hover{
   box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 231, 164, 0.6);
+    0 22px 40px rgba(0,0,0,0.9),
+    0 0 0 2px rgba(182,255,182,1) inset,
+    0 0 30px rgba(115,255,90,0.8);
 }
 
-.searchPuzzle button {
-  color: #b5fff8;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(181, 255, 248, 0.6);
+/* 手机/竖屏 iPad：宽度微调 */
+@media (max-width: 768px){
+  .anabelle-checkin button,
+  .npcPic button,
+  .smilePic button,
+  .mission4 button,
+  .searchPuzzle button{
+    width: 88vw;
+    margin: 10px 0;
+  }
 }
+
 
 
 .anabelle-checkin {
@@ -296,10 +367,25 @@ body{
 }
 
 
-.selfieMainTitle {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 30px;
+.selfieMainTitle{
+  /* 给背景 title/logo 预留空间（只推标题，不影响 Back 按钮） */
+  margin-top: clamp(18px, 6vh, 70px);
+  width: 100%;
   text-align: center;
+}
+
+.selfieMainTitle h3{
+  margin: 0;                 /* 清掉浏览器默认 h3 margin */
+  padding: 10px 14px;
+
+  color: #269623;            /* 跟你上面一样的绿色 */
+  font-size: clamp(26px, 5.6vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+
+  text-shadow:
+    0 8px 22px rgba(0,0,0,0.86),
+    0 2px 0 rgba(0,0,0,0.35);
 }
 
 ._14Btn {
@@ -319,11 +405,11 @@ body{
   margin: 10px;
   border: none;
   outline: none;
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 0.03em;
 
   /* 玻璃感背景 */
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 15px;
   color: #fdfdfd;
   box-shadow:
@@ -364,53 +450,10 @@ body{
   ._14Btn button {
     flex: 1 1 calc(50% - 20px);
     height: 60px;
-    font-size: 18px;
+    font-size: 20px;
     padding: 15px;
   }
 }
-
-._14Btn button.npc-red {
-  color: #ffd0d8;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 96, 125, 0.8);
-}
-
-._14Btn button.npc-blue {
-  color: #c9ddff;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(110, 162, 255, 0.8);
-}
-
-._14Btn button.npc-cyan {
-  color: #c4fff7;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(124, 242, 255, 0.9);
-}
-
-._14Btn button.npc-green {
-  color: #c4ffce;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(124, 255, 152, 0.9);
-}
-
-._14Btn button.npc-orange {
-  color: #ffe4c4;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 183, 124, 0.9);
-}
-
-._14Btn button.npc-yellow {
-  color: #f6ffc4;
-  box-shadow:
-    0 14px 28px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(253, 255, 124, 0.9);
-}
-
 
 
 
@@ -431,34 +474,65 @@ body{
 
 /* 100 Smiles */
 
-.smilePage {
+body:has(.smilePage){
+  align-items: flex-start !important;
+  max-height: none !important;
+}
+
+.smilePage{
+  position: fixed;
+  inset: 0;
+  transform: none;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-}
-
-.smileBackBtn {
-  display: flex;
   justify-content: flex-start;
+
   width: 100%;
+   height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+}
+.smileBackBtn{ display:flex; justify-content:flex-start; width:100%; }
+
+.smileBackBtn button{ margin: 12px 16px; padding: 10px 18px; border-radius: 999px; border: none; font-size: 14px; background: rgba(0, 0, 0, 0.45); color: #fdfdfd; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.25); cursor: pointer; }
+
+.smileBackBtn button:hover{ background: rgba(0, 0, 0, 0.55); }
+
+#smileUpload{ width: min(88vw, 520px); padding: 10px 12px; border-radius: 16px; border: 1.6px solid rgba(255,255,255,0.22); color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 12px 24px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06); } /* Chrome/Edge */ #smileUpload::file-selector-button{ margin-right: 12px; border: none; padding: 10px 14px; border-radius: 999px; background: rgba(0,0,0,0.55); color: #fff; cursor: pointer; box-shadow: 0 8px 18px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.22); } /* Safari 旧写法 */ #smileUpload::-webkit-file-upload-button{ margin-right: 12px; border: none; padding: 10px 14px; border-radius: 999px; background: rgba(0,0,0,0.55); color: #fff; cursor: pointer; box-shadow: 0 8px 18px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.22); } #smileUpload::file-selector-button:hover, #smileUpload::-webkit-file-upload-button:hover{ background: rgba(0,0,0,0.68); }
+
+#smileSubmitBtn{ cursor: pointer; width: min(88vw, 520px); height: clamp(50px, 7.2vh, 60px); padding: 14px 18px; border-radius: 18px; border: 1.8px solid rgba(182,255,182,0.70); color: rgba(255,255,255,0.95); font-size: clamp(16px, 3.6vw, 22px); font-weight: 800; letter-spacing: 0.04em; background: linear-gradient(180deg, rgba(182,255,182,0.28), rgba(76,176,102,0.58)), radial-gradient(140% 220% at 0% 0%, rgba(255,255,255,0.18), transparent 55%); box-shadow: 0 16px 30px rgba(0,0,0,0.75), 0 0 0 1.5px rgba(182,255,182,0.65) inset, 0 0 22px rgba(115,255,90,0.55); transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
+
+#smileSubmitBtn:hover{ transform: translateY(-2px); box-shadow: 0 20px 36px rgba(0,0,0,0.82), 0 0 0 2px rgba(182,255,182,0.85) inset, 0 0 30px rgba(115,255,90,0.75); } 
+
+#smileSubmitBtn:active{ transform: translateY(-1px); }
+
+.smilePage::after{
+  content: "";
+  display: block;
+  height: max(24px, 2vh); /* 你想更大就把 12vh 调大，例如 16vh */
 }
 
-.smileBackBtn button {
-  padding: 20px;
-  background: white;
-  border: none;
+.smileTitle{
+  margin: 10px 12px 14px;
+  text-align: center;
+  font-size: clamp(26px, 5.6vw, 40px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #269623;
+  text-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.863),
+    0 2px 0 rgba(0,0,0,0.35);
+  padding: 10px 14px;
+  border-radius: 14px;
 }
-
-.smileTitle {
-  font-size: 30px;
+.smileTitle h3{
+  margin-bottom: 0 !important;  /* bottom margin = 0 */
+  padding-bottom: 0 !important; /* bottom padding = 0 */
 }
 
 .overlay {
@@ -523,47 +597,58 @@ body{
   line-height: 20px;
 }
 
-#imagePreview,
-#images {
+#imagePreview, #images{
+  width: min(88vw, 520px);
+  min-height: 190px;                 /* ✅ 预留空间（你要更大就调这个） */
+  padding: 12px;
+  margin-top: 12px;
+  overflow-x: auto;
+  overflow-y: auto;
   display: flex;
-  flex-wrap: wrap; /* allow images to wrap */
-  justify-content: center; /* center horizontally */
-  gap: 10px; /* spacing between images */
-  max-height: 500px; /* adjust as needed */
-  overflow-y: auto; /* vertical scroll if overflow */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fafafa;
+  flex-direction: row;
+  gap: 12px;
+
+  overflow-x: auto;                  /* ✅ 左右滚动 */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* ✅ 手机滑动更顺 */
+
+  border-radius: 16px;
+  border: 1.6px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.45);
+
+  scroll-snap-type: x mandatory;     /* 可选：滑动会“吸附” */
 }
+
+#imagePreview:empty, #images:empty{
+  align-items: center;
+  justify-content: center;
+}
+
+
+#imagePreview:empty::before, #images:empty::before{
+  content: "No preview yet";
+  color: rgba(255,255,255,0.55);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+}
+
 
 .img-container {
   position: relative;
 }
 
-.img-container img {
-  width: 200px;
-  height: auto;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  object-fit: contain;
-  cursor: pointer;
-}
+.img-container img{ width: 200px; height: auto; border-radius: 12px; border: 2px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.25); box-shadow: 0 14px 28px rgba(0,0,0,0.45); object-fit: cover; }
 
 .smilePic {
   position: relative; /* allows the tick to position inside this div */
   display: inline-block;
 }
 
-.smilePic .tick {
-  position: absolute;
-  bottom: 10px; /* adjust to control vertical placement */
-  right: 30px; /* adjust to control horizontal placement */
-  font-size: 2em; /* larger tick */
-  color: red;
-  font-weight: bold;
-  pointer-events: none; /* ensures it doesn't block button clicks */
-}
+.smilePic .tick { position: absolute; bottom: 10px; /* adjust to control vertical placement */ right: 30px; /* adjust to control horizontal placement */ font-size: 2em; /* larger tick */ color: red; font-weight: bold; pointer-events: none; /* ensures it doesn't block button clicks */ }
 
 /* Mission 4 */
 

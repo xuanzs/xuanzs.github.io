@@ -72,11 +72,10 @@
   --cell-gap: clamp(6px, 2.4vw, 10px);
   --edge-bleed: 0px;
 
-    --font-title:
-    "Bungee",            /* 英文涂鸦街机 */
-    "Ma Shan Zheng",     /* 中文刷笔涂鸦 */
-    "ZCOOL KuaiLe",      /* 中文手写俏皮备用 */
-    system-ui, sans-serif;
+--font-title:
+  "Bungee",
+  "Ma Shan Zheng",
+  system-ui, sans-serif;
 
   --font-strong:
     "Anton",
@@ -633,6 +632,17 @@ body.submitted h1{
 }
 
 @media (max-width: 480px){
+
+  h1, body.submitted h1, .team-title{
+    font-size: clamp(28px, 9.5vw, 40px);
+    -webkit-text-stroke: 2px #000;  /* 小屏描边太粗会糊，减一点 */
+    letter-spacing: .08em;
+    text-shadow:
+      0 3px 0 rgba(0,0,0,.9),
+      0 0 10px rgba(124,242,255,.6),
+      0 0 18px rgba(90,35,161,.7);
+  }
+
   .popup{
     width: min(92vw, 320px);
     padding: 22px 18px; 
@@ -815,9 +825,9 @@ body.submitted .mapWrap{
     #t1 button{
     font-size: clamp(40px, 3.2vw, 30px); /* 原本 clamp(18px,5vw,24px) */
     font-weight: 900;
-      font-family: var(--font-strong);
-  letter-spacing: .02em;
-  text-shadow: 0 2px 0 rgba(0,0,0,.35);
+    font-family: var(--font-strong);
+    letter-spacing: .02em;
+    text-shadow: 0 2px 0 rgba(0,0,0,.35);
   }
 
 
@@ -926,7 +936,7 @@ body.submitted .mapWrap{
 
   /* ✅ 排序：地图在上、名字在地图下、Bingo 再下面 */
   .mapWrap{ order: 0; margin: 0 0 6px 0 !important; }
-  h1, .team-title, .teamNameWrap{ order: 1; margin: 0 0 10px 0 !important; }
+  h1, .team-title, .teamNameWrap{font-family: var(--font-title); order: 1; margin: 0 0 10px 0 !important; }
   .table{ order: 2; }
 
   /* ✅ Bingo 外框放大 + 置中 */
@@ -937,6 +947,16 @@ body.submitted .mapWrap{
     border-radius: 22px !important;
   }
 
+  h1, body.submitted h1, .team-title{
+    color: #fff;
+    -webkit-text-stroke: 3px #000;   /* 黑描边 */
+    text-shadow:
+      0 4px 0 rgba(0,0,0,.85),
+      0 0 14px rgba(124,242,255,.55),  /* 冰蓝光 */
+      0 0 26px rgba(90,35,161,.65);   /* 紫光 */
+    letter-spacing: .1em;
+  }
+
   #t1{
     width:100% !important;
     margin-inline:auto !important;
@@ -944,7 +964,6 @@ body.submitted .mapWrap{
 
   /* ✅ 格子数字跟着放大 */
   #t1 button{
-    font-size: clamp(32px, 4.8vw, 54px) !important;
     font-weight: 900 !important;
     line-height: 1 !important;
   }
@@ -990,6 +1009,7 @@ body.submitted .mapWrap{
     margin: 8px 0 14px !important;
     text-align: center !important;
     letter-spacing: .08em !important;
+    font-family: var(--font-title);
   }
 
   /* map 按钮横屏放大一圈（同时 cover #mapBtn 这种写法） */
@@ -1057,5 +1077,130 @@ body.submitted .mapWrap{
     transform: scale(var(--icon-scale)) !important;
     transform-origin: center center !important;
     will-change: transform;
+  }
+}
+
+
+@media (orientation: landscape) and (min-width: 768px) and (max-width: 1366px){
+
+  /* -------- 未 submit：左右布局 + t1 缩小 -------- */
+  :root{
+    /* t1 不要再用 100vh 级别，会太大
+       用宽度上限(≈56vw) + 高度上限(≈56vh) 双保险 */
+    --table-max: clamp(420px, 56vh, 560px);
+    --table-size: min(calc(56vw - 2 * var(--gutter)), var(--table-max));
+    --table-size: min(calc(56svw - 2 * var(--gutter)), var(--table-max));
+
+    /* 右侧按钮跟着横屏略放大，但不要挤爆 */
+    --btn-size: clamp(48px, 5vw, 66px);
+  }
+
+  .container{
+    display: grid !important;
+    grid-template-columns: var(--table-size) minmax(260px, 1fr) !important;
+    grid-template-areas:
+      "map    map"
+      "title  title"
+      "name   name"
+      "table  right"
+      "bottom bottom";
+    column-gap: clamp(22px, 3vw, 40px); /* 左右间距更明显 */
+    row-gap: var(--block-gap);
+    align-items: start;
+    justify-content: center;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .mapWrap{ grid-area: map; justify-self: center; }
+  h1, body.submitted h1{ grid-area: title; justify-self: center; }
+  #teamName{ grid-area: name; justify-self: center; }
+
+  /* 左侧 t1 */
+  .table{
+    grid-area: table;
+    justify-self: end;
+    width: var(--table-size) !important;
+  }
+
+  /* 右侧 right buttons：和左边留点空间 */
+  .right{
+    grid-area: right;
+    justify-self: start;
+    align-self: center;
+    width: min(40vw, 520px);
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: clamp(8px, 1.6vw, 18px); /* ✅ 预留呼吸位 */
+  }
+
+  /* 底部三按钮跨两栏居中 */
+  .bottom{
+    grid-area: bottom;
+    justify-self: center;
+    width: 100% !important;
+    max-width: calc(
+      var(--table-size) + min(40vw, 520px) + clamp(22px, 3vw, 40px)
+    ) !important;
+    margin-top: var(--block-gap) !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* -------- submit 后：回到单列置中 + 隐藏 right/bottom -------- */
+  body.submitted .container{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--block-gap) !important;
+  }
+
+  body.submitted .right,
+  body.submitted .bottom{
+    display: none !important;
+  }
+
+  body.submitted .table{
+    justify-self: center !important;
+    margin-inline: auto !important;
+    width: var(--table-size) !important;
+  }
+}
+
+@media (orientation: portrait) and (min-width: 768px) and (max-width: 1366px){
+
+  /* title 放大（跟横屏一致的视觉等级） */
+  h1,
+  body.submitted h1,
+  .team-title{
+    display: block !important;
+    font-size: clamp(34px, 5.2vw, 50px) !important;
+    font-weight: 900 !important;
+    margin: 10px 0 18px !important;
+    text-align: center !important;
+    letter-spacing: .08em;
+    text-shadow:
+      0 3px 0 rgba(0,0,0,.9),
+      0 0 10px rgba(124,242,255,.6),
+      0 0 18px rgba(90,35,161,.7);
+    font-family: var(--font-title);
+    -webkit-text-stroke: 2px #000;
+  }
+
+  /* map button 放大到横屏同款（但用 vw 更适合竖屏） */
+  .mapBtn,
+  #mapBtn{
+    width: clamp(70px, 10vw, 96px) !important;
+    height: clamp(70px, 10vw, 96px) !important;
+    font-size: clamp(26px, 4.2vw, 34px) !important;
+    border-width: 2px !important;
+  }
+
+  /* map 与标题间距微调，看起来像横屏排版 */
+  .mapWrap{
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    justify-content: center !important;
   }
 }
