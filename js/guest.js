@@ -36,15 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
             assignments.forEach((item, index) => {
               const btn = tableButtons[index];
               btn.textContent = item.value || "";
-            })
-        
+            });
+
             filled = true;
-        
+
             teamName.style.display = "none";
             document.querySelector(".right").style.display = "none";
             document.querySelector(".bottom").style.display = "none";
             document.querySelector(".container h1").textContent = data.name;
-            
+
             highlightCorrectStations(`team${team}`, tableButtons);
             document.body.classList.add("submitted");
 
@@ -69,22 +69,24 @@ document.addEventListener("DOMContentLoaded", function () {
               });
 
             db.collection("skills")
-            .doc("restore")
-            .onSnapshot((resDoc) => {
-              if (!resDoc.exists) {
-                currentRestoreTeams = [];
-              } else {
-                const data = resDoc.data();
-                currentRestoreTeams = data.teams || [];
-              }
-              applyShutdownIfNeeded();
-            });
+              .doc("restore")
+              .onSnapshot((resDoc) => {
+                if (!resDoc.exists) {
+                  currentRestoreTeams = [];
+                } else {
+                  const data = resDoc.data();
+                  currentRestoreTeams = data.teams || [];
+                }
+                applyShutdownIfNeeded();
+              });
 
             function applyShutdownIfNeeded() {
               if (!shutdownStation) return;
 
               if (currentRestoreTeams.includes(currentTeamId)) {
-                console.log(`Team ${currentTeamId} is in restore list, skipping shutdown`);
+                console.log(
+                  `Team ${currentTeamId} is in restore list, skipping shutdown`
+                );
                 resetButtons();
                 return;
               }
@@ -108,14 +110,17 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Freeze
-            const audioContext = new (window.AudioContext || window.webkitAudioContext) ();
+            const audioContext = new (window.AudioContext ||
+              window.webkitAudioContext)();
 
             async function loadAndPlaySound(url) {
               await audioContext.resume();
 
               const response = await fetch(url);
               const arrayBuffer = await response.arrayBuffer();
-              const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+              const audioBuffer = await audioContext.decodeAudioData(
+                arrayBuffer
+              );
 
               const source = audioContext.createBufferSource();
               source.buffer = audioBuffer;
@@ -136,16 +141,17 @@ document.addEventListener("DOMContentLoaded", function () {
                   if (status === "Freeze") {
                     overlay_2.style.visibility = "visible";
 
-                    alert("You are FREEZED")
+                    alert("You are FREEZED");
 
                     console.log("Status is Freeze, playing sound...");
-                    loadAndPlaySound("/sound/airHorn.mp3").then(() => {
-                      console.log("Sound played successfully");
-                    })
-                    .catch((err) => {
-                      console.error("Error playing sound:", err);
-                      overlay_2.style.visibility = "visible";
-                    });
+                    loadAndPlaySound("/sound/airHorn.mp3")
+                      .then(() => {
+                        console.log("Sound played successfully");
+                      })
+                      .catch((err) => {
+                        console.error("Error playing sound:", err);
+                        overlay_2.style.visibility = "visible";
+                      });
                   } else {
                     if (overlay_2.style.visibility === "visible") {
                       alert("You are UNfreezed");
@@ -153,8 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                   }
                 }
-            });
-
+              });
           } else {
             teamName.style.display = "block";
             document.querySelector(".right").style.display = "block";
@@ -165,16 +170,16 @@ document.addEventListener("DOMContentLoaded", function () {
         (error) => {
           console.error("Error fetching document:", error);
           alert("Failed to load data");
-        });
+        }
+      );
   } else {
     alert("No team selected");
     location.href = "../index.html";
   }
-  
 
   mapBtn.addEventListener("click", () => {
-    sessionStorage.setItem('guestId', `${team}`);
-    window.location.href="../map/index.html";
+    sessionStorage.setItem("guestId", `${team}`);
+    window.location.href = "../map/index.html";
   });
 
   // ⭐ 核心变量
@@ -194,17 +199,17 @@ document.addEventListener("DOMContentLoaded", function () {
           if (oldRightBtn) {
             // 释放旧数字
             oldRightBtn.disabled = false;
-            oldRightBtn.classList.remove('used');
+            oldRightBtn.classList.remove("used");
             assignedButtonsMap.delete(btn);
           }
 
           // 填入新数字
           btn.textContent = selectedNumber;
-          
+
           // 标记右侧按钮为已使用
           selectedRightButton.disabled = true;
-          selectedRightButton.classList.add('used');
-          selectedRightButton.classList.remove('selected');
+          selectedRightButton.classList.add("used");
+          selectedRightButton.classList.remove("selected");
           assignedButtonsMap.set(btn, selectedRightButton);
 
           // 清除选中状态
@@ -218,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
           tableButtons.forEach((b) => b.classList.remove("selected"));
           btn.classList.add("selected");
           selectedTableButton = btn;
-          
+
           // 清除右侧选中状态
           rightButtons.forEach((b) => b.classList.remove("selected"));
           selectedNumber = null;
@@ -244,21 +249,21 @@ document.addEventListener("DOMContentLoaded", function () {
   // ⭐ 2️⃣ 右侧数字按钮点击事件（支持两种模式）
   rightButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      if (!btn.disabled && !btn.classList.contains('used')) {
+      if (!btn.disabled && !btn.classList.contains("used")) {
         // 模式1：如果已经选中了表格单元格，直接填入
         if (selectedTableButton) {
           const oldRightBtn = assignedButtonsMap.get(selectedTableButton);
           if (oldRightBtn) {
             oldRightBtn.disabled = false;
-            oldRightBtn.classList.remove('used');
+            oldRightBtn.classList.remove("used");
             assignedButtonsMap.delete(selectedTableButton);
           }
 
           selectedTableButton.textContent = btn.textContent;
           btn.disabled = true;
-          btn.classList.add('used');
+          btn.classList.add("used");
           assignedButtonsMap.set(selectedTableButton, btn);
-          
+
           tableButtons.forEach((b) => b.classList.remove("selected"));
           rightButtons.forEach((b) => b.classList.remove("selected"));
           selectedTableButton = null;
@@ -267,10 +272,10 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           // 模式2：选中这个数字，等待点击表格
           rightButtons.forEach((b) => b.classList.remove("selected"));
-          btn.classList.add('selected');
+          btn.classList.add("selected");
           selectedNumber = btn.textContent;
           selectedRightButton = btn;
-          
+
           // 清除表格选中状态
           tableButtons.forEach((b) => b.classList.remove("selected"));
           selectedTableButton = null;
@@ -287,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const usedRightBtn = assignedButtonsMap.get(selectedTableButton);
         if (usedRightBtn) {
           usedRightBtn.disabled = false;
-          usedRightBtn.classList.remove('used');
+          usedRightBtn.classList.remove("used");
           assignedButtonsMap.delete(selectedTableButton);
         }
         tableButtons.forEach((b) => b.classList.remove("selected"));
@@ -309,8 +314,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       rightButtons.forEach((rightBtn) => {
         rightBtn.disabled = false;
-        rightBtn.classList.remove('used');
-        rightBtn.classList.remove('selected');
+        rightBtn.classList.remove("used");
+        rightBtn.classList.remove("selected");
       });
 
       assignedButtonsMap.clear();
@@ -403,7 +408,8 @@ function highlightCorrectStations(teamId, tableButtons) {
           const topTeams = stationTopTeamsMap.get(stationNumber);
 
           if (topTeams && topTeams.includes(teamId)) {
-            btn.style.background = "linear-gradient(180deg, #0A4618FF, #1EFF00FF)";
+            btn.style.background =
+              "linear-gradient(180deg, #0A4618FF, #1EFF00FF)";
             btn.style.color = "#FFFFFFFF";
           } else {
             btn.style.background = "linear-gradient(180deg,#fff,#f1f1f1)";
@@ -446,11 +452,12 @@ function getTop5Teams(stationData) {
 let unsubscribeStationPopup = null;
 const teamNameMap = new Map();
 
-firebase.firestore()
+firebase
+  .firestore()
   .collection("assignments")
   .onSnapshot((snap) => {
     teamNameMap.clear();
-    snap.forEach(doc => {
+    snap.forEach((doc) => {
       const data = doc.data() || {};
       // doc.id: "team1"..."team15"
       teamNameMap.set(doc.id, data.name || doc.id);
@@ -459,136 +466,141 @@ firebase.firestore()
   });
 
 function showTop5PairsAndBabyForStation(stationLabel) {
+  if (unsubscribeStationPopup) unsubscribeStationPopup();
+  clearPopupDisplay();
+
   if (!stationLabel) return;
 
-  const match = stationLabel.match(/^S?(\d+)$/i);
+  const match = String(stationLabel)
+    .trim()
+    .match(/^S?(\d+)$/i);
   if (!match) return;
 
   const stationNumber = match[1];
-
-  if (unsubscribeStationPopup) {
-    unsubscribeStationPopup();
-  }
 
   unsubscribeStationPopup = firebase
     .firestore()
     .collection("stationSubmission")
     .doc("station" + stationNumber)
-    .onSnapshot(
-      (doc) => {
-        if (!doc.exists) {
-          clearPopupDisplay();
-          return;
-        }
+    .onSnapshot((doc) => {
+      if (!doc.exists) {
+        clearPopupDisplay();
+        return;
+      }
 
-        const data = doc.data();
-        if (!data) {
-          clearPopupDisplay();
-          return;
-        }
+      const data = doc.data();
+      if (!data) {
+        clearPopupDisplay();
+        return;
+      }
 
-        const MAX_ROWS = 4;
-        const MAX_PAIRS = 5;
+      const MAX_ROWS = 4;
+      const MAX_PAIRS = 5;
 
-        const top5Pairs = Array.from({ length: MAX_PAIRS }, () => ({
-          team: null,
-          baby: -Infinity,
-        }));
+      const top5Pairs = Array.from({ length: MAX_PAIRS }, () => ({
+        team: null,
+        baby: -Infinity,
+      }));
 
-        for (let row = 1; row <= MAX_ROWS; row++) {
-          const rowData = data[`row${row}`];
-          if (!rowData || !Array.isArray(rowData.team) || !Array.isArray(rowData.baby))
-            continue;
+      for (let row = 1; row <= MAX_ROWS; row++) {
+        const rowData = data[`row${row}`];
+        if (
+          !rowData ||
+          !Array.isArray(rowData.team) ||
+          !Array.isArray(rowData.baby)
+        )
+          continue;
 
-          for (let i = 0; i < MAX_PAIRS; i++) {
-            const team = rowData.team[i];
-            const baby = parseFloat(rowData.baby[i]);
+        for (let i = 0; i < MAX_PAIRS; i++) {
+          const teamRaw = rowData.team[i];
+          const babyRaw = rowData.baby[i];
 
-            if (team && !isNaN(baby)) {
-              if (baby > top5Pairs[i].baby) {
-                top5Pairs[i] = { team, baby };
-              }
+          const team = typeof teamRaw === "string" ? teamRaw.trim() : "";
+          const baby = Number(babyRaw);
+
+          // ✅ only treat as valid when team not empty and baby is a real number
+          if (team && Number.isFinite(baby)) {
+            if (baby > top5Pairs[i].baby) {
+              top5Pairs[i] = { team, baby };
             }
           }
         }
+      }
 
-        document.querySelector(".popup h4").textContent = `Station ${stationNumber}`;
-        
-        const babiesWrap = document.querySelector(".popup .babies");
+      document.querySelector(
+        ".popup h4"
+      ).textContent = `Station ${stationNumber}`;
 
-        const rankedPairs = top5Pairs
-          .filter(p => p.team && isFinite(p.baby))
-          .sort((a, b) => b.baby - a.baby);
+      const babiesWrap = document.querySelector(".popup .babies");
+      babiesWrap.innerHTML = "";
 
-        while (rankedPairs.length < 5) {
-          rankedPairs.push({ team: null, baby: null });
-        }
-        babiesWrap.innerHTML = "";
+      const sizeMap = { 4: 40, 3: 30, 2: 20, 1: 15 };
 
-        const sizeMap = { 4: 40, 3: 30, 2: 20, 1: 15 };
+      // ✅ show by column order, do not sort
+      top5Pairs.forEach(({ team, baby }, idx) => {
+        const col = idx + 1;
 
-        rankedPairs.forEach(({ team, baby }, index) => {
-          const row = document.createElement("div");
-          row.className = "baby-row";
+        const row = document.createElement("div");
+        row.className = "baby-row";
 
-          if (!team) {
-            row.classList.add("empty");
-            row.innerHTML = `
-              <span class="rank">#${index + 1}</span>
+        // ✅ empty if never found any valid pair for this column
+        if (!team || !Number.isFinite(baby) || baby <= 0) {
+          row.classList.add("empty");
+          row.innerHTML = `
+              <span class="rank">Col ${col}</span>
               <span class="no-data">No data</span>
             `;
-            babiesWrap.appendChild(row);
-            return;
-          }
+          babiesWrap.appendChild(row);
+          return;
+        }
 
-          const m = String(team).match(/(\d+)/);
-          const teamNum = m ? m[1] : null;
+        const m = String(team).match(/(\d+)/);
+        const teamNum = m ? m[1] : null;
 
-          const babyVal = Number(baby);
-          const iconSize = sizeMap[babyVal] || 26;
+        const iconSize = sizeMap[baby] || 26;
 
-          const teamKey = String(team).toLowerCase();
-          const teamDisplayName = teamNameMap.get(teamKey) || team;
+        const teamKey = String(team).toLowerCase();
+        const teamDisplayName = teamNameMap.get(teamKey) || team;
 
-          const iconHTML = teamNum
-            ? `<img class="team-icon"
+        const iconHTML = teamNum
+          ? `<img class="team-icon"
                     src="../public/groupicon/team${teamNum}.png"
                     alt="Team ${teamNum}"
                     style="width:${iconSize}px;height:${iconSize}px"
                     onerror="this.style.display='none'">`
-            : "";
+          : "";
 
-          row.innerHTML = `
+        row.innerHTML = `
             ${iconHTML}
             <span class="team-label">${teamDisplayName}</span>
           `;
 
-          babiesWrap.appendChild(row);
-        });
-
-      }
-    );
+        babiesWrap.appendChild(row);
+      });
+    });
 }
 
 function clearPopupDisplay() {
-  document.querySelector(".popup h4").textContent = "No Data";
-  const h5Elements = document.querySelectorAll(".babies h5");
-  h5Elements.forEach((h5) => (h5.textContent = ""));
+  const title = document.querySelector(".popup h4");
+  if (title) title.textContent = "No Data";
+
+  const babiesWrap = document.querySelector(".popup .babies");
+  if (babiesWrap) babiesWrap.innerHTML = ""; // ✅ clear all previous rows
 }
 
-const overlay = document.getElementById('overlay');
-const popup = document.getElementById('popup');
-const btnClose = document.getElementById('popupClose');
+const overlay = document.getElementById("overlay");
+const popup = document.getElementById("popup");
+const btnClose = document.getElementById("popupClose");
 
-function closePopup(){
-  popup.classList.remove('show');
-  overlay.classList.remove('show');
-  document.body.classList.remove('modal-open');
+function closePopup() {
+  popup.classList.remove("show");
+  overlay.classList.remove("show");
+  document.body.classList.remove("modal-open");
 }
 
-overlay.addEventListener('click', closePopup);
-btnClose.addEventListener('click', closePopup);
-popup.addEventListener('click', (e)=> e.stopPropagation());
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape' && popup.classList.contains('show')) closePopup();
+overlay.addEventListener("click", closePopup);
+btnClose.addEventListener("click", closePopup);
+popup.addEventListener("click", (e) => e.stopPropagation());
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && popup.classList.contains("show")) closePopup();
 });
