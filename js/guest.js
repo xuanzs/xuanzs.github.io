@@ -484,7 +484,9 @@ function showTop5PairsAndBabyForStation(stationLabel) {
     .doc("station" + stationNumber)
     .onSnapshot((doc) => {
       if (!doc.exists) {
-        clearPopupDisplay();
+        document.querySelector(".popup h4").textContent = `Station ${stationNumber}`;
+        const babiesWrap = document.querySelector(".popup .babies");
+        if (babiesWrap) babiesWrap.innerHTML = "";
         return;
       }
 
