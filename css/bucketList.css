@@ -683,3 +683,103 @@ body:has(.smilePage){
   font-weight: bold;
   pointer-events: none; /* ensures it doesn't block button clicks */
 }
+
+/* =========================
+   COMIC BUTTON SKIN (Bucket List main 5 buttons only)
+   Paste at END of bucketList.css
+========================= */
+
+/* 只锁定 mainPage 的 5 个任务按钮，避免影响别的页面按钮 */
+.mainPage .anabelle-checkin button,
+.mainPage .npcPic button,
+.mainPage .smilePic button,
+.mainPage .mission4 button,
+.mainPage .searchPuzzle button{
+  /* 漫画粗描边 + 偏移阴影 */
+  border: 4px solid #000 !important;
+  box-shadow: 10px 10px 0 #000 !important;
+  position: relative;
+  overflow: hidden;
+  transform: rotate(-1deg);
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
+}
+
+/* halftone 点点层（漫画感） */
+.mainPage .anabelle-checkin button::before,
+.mainPage .npcPic button::before,
+.mainPage .smilePic button::before,
+.mainPage .mission4 button::before,
+.mainPage .searchPuzzle button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(0,0,0,.16) 1.1px, transparent 1.1px) 0 0/9px 9px;
+  opacity:.35;
+  mix-blend-mode:multiply;
+}
+
+/* hover/active 漫画弹起 */
+.mainPage .anabelle-checkin button:hover,
+.mainPage .npcPic button:hover,
+.mainPage .smilePic button:hover,
+.mainPage .mission4 button:hover,
+.mainPage .searchPuzzle button:hover{
+  transform: translateY(-3px) rotate(1deg);
+  box-shadow: 14px 14px 0 #000 !important;
+  filter: saturate(1.06) contrast(1.02);
+}
+
+.mainPage .anabelle-checkin button:active,
+.mainPage .npcPic button:active,
+.mainPage .smilePic button:active,
+.mainPage .mission4 button:active,
+.mainPage .searchPuzzle button:active{
+  transform: translateY(1px) rotate(0deg) scale(.995);
+  box-shadow: 7px 7px 0 #000 !important;
+}
+
+/* ✅ 关键：保留你 npc / smile 原本的蓝绿发光，不要被黑阴影盖掉
+   用额外的 drop-shadow 叠加回去（看起来会更“漫画发光”） */
+.mainPage .npcPic button{
+  filter: drop-shadow(0 0 14px rgba(124,242,255,.60));
+}
+.mainPage .npcPic button:hover{
+  filter: drop-shadow(0 0 18px rgba(124,242,255,.75)) saturate(1.06) contrast(1.02);
+}
+
+.mainPage .smilePic button{
+  filter: drop-shadow(0 0 14px rgba(115,255,90,.60));
+}
+.mainPage .smilePic button:hover{
+  filter: drop-shadow(0 0 18px rgba(115,255,90,.78)) saturate(1.06) contrast(1.02);
+}
+
+/* =========================
+   COMIC SKIN (NO DOTS)
+   NPC team buttons: ._14Btn button
+========================= */
+.npcMainPage ._14Btn button{
+  border: 4px solid #000 !important;
+  box-shadow: 10px 10px 0 #000 !important;
+  font-weight: bold;
+  /* 保留你原本玻璃紫 느낌，但不要 hover 变白 */
+  background: rgba(255,255,255,0.10) !important;
+  color: #fdfdfd !important;
+
+  transform: rotate(-1deg);
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease, background .14s ease;
+}
+
+.npcMainPage ._14Btn button:hover{
+  background: rgba(255,255,255,0.16) !important;
+  transform: translateY(-3px) rotate(1deg);
+  box-shadow: 14px 14px 0 #000 !important;
+  filter: saturate(1.06) contrast(1.02);
+}
+
+.npcMainPage ._14Btn button:active{
+  transform: translateY(1px) rotate(0deg) scale(.995);
+  box-shadow: 7px 7px 0 #000 !important;
+}

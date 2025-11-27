@@ -39,7 +39,7 @@ if (teamNo) {
           fileInput.style.display = "none";
           submitBtn.style.display = "none";
           selfieDesc.style.display = "none";
-
+          document.getElementById("uploadBar").style.display = "none";
           console.log("Count is 3 - showing existing uploaded images");
 
           showImages(imageUrls);
@@ -55,6 +55,8 @@ if (teamNo) {
   alert("Error");
   location.href = "bucketList.html";
 }
+
+const fileName = document.getElementById("fileName");
 
 fileInput.addEventListener("change", () => {
   if (fileInput.files && fileInput.files.length > 0) {
@@ -254,20 +256,18 @@ submitBtn.addEventListener("click", () => {
     });
   });
 
-  Promise.all(uploadPromises)
-    .then(() => {
-      overlay.style.visibility = "hidden";
-      alert("Images uploaded successfully!");
-      // location.reload(); // Reload to show uploaded images
-      selectedFiles = [];
-      imgPre.innerHTML = "";
-      submitBtn.disabled = true;
-    })
-    .catch((err) => {
-      overlay.style.visibility = "hidden";
-      alert("Upload failed: " + err);
-      selectedFiles = [];
-      fileInput.value = "";
-      imgPre.innerHTML = "";
-    });
+Promise.all(uploadPromises)
+  .then(async () => {
+    overlay.style.visibility = "hidden";
+    alert("Images uploaded successfully!");
+    const snap = await db.collection("npcPic").doc(`team${teamNo}`).get();
+    const latestUrls = snap.exists ? (snap.data().imageUrls || []) : [];
+    showImages(latestUrls);
+
+    selectedFiles = [];
+    imgPre.innerHTML = "";
+    submitBtn.disabled = true;
+  })
+
+
 });
