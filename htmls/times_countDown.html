@@ -8,29 +8,31 @@
   <script src="../js/times_countDown.js" defer></script>
 </head>
 
+<audio id="beepAudio" src="../sound/timesup.mp3" preload="auto"></audio>
+
 <body>
   <div class="app">
     <h1 class="title">COUNTDOWN 倒计时</h1>
 
     <!-- ✅ 一开始只显示确认面板 -->
     <div class="input-panel" id="inputPanel">
-      <div class="default-text">默认倒计时：90 分钟</div>
+      <div class="default-text">记录这个时间，每次 30 分钟响铃一次</div>
       <button id="startBtn" class="start-btn">START 确定</button>
       <p class="hint">* 开始后不可暂停/结束（除非 refresh）</p>
     </div>
   </div>
 
-  <!-- ✅ 全屏倒计时器：默认隐藏，按 start 后显示 -->
-  <div class="timer-wrap hidden" id="timerWrap">
-    <div class="timer" id="timer">
-      <span id="dHH">01</span><span class="colon">:</span>
-      <span id="dMM">30</span><span class="colon">:</span>
-      <span id="dSS">00</span>
-    </div>
-    <div id="status" class="status">RUNNING...</div>
-
-    <!-- 声音文件：放同目录或改路径 -->
-    <audio id="beepAudio" src="./sound.mp3" preload="auto"></audio>
+<div class="timer-wrap hidden" id="timerWrap">
+  <div class="timer" id="timer">
+    <span id="dHH">00</span><span class="colon">:</span>
+    <span id="dMM">00</span><span class="colon">:</span>
+    <span id="dSS">00</span>
   </div>
+  <div id="status" class="status">READY</div>
+
+  <!-- ✅ 路径：从 htmls/ 到根目录 sound/ -->
+  <audio id="beepAudio" src="../sound/timesup.mp3" preload="auto"></audio>
+</div>
+
 </body>
 </html>

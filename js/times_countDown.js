@@ -9,60 +9,69 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusEl  = document.getElementById("status");
   const beepAudio = document.getElementById("beepAudio");
 
-  const DEFAULT_SECONDS = 90 * 60; // 90分钟
-  let remaining = DEFAULT_SECONDS;
-  let timerId = null;
+  let clockTimerId = null;
+
+  // ✅ 记录开始时间 & 下一次响铃时间
+  let startTimeMs = null;
+  let nextBeepAtMs = null;
+
+  const BEEP_EVERY_MIN = 29.80;
+  const BEEP_INTERVAL_MS = BEEP_EVERY_MIN * 60 * 1000;
 
   const pad2 = (n) => String(n).padStart(2, "0");
 
-  function render(sec){
-    const hh = Math.floor(sec / 3600);
-    const mm = Math.floor((sec % 3600) / 60);
-    const ss = sec % 60;
-    dHH.textContent = pad2(hh);
-    dMM.textContent = pad2(mm);
-    dSS.textContent = pad2(ss);
+  function renderNowTime() {
+    const now = new Date();
+    dHH.textContent = pad2(now.getHours());
+    dMM.textContent = pad2(now.getMinutes());
+    dSS.textContent = pad2(now.getSeconds());
   }
 
-  function playBeep(){
+  function playBeep() {
     if (!beepAudio) return;
     beepAudio.currentTime = 0;
-    beepAudio.play().catch(()=>{});
+    beepAudio.play().catch(() => {
+      // 如果浏览器阻止自动播放，这里不报错
+    });
   }
 
-  function startCountdown(){
-    // 切换界面：隐藏面板、显示全屏倒计时
+  function tick() {
+    // 1) 永远更新现实时间
+    renderNowTime();
+
+    // 2) 如果已开始，检查是否到 30 分钟提醒
+    if (startTimeMs && nextBeepAtMs) {
+      const nowMs = Date.now();
+      if (nowMs >= nextBeepAtMs) {
+        playBeep();
+
+        // ⚠️ 用 while 防止“页面后台太久”一次跳过很多轮
+        while (nextBeepAtMs <= nowMs) {
+          nextBeepAtMs += BEEP_INTERVAL_MS;
+        }
+      }
+    }
+  }
+
+  function startRealClock() {
+    // 切换界面
     inputPanel.classList.add("hidden");
     timerWrap.classList.remove("hidden");
 
+    // 记录开始时刻 & 设置第一次响铃（30分钟后）
+    startTimeMs = Date.now();
+    nextBeepAtMs = startTimeMs + BEEP_INTERVAL_MS;
+
     statusEl.textContent = "RUNNING...";
-    render(remaining);
+    renderNowTime();
 
-    timerId = setInterval(() => {
-      remaining--;
-
-      // 每 15 分钟提醒一次（900s）
-      if (remaining > 0 && remaining % (15 * 60) === 0) {
-        playBeep();
-      }
-
-      if (remaining <= 0){
-        remaining = 0;
-        render(0);
-        statusEl.textContent = "TIME UP";
-        playBeep();
-        clearInterval(timerId);
-        timerId = null;
-        return;
-      }
-
-      render(remaining);
-    }, 1000);
+    // 每秒刷新一次现实时间
+    clockTimerId = setInterval(tick, 1000);
+    tick();
   }
 
-  // 只能按一次 Start
   startBtn.addEventListener("click", () => {
-    if (timerId) return;
-    startCountdown();
+    if (clockTimerId) return;
+    startRealClock();
   });
 });
