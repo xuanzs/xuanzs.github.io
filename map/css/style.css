@@ -805,22 +805,22 @@ button:focus {
 } */
 
 .list__item.is-category-header[data-category="1"]::before {
-	content: "FOH";
+	content: "ShutDown";
 	color: #000000;
 }
 
-.list__item.is-category-header[data-category="2"]::before {
+.list__item.is-category-header[data-category="3"]::before {
 	content: "Vacant";
 	color: #7cbf7f;
 }
 
-.list__item.is-category-header[data-category="3"]::before {
+.list__item.is-category-header[data-category="4"]::before {
 	content: "Occupied";
 	color: #dc4b7c;
 }
 
-.list__item.is-category-header[data-category="4"]::before {
-	content: "Relax & Recharge";
+.list__item.is-category-header[data-category="2"]::before {
+	content: "FOH";
 	color: #8d65e0;
 }
 
@@ -958,17 +958,17 @@ button:focus {
 .pin[data-category='1'] .icon--pin {
 	fill: #000000;
 }
-.pin[data-category='2'] .icon--pin {
+.pin[data-category='3'] .icon--pin {
 	fill: #7cbf7f;
 }
 /* .pin[data-category='2'] .icon--pin {
 	fill: #6584c7;
 } */
-.pin[data-category='3'] .icon--pin {
+.pin[data-category='4'] .icon--pin {
 	fill: #dc4b7c;
 }
-.pin[data-category='4'] .icon--pin {
-	fill: #8d65e0;
+.pin[data-category='2'] .icon--pin {
+	fill: #5500ff;
 }
 
 .pin--active .icon--pin {
@@ -1036,6 +1036,11 @@ button:focus {
 .pin--6-2 { top: 63.5vmin; left: 62.3vmin; }
 .pin--6-3 { top: 57.7vmin; left: 91.4vmin; }
 .pin--6-4 { top: 28vmin; left: 29vmin; }
+
+#icon-gear {
+	color: #00ff0d;
+	filter: drop-shadow(0 0 1px #00ff0d) drop-shadow(0 0 6px rgba(0,255,13,.35));
+}
 
 
 /* Mobile compatability */
