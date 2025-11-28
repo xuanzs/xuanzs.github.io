@@ -609,7 +609,7 @@ button:focus {
 	color: #000000;
 }
 
-.content__item[data-category='2'] .content__item-title {
+.content__item[data-category='3'] .content__item-title {
 	color: #7cbf7f;
 }
 
@@ -617,11 +617,11 @@ button:focus {
 	color: #6584c7;
 } */
 
-.content__item[data-category='3'] .content__item-title {
+.content__item[data-category='4'] .content__item-title {
 	color: #dc4b7c;
 }
 
-.content__item[data-category='4'] .content__item-title {
+.content__item[data-category='2'] .content__item-title {
 	color: #8d65e0;
 }
 
