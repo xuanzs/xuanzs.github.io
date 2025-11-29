@@ -22,6 +22,10 @@ let unsubGM = null;
 let lastFreezeStatus = null;
 let lastShutdownStation = null;
 
+// ✅ MUST be before fillTeamDropdowns() gets called
+let teamsLoaded = false;
+let cachedTeamOptions = null;
+
 // ===========================
 // INITIALIZATION
 // ===========================
@@ -220,8 +224,7 @@ function updateStationStatus(status) {
 // ===========================
 // DROPDOWN POPULATION
 // ===========================
-let teamsLoaded = false;
-let cachedTeamOptions = null;
+
 
 function fillTeamDropdowns() {
   const teamSelects = document.querySelectorAll(".row .top select");
