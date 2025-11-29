@@ -89,7 +89,7 @@ function setupShutdownListener() {
 // STATUS MANAGEMENT
 // ===========================
 function getStatus() {
-  gmDocRef.onSnapshot((doc) => {
+  gmDocRef.get().then((doc) => {
     if (!doc.exists) return;
 
     const data = doc.data();
