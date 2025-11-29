@@ -12,6 +12,17 @@ const stationName = document.querySelector(".left h1");
 const gmDocRef = db.collection("authentication").doc("gamemaster");
 
 // ===========================
+// GLOBAL LISTENER HANDLES (IMPORTANT: prevent duplicate onSnapshot)
+// ===========================
+let unsubFreeze = null;
+let unsubShutdown = null;
+let unsubSubmission = null;
+let unsubGM = null;
+
+let lastFreezeStatus = null;
+let lastShutdownStation = null;
+
+// ===========================
 // INITIALIZATION
 // ===========================
 if (!stationId) {
@@ -23,16 +34,29 @@ if (!stationId) {
 }
 
 function initializeApp() {
-  setupFreezeListener();
-  setupShutdownListener();
-  fillTeamDropdowns();
-  loadSubmissionData();
-  // setVacantStatus();
-  getStatus();
+  setupFreezeListener();           // skills/pause
+  setupShutdownListener();         // skills/shutdown
+  fillTeamDropdowns();             // assignments -> team dropdown options
+  setupSubmissionListener();       // stationSubmission/stationX
+  setupGMStatusListener();         // authentication/gamemaster
+  getStatusOnceForInitialUI();     // optional: set background once quickly
+  // default: start locked until status says occupied
+  disableAllRows();
+
+  // cleanup listeners if leaving page
+  window.addEventListener("beforeunload", cleanupListeners);
+}
+
+function cleanupListeners() {
+  if (unsubFreeze) unsubFreeze();
+  if (unsubShutdown) unsubShutdown();
+  if (unsubSubmission) unsubSubmission();
+  if (unsubGM) unsubGM();
+  unsubFreeze = unsubShutdown = unsubSubmission = unsubGM = null;
 }
 
 // ===========================
-// AUDIO & FREEZE FUNCTIONALITY
+// AUDIO
 // ===========================
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -41,147 +65,214 @@ async function playSound(url) {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
   const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-  
+
   const source = audioContext.createBufferSource();
   source.buffer = audioBuffer;
   source.connect(audioContext.destination);
   source.start(0);
 }
 
+// ===========================
+// FREEZE FUNCTIONALITY (skills/pause)
+// ===========================
 function setupFreezeListener() {
-  db.collection("skills")
+  if (unsubFreeze) unsubFreeze();
+
+  unsubFreeze = db
+    .collection("skills")
     .doc("pause")
     .onSnapshot((doc) => {
       if (!doc.exists) return;
-      
-      const status = doc.data().status;
-      
+
+      const status = doc.data()?.status;
+      if (!status) return;
+
+      // prevent repeated alerts when snapshot fires but status unchanged
+      if (status === lastFreezeStatus) return;
+      lastFreezeStatus = status;
+
       if (status === "Freeze") {
         alert("You are FREEZED");
         element.style.backgroundColor = "blue";
-        playSound("/sound/airHorn.mp3")
-          .then(() => console.log("Sound played successfully"))
-          .catch((err) => console.error("Error playing sound:", err));
-      } else if (element.style.backgroundColor === "blue") {
-        alert("You are UNfreezed");
-        element.style.backgroundColor = "green";
+        playSound("/sound/airHorn.mp3").catch((err) =>
+          console.error("Error playing sound:", err)
+        );
+      } else {
+        // any non-Freeze treated as Unfreeze
+        if (element.style.backgroundColor === "blue") {
+          alert("You are UNfreezed");
+        }
+        // don't force green here if occupied should be red; GM listener controls main color
       }
     });
 }
 
+// ===========================
+// SHUTDOWN FUNCTIONALITY (skills/shutdown)  ✅ fixed doc
+// ===========================
 function setupShutdownListener() {
-  db.collection("skills")
-    .doc("pause")
-    .onSnapshot((doc) => {
-      const data = doc.data();
-      const shutStation = data.station;
+  if (unsubShutdown) unsubShutdown();
 
-      if (stationId === shutStation) {
+  unsubShutdown = db
+    .collection("skills")
+    .doc("shutdown")
+    .onSnapshot((doc) => {
+      if (!doc.exists) return;
+
+      const shutStation = doc.data()?.station;
+      if (!shutStation) return;
+
+      // prevent repeated alerts
+      if (shutStation === lastShutdownStation) return;
+      lastShutdownStation = shutStation;
+
+      if (String(stationId) === String(shutStation)) {
         alert("Your station is SHUTDOWN");
-        playSound("/sound/alarm2.mp3")
-          .then(() => console.log("Sound played successfully"))
-          .catch((err) => console.error("Error playing sound:", err));
+        playSound("/sound/alarm2.mp3").catch((err) =>
+          console.error("Error playing sound:", err)
+        );
       }
-    })
+    });
 }
 
 // ===========================
-// STATUS MANAGEMENT
+// STATUS MANAGEMENT (authentication/gamemaster)
+// IMPORTANT FIXES:
+// 1) Only ONE gm onSnapshot listener for the whole page (no duplicates)
+// 2) Update only the specific field path (no overwriting accounts map)
 // ===========================
-function getStatus() {
-  gmDocRef.get().then((doc) => {
-    if (!doc.exists) return;
+function setupGMStatusListener() {
+  if (unsubGM) unsubGM();
 
-    const data = doc.data();
-    const gmData = data.accounts?.[`gm${stationId}`];
-    const status = gmData?.status;
+  unsubGM = gmDocRef.onSnapshot((doc) => {
+    const status = doc.data()?.accounts?.[`gm${stationId}`]?.status;
 
-    if (status === "vacant") {
-      setVacantStatus();
-    } else if (status === "occupied") {
-      setOccupiedStatus();
+    // If freeze set blue, keep blue, but still manage dropdowns
+    if (status === "occupied") {
+      // only set red if not freezed
+      if (element.style.backgroundColor !== "blue") {
+        element.style.backgroundColor = "red";
+      }
+      updateDropdownStates();
+    } else if (status === "vacant") {
+      if (element.style.backgroundColor !== "blue") {
+        element.style.backgroundColor = "green";
+      }
+      disableAllRows();
     } else {
-      console.error("Error getting status");
+      // unknown => safest lock
+      disableAllRows();
     }
-  })
+  });
+}
+
+function getStatusOnceForInitialUI() {
+  gmDocRef
+    .get()
+    .then((doc) => {
+      const status = doc.data()?.accounts?.[`gm${stationId}`]?.status;
+      if (status === "occupied") {
+        if (element.style.backgroundColor !== "blue") {
+          element.style.backgroundColor = "red";
+        }
+      } else if (status === "vacant") {
+        if (element.style.backgroundColor !== "blue") {
+          element.style.backgroundColor = "green";
+        }
+      }
+    })
+    .catch((e) => console.error("getStatusOnceForInitialUI error:", e));
 }
 
 function setVacantStatus() {
-  element.style.backgroundColor = "green";
-  updateStationStatus("vacant");
-  // Status update will trigger onSnapshot which will disable all dropdowns
+  if (element.style.backgroundColor !== "blue") {
+    element.style.backgroundColor = "green";
+  }
+  return updateStationStatus("vacant");
 }
 
 function setOccupiedStatus() {
-  element.style.backgroundColor = "red";
-  updateStationStatus("occupied");
-  // Status update will trigger onSnapshot which will enable required dropdowns
+  if (element.style.backgroundColor !== "blue") {
+    element.style.backgroundColor = "red";
+  }
+  return updateStationStatus("occupied");
 }
 
 function updateStationStatus(status) {
-  gmDocRef.set({
-    accounts: {
-      [`gm${stationId}`]: { status }
-    }
-  }, { merge: true });
+  // ✅ only update one field, do not overwrite accounts map
+  return gmDocRef
+    .update({
+      [`accounts.gm${stationId}.status`]: status,
+    })
+    .catch(() => {
+      // if doc doesn't exist yet, create it once
+      return gmDocRef.set(
+        {
+          accounts: {
+            [`gm${stationId}`]: { status },
+          },
+        },
+        { merge: true }
+      );
+    });
 }
 
 // ===========================
 // DROPDOWN POPULATION
 // ===========================
+let teamsLoaded = false;
+let cachedTeamOptions = null;
+
 function fillTeamDropdowns() {
-  // const teamSelects = document.querySelectorAll(".top select");
-
-  // db.collection("assignments")
-  //   .get().then((querySnapshot) => {
-  //     // Clear existing options first (except the empty option)
-  //     teamSelects.forEach((select) => {
-  //       // Keep only the first empty option if it exists
-  //       const hasEmptyOption = select.options[0]?.value === "";
-  //       select.innerHTML = hasEmptyOption ? '<option value=""></option>' : '';
-  //     });
-
-  //     querySnapshot.forEach((doc) => {
-  //       const { name: teamName } = doc.data();
-  //       const option = document.createElement("option");
-  //       option.value = doc.id;
-  //       option.textContent = teamName;
-
-  //       teamSelects.forEach((select) => {
-  //         select.appendChild(option.cloneNode(true));
-  //       });
-  //     });
-
-  //     teamSelects.forEach((select) => {
-  //       select.addEventListener("change", () => fillBabyDropdown(select));
-  //     });
-  //   })
   const teamSelects = document.querySelectorAll(".row .top select");
 
-  // 防止重复填充
+  // bind change listener once per select
   teamSelects.forEach((s) => {
-    if (s.dataset.filled === "1") return;
-    s.dataset.filled = "1";
-    s.addEventListener("change", () => fillBabyDrop(s));
+    if (s.dataset.bound === "1") return;
+    s.dataset.bound = "1";
+    s.addEventListener("change", () => fillBabyDropdown(s)); // ✅ correct function name
   });
 
-  db.collection("assignments").get().then((qs) => {
-    const opts = [];
-    qs.forEach((doc) => opts.push({ id: doc.id, name: doc.data().name }));
+  // load once
+  if (teamsLoaded && cachedTeamOptions) {
+    applyTeamOptions(teamSelects, cachedTeamOptions);
+    return;
+  }
 
-    teamSelects.forEach((select) => {
-      // 如果你要每次都重建，请先清空再加
-      if (select.options.length <= 1) {
-        opts.forEach(({ id, name }) => {
-          const option = document.createElement("option");
-          option.value = id;
-          option.textContent = name;
-          select.appendChild(option);
-        });
-      }
+  db.collection("assignments")
+    .get()
+    .then((qs) => {
+      const opts = [];
+      qs.forEach((doc) => opts.push({ id: doc.id, name: doc.data().name }));
+
+      teamsLoaded = true;
+      cachedTeamOptions = opts;
+
+      applyTeamOptions(teamSelects, opts);
+    })
+    .catch((err) => console.error("Error loading teams:", err));
+}
+
+function applyTeamOptions(teamSelects, opts) {
+  teamSelects.forEach((select) => {
+    // Keep first empty option if exists, otherwise add one
+    if (select.options.length === 0 || select.options[0].value !== "") {
+      const empty = document.createElement("option");
+      empty.value = "";
+      empty.textContent = "";
+      select.insertBefore(empty, select.firstChild);
+    }
+
+    // Prevent duplicate options
+    const existing = new Set([...select.options].map((o) => o.value));
+    opts.forEach(({ id, name }) => {
+      if (existing.has(id)) return;
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = name;
+      select.appendChild(option);
     });
   });
-    // .catch((error) => console.error("Error loading teams:", error));
 }
 
 function fillBabyDropdown(teamSelect) {
@@ -189,8 +280,12 @@ function fillBabyDropdown(teamSelect) {
   if (!teamId) return;
 
   const parentRow = teamSelect.closest(".row");
-  const pairClass = teamSelect.className;
-  const babySelect = parentRow.querySelector(`.bottom .s${pairClass.substring(1)}`);
+  const pairClass = teamSelect.className; // like "p1"
+  const babySelect = parentRow.querySelector(
+    `.bottom .s${pairClass.substring(1)}`
+  );
+
+  if (!babySelect) return;
 
   babySelect.innerHTML = '<option value=""></option>';
 
@@ -198,10 +293,7 @@ function fillBabyDropdown(teamSelect) {
     .doc(teamId)
     .get()
     .then((doc) => {
-      if (!doc.exists) {
-        console.error("Team not found in Firestore.");
-        return;
-      }
+      if (!doc.exists) return;
 
       const babies = doc.data().baby || [];
       babies.forEach((baby) => {
@@ -215,98 +307,67 @@ function fillBabyDropdown(teamSelect) {
 }
 
 // ===========================
-// DATA LOADING
+// DATA LOADING (stationSubmission/stationX)
+// IMPORTANT FIX: only ONE listener, no nested gm listener
 // ===========================
-function loadSubmissionData() {
-  // Listen to station submission data
-  db.collection("stationSubmission")
+function setupSubmissionListener() {
+  if (unsubSubmission) unsubSubmission();
+
+  unsubSubmission = db
+    .collection("stationSubmission")
     .doc(`station${stationId}`)
     .onSnapshot((doc) => {
-      if (!doc.exists) {
-        // No data yet, check gamemaster status to determine if dropdowns should be enabled
-        checkGamemasterStatusAndUpdateDropdowns();
-        return;
-      }
+      if (!doc.exists) return;
 
       const data = doc.data();
-      
-      // Fill all existing data into dropdowns
+
       for (let row = 1; row <= MAX_ROWS; row++) {
         const rowData = data[`row${row}`];
         if (!rowData) continue;
 
         for (let i = 0; i < MAX_PAIRS; i++) {
-          if (rowData.team[i]) {
+          if (rowData.team?.[i]) {
             const teamSelect = getInput(row, "top", "p", i + 1);
             const babySelect = getInput(row, "bottom", "s", i + 1);
-            
+
             ensureOptionExistsAndSelect(teamSelect, rowData.team[i]);
-            ensureOptionExistsAndSelect(babySelect, rowData.baby[i]);
+            ensureOptionExistsAndSelect(babySelect, rowData.baby?.[i]);
           }
         }
       }
-      
-      // After filling data, check gamemaster status and update dropdowns
-      checkGamemasterStatusAndUpdateDropdowns();
+      // dropdown enabling is handled by GM listener based on occupied/vacant
     });
 }
 
 function ensureOptionExistsAndSelect(select, value) {
-  if (!value) return;
+  if (!select || value === undefined || value === null || value === "") return;
 
-  const hasOption = [...select.options].some((opt) => opt.value === value);
-
+  const hasOption = [...select.options].some((opt) => opt.value === String(value));
   if (!hasOption) {
     const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = value;
+    opt.value = String(value);
+    opt.textContent = String(value);
     select.appendChild(opt);
 
-    // Fetch team name if it's a team ID
-    if (/^team\d+$/.test(value)) {
+    if (/^team\d+$/.test(String(value))) {
       db.collection("assignments")
-        .doc(value)
+        .doc(String(value))
         .get()
         .then((doc) => {
-          if (doc.exists) {
-            opt.textContent = doc.data().name;
-          }
+          if (doc.exists) opt.textContent = doc.data().name;
         });
     }
   }
 
-  select.value = value;
+  select.value = String(value);
 }
 
 // ===========================
 // DROPDOWN STATE MANAGEMENT
 // ===========================
-function checkGamemasterStatusAndUpdateDropdowns() {
-  gmDocRef.onSnapshot((doc) => {
-    if (!doc.exists) {
-      disableAllRows();
-      return;
-    }
-
-    const data = doc.data();
-    const gmData = data.accounts?.[`gm${stationId}`];
-    const status = gmData?.status;
-
-    if (status === "occupied") {
-      // Only enable required dropdowns when occupied
-      updateDropdownStates();
-    } else {
-      // If vacant, disable all dropdowns
-      disableAllRows();
-    }
-  });
-}
-
 function updateDropdownStates() {
-  // First, disable all dropdowns
   disableAllRows();
 
-  // Process each column (pair position) from 1 to 5
   for (let col = 1; col <= MAX_PAIRS; col++) {
     enableDropdownsForColumn(col);
   }
@@ -320,58 +381,39 @@ function disableAllRows() {
 }
 
 function enableDropdownsForColumn(col) {
-  // Check if row 4 has baby = 4 (column closed)
+  // If row4 baby == 4 => column fully closed
   const row4Baby = getInput(4, "bottom", "s", col);
-  if (row4Baby && parseInt(row4Baby.value) === 4) {
-    return; // This column is closed, don't open any dropdowns
-  }
+  if (row4Baby && parseInt(row4Baby.value) === 4) return;
 
-  // Process from Row 1 to Row 3 (not Row 4 - it's manually managed)
   for (let row = 1; row <= 3; row++) {
     const teamSelect = getInput(row, "top", "p", col);
     const babySelect = getInput(row, "bottom", "s", col);
-
     if (!teamSelect || !babySelect) continue;
 
     const teamValue = teamSelect.value;
     const babyValue = babySelect.value;
 
-    // If current position is filled
     if (teamValue && babyValue) {
       const babyNum = parseInt(babyValue);
 
-      // ROW 1: If baby !== 3, open above (row 2) and right side
       if (row === 1) {
         if (babyNum !== 3) {
-          // Open above (row 2, same column)
           const row2Team = getInput(2, "top", "p", col);
           const row2Baby = getInput(2, "bottom", "s", col);
           if (row2Team && row2Baby && !row2Team.value) {
             row2Team.disabled = false;
             row2Baby.disabled = false;
           }
-
-          // Open right side (row 1, next column)
-          const nextTeam = getInput(1, "top", "p", col + 1);
-          const nextBaby = getInput(1, "bottom", "s", col + 1);
-          if (nextTeam && nextBaby && !nextTeam.value) {
-            nextTeam.disabled = false;
-            nextBaby.disabled = false;
-          }
-        } else {
-          // baby === 3: only open right side, don't open above
-          const nextTeam = getInput(1, "top", "p", col + 1);
-          const nextBaby = getInput(1, "bottom", "s", col + 1);
-          if (nextTeam && nextBaby && !nextTeam.value) {
-            nextTeam.disabled = false;
-            nextBaby.disabled = false;
-          }
         }
-      }
-      // ROW 2: If baby === 2, open above (row 3). If baby === 3, don't open above
-      else if (row === 2) {
+        // open right side always when row1 filled
+        const nextTeam = getInput(1, "top", "p", col + 1);
+        const nextBaby = getInput(1, "bottom", "s", col + 1);
+        if (nextTeam && nextBaby && !nextTeam.value) {
+          nextTeam.disabled = false;
+          nextBaby.disabled = false;
+        }
+      } else if (row === 2) {
         if (babyNum === 2) {
-          // Open above (row 3, same column)
           const row3Team = getInput(3, "top", "p", col);
           const row3Baby = getInput(3, "bottom", "s", col);
           if (row3Team && row3Baby && !row3Team.value) {
@@ -379,49 +421,26 @@ function enableDropdownsForColumn(col) {
             row3Baby.disabled = false;
           }
         }
-        // If baby === 3, that's the end, don't open above
       }
-      // ROW 3: Don't automatically open row 4
-      // Row 4 is manually managed, not opened by the system
-    }
-    // If current position is empty
-    else {
-      // ROW 1: Always enable if empty (starting point)
+      // row3 does not open row4 automatically
+    } else {
       if (row === 1) {
         teamSelect.disabled = false;
         babySelect.disabled = false;
-      }
-      // ROW 2: Enable if row 1 baby !== 3
-      else if (row === 2) {
-        const row1Team = getInput(1, "top", "p", col);
+      } else if (row === 2) {
         const row1Baby = getInput(1, "bottom", "s", col);
-        
-        if (row1Team?.value && row1Baby?.value) {
-          const row1BabyNum = parseInt(row1Baby.value);
-          
-          if (row1BabyNum !== 3) {
-            teamSelect.disabled = false;
-            babySelect.disabled = false;
-          }
+        if (row1Baby?.value && parseInt(row1Baby.value) !== 3) {
+          teamSelect.disabled = false;
+          babySelect.disabled = false;
         }
-      }
-      // ROW 3: Enable if row 2 baby === 2
-      else if (row === 3) {
-        const row2Team = getInput(2, "top", "p", col);
+      } else if (row === 3) {
         const row2Baby = getInput(2, "bottom", "s", col);
-        
-        if (row2Team?.value && row2Baby?.value) {
-          const row2BabyNum = parseInt(row2Baby.value);
-          
-          if (row2BabyNum === 2) {
-            teamSelect.disabled = false;
-            babySelect.disabled = false;
-          }
+        if (row2Baby?.value && parseInt(row2Baby.value) === 2) {
+          teamSelect.disabled = false;
+          babySelect.disabled = false;
         }
       }
-      
-      // Stop processing this column after first empty position
-      break;
+      break; // stop after first empty in this column
     }
   }
 }
@@ -432,7 +451,6 @@ function enableDropdownsForColumn(col) {
 async function submitBtn() {
   let submittedPair = null;
 
-  // Find the first active (enabled and filled) pair
   for (let row = 1; row <= MAX_ROWS && !submittedPair; row++) {
     for (let col = 1; col <= MAX_PAIRS && !submittedPair; col++) {
       const teamSelect = getInput(row, "top", "p", col);
@@ -441,8 +459,14 @@ async function submitBtn() {
       const teamValue = teamSelect?.value?.trim();
       const babyValue = babySelect?.value?.trim();
 
-      // Check if this pair is active and filled
-      if (!teamSelect.disabled && !babySelect.disabled && teamValue && babyValue) {
+      if (
+        teamSelect &&
+        babySelect &&
+        !teamSelect.disabled &&
+        !babySelect.disabled &&
+        teamValue &&
+        babyValue
+      ) {
         submittedPair = { row, col, teamValue, babyValue, teamSelect, babySelect };
       }
     }
@@ -455,34 +479,20 @@ async function submitBtn() {
 
   const { row, col, teamValue, babyValue, teamSelect, babySelect } = submittedPair;
 
-  // Validate submission
-  if (!validateSubmission(row, col, teamValue, babyValue)) {
-    return;
-  }
+  if (!validateSubmission(row, col, teamValue, babyValue)) return;
 
-  // Disable the submitted pair
   teamSelect.disabled = true;
   babySelect.disabled = true;
 
-  // Log to history
   await logSubmission(row, col, teamValue, babyValue);
-
-  // Remove baby from assignment
   await removeBabyFromAssignment(teamValue, babyValue);
+  await updateStationSubmission(row);
 
-  // Update Firestore with new row data
-  await updateStationSubmission(row, col, teamValue, babyValue);
-
-  // Update dropdown states based on new submission
-  // After submission, status is set to vacant which will trigger
-  // the onSnapshot listener to disable all dropdowns
-  
   alert(`Row ${row} - Pair ${col} submitted successfully!`);
-  setVacantStatus();
+  await setVacantStatus();
 }
 
 function validateSubmission(row, col, teamValue, babyValue) {
-  // Check if different from row below
   if (row > 1) {
     const belowTeam = getInput(row - 1, "top", "p", col)?.value;
     const belowBaby = getInput(row - 1, "bottom", "s", col)?.value;
@@ -492,16 +502,13 @@ function validateSubmission(row, col, teamValue, babyValue) {
       return false;
     }
 
-    // Check if baby value is greater than row below
     const belowBabyNum = parseFloat(belowBaby);
     const babyNum = parseFloat(babyValue);
-
     if (!isNaN(belowBabyNum) && babyNum <= belowBabyNum) {
       alert(`Baby value must be greater than Row ${row - 1}`);
       return false;
     }
   }
-
   return true;
 }
 
@@ -517,31 +524,30 @@ async function logSubmission(row, col, teamValue, babyValue) {
         pair: `Row${row}-Pair${col}`,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
-    console.log(`Logged Row${row}-Pair${col} to history`);
   } catch (error) {
     console.error("Error logging submission:", error);
   }
 }
 
-async function updateStationSubmission(row, col, teamValue, babyValue) {
+async function updateStationSubmission(row) {
   const docRef = db.collection("stationSubmission").doc(`station${stationId}`);
 
   try {
     const docSnap = await docRef.get();
-    
-    // Build the row data
+
     const rowData = { team: [], baby: [] };
     for (let i = 1; i <= MAX_PAIRS; i++) {
-      const t = getInput(row, "top", "p", i)?.value || "";
-      const b = getInput(row, "bottom", "s", i)?.value || "";
-      rowData.team.push(t);
-      rowData.baby.push(b);
+      rowData.team.push(getInput(row, "top", "p", i)?.value || "");
+      rowData.baby.push(getInput(row, "bottom", "s", i)?.value || "");
     }
 
     if (!docSnap.exists) {
       const allData = {};
       for (let r = 1; r <= MAX_ROWS; r++) {
-        allData[`row${r}`] = r === row ? rowData : { team: ["", "", "", "", ""], baby: ["", "", "", "", ""] };
+        allData[`row${r}`] =
+          r === row
+            ? rowData
+            : { team: ["", "", "", "", ""], baby: ["", "", "", "", ""] };
       }
       await docRef.set({
         ...allData,
@@ -564,20 +570,14 @@ async function removeBabyFromAssignment(teamId, babyValue) {
     const docRef = db.collection("assignments").doc(teamId);
     const docSnap = await docRef.get();
 
-    if (!docSnap.exists) {
-      console.warn(`Team ${teamId} not found.`);
-      return;
-    }
+    if (!docSnap.exists) return;
 
     const babies = docSnap.data().baby || [];
     const index = babies.indexOf(Number(babyValue));
-    
+
     if (index > -1) {
       babies.splice(index, 1);
       await docRef.update({ baby: babies });
-      console.log(`Removed baby ${babyValue} from team ${teamId}`);
-    } else {
-      console.warn(`Baby ${babyValue} not found in team ${teamId}`);
     }
   } catch (error) {
     console.error("Error removing baby from assignment:", error);
@@ -590,8 +590,3 @@ async function removeBabyFromAssignment(teamId, babyValue) {
 function getInput(row, section, prefix, index) {
   return document.querySelector(`.r${row} .${section} .${prefix}${index}`);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  // fillTeamDropdowns();
-  loadSubmissionData();
-});
