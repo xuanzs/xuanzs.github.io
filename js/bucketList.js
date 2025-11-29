@@ -387,15 +387,15 @@ function showImages(imageUrls) {
   });
 }
 
-db.collection("smiles").doc("list").onSnapshot((doc) => {
-  if (doc.exists) {
-    const data = doc.data();
-    const imageUrls = data.imageUrls || [];
-    showImages(imageUrls);
-  } else {
-    console.warn("No document found at smiles/list");
-  }
-});
+// db.collection("smiles").doc("list").onSnapshot((doc) => {
+//   if (doc.exists) {
+//     const data = doc.data();
+//     const imageUrls = data.imageUrls || [];
+//     showImages(imageUrls);
+//   } else {
+//     console.warn("No document found at smiles/list");
+//   }
+// });
 
 let selectedFiles = [];
 

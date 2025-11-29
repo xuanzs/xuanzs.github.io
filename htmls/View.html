@@ -17,16 +17,6 @@
             --chalk:#f3f3f3;
             }
 
-            /* 2) 背景噪点层（在最底层） */
-            html::before{
-            content:"";
-            position:fixed; inset:0;
-            pointer-events:none;
-            z-index:-1;
-            background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjxmZUNvbXBvbmVudFRyYW5zZmVyPjxmZUZ1bmNBIHR5cGU9InRhYmxlIiB0YWJsZVZhbHVlcz0iMCAwIDAgMC4wOCAuMTUgMCIvPjwvZmVDb21wb25lbnRUcmFuc2Zlcj48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
-            mix-blend-mode: overlay;
-            }
-
             /* 3) 页面背景：紫黑渐变 + 暗角 */
             html, body{ height:100%; }
             body{
@@ -37,12 +27,8 @@
             min-height:100vh;
 
             color: var(--chalk);
-            background:
-                radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,.06), transparent 60%),
-                radial-gradient(1000px 800px at 85% 20%, rgba(124,242,255,.06), transparent 55%),
-                linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-                linear-gradient(145deg, var(--purple) 0%, var(--purple-deep) 60%, #220a49 100%) !important;
-            background-attachment: fixed;
+            background:url("../public/background/Viewbackground.png")
+              no-repeat center/cover fixed;
             }
         .overlay {
             position: fixed;
