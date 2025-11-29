@@ -24,7 +24,7 @@ html, body{
 body{
   color: var(--chalk);
   background:
-    url("../public/background/bucketlistBackground.png") center/cover no-repeat fixed;
+    url("../public/background/bucketListBackground.png") center/cover no-repeat fixed;
 
   display:flex;
   justify-content:center;
