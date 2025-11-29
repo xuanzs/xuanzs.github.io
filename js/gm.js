@@ -130,32 +130,57 @@ function updateStationStatus(status) {
 // DROPDOWN POPULATION
 // ===========================
 function fillTeamDropdowns() {
-  const teamSelects = document.querySelectorAll(".top select");
+  // const teamSelects = document.querySelectorAll(".top select");
 
-  db.collection("assignments")
-    .get().then((querySnapshot) => {
-      // Clear existing options first (except the empty option)
-      teamSelects.forEach((select) => {
-        // Keep only the first empty option if it exists
-        const hasEmptyOption = select.options[0]?.value === "";
-        select.innerHTML = hasEmptyOption ? '<option value=""></option>' : '';
-      });
+  // db.collection("assignments")
+  //   .get().then((querySnapshot) => {
+  //     // Clear existing options first (except the empty option)
+  //     teamSelects.forEach((select) => {
+  //       // Keep only the first empty option if it exists
+  //       const hasEmptyOption = select.options[0]?.value === "";
+  //       select.innerHTML = hasEmptyOption ? '<option value=""></option>' : '';
+  //     });
 
-      querySnapshot.forEach((doc) => {
-        const { name: teamName } = doc.data();
-        const option = document.createElement("option");
-        option.value = doc.id;
-        option.textContent = teamName;
+  //     querySnapshot.forEach((doc) => {
+  //       const { name: teamName } = doc.data();
+  //       const option = document.createElement("option");
+  //       option.value = doc.id;
+  //       option.textContent = teamName;
 
-        teamSelects.forEach((select) => {
-          select.appendChild(option.cloneNode(true));
+  //       teamSelects.forEach((select) => {
+  //         select.appendChild(option.cloneNode(true));
+  //       });
+  //     });
+
+  //     teamSelects.forEach((select) => {
+  //       select.addEventListener("change", () => fillBabyDropdown(select));
+  //     });
+  //   })
+  const teamSelects = document.querySelectorAll(".row .top select");
+
+  // 防止重复填充
+  teamSelects.forEach((s) => {
+    if (s.dataset.filled === "1") return;
+    s.dataset.filled = "1";
+    s.addEventListener("change", () => fillBabyDrop(s));
+  });
+
+  db.collection("assignments").get().then((qs) => {
+    const opts = [];
+    qs.forEach((doc) => opts.push({ id: doc.id, name: doc.data().name }));
+
+    teamSelects.forEach((select) => {
+      // 如果你要每次都重建，请先清空再加
+      if (select.options.length <= 1) {
+        opts.forEach(({ id, name }) => {
+          const option = document.createElement("option");
+          option.value = id;
+          option.textContent = name;
+          select.appendChild(option);
         });
-      });
-
-      teamSelects.forEach((select) => {
-        select.addEventListener("change", () => fillBabyDropdown(select));
-      });
-    })
+      }
+    });
+  });
     // .catch((error) => console.error("Error loading teams:", error));
 }
 
