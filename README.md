@@ -22,6 +22,33 @@ The application supports three main roles:
 
 An additional **group overview page** presents the progress boards of multiple teams in one place.
 
+## Screenshots
+
+### 1. Participant Board
+Players configure a 5×5 station board before the event. Green indicates completed station challenges, while black indicates blocked stations.
+
+![Participant Board](docs/screenshots/participant-board.png)
+
+### 2. Group Progress Overview
+Displays the progress of multiple teams, allowing organisers to monitor completed and blocked stations.
+
+![Group Overview](docs/screenshots/group-overview.png)
+
+### 3. Administrator Dashboard
+Enables organisers to manage special game actions such as station shutdown, restoration, swapping and pausing.
+
+![Administrator Dashboard](docs/screenshots/admin-dashboard.png)
+
+### 4. Game Master Dashboard
+Allows Game Masters to record successful station challenges and update station occupancy.
+
+![Game Master Dashboard](docs/screenshots/game-master.png)
+
+### 5. Interactive Campus Map
+Displays station locations and availability, with green for vacant, red for occupied and black for shut-down stations.
+
+![Campus Map](docs/screenshots/campus-map.png)
+
 ## How the game works
 
 1. **Set up a team board.** Participants arrange station numbers on a 5 × 5 board. Once submitted, their arrangement is locked for the event.
@@ -113,26 +140,34 @@ Open the repository in a local web server (for example, the VS Code Live Server 
 ```
 
 Some interfaces use the original Firebase project and may require data or access permissions that are not part of a read-only portfolio demo. Avoid submitting test data to the original event database.
-
-## Screenshots
-
-Recommended screenshots to include in this section when adding images to the repository:
-
-1. **Participant board:** locked number arrangement with green completed and black blocked stations.
-2. **Group overview:** several teams' progress boards side by side.
-3. **Administrator dashboard:** station-management and special-action controls.
-4. **Game Master dashboard:** station results and Vacant / Occupied actions.
-5. **Campus station map:** floor layout with colour-coded station markers.
-
-Store the images in a folder such as `docs/screenshots/`, then add Markdown image references here. Avoid showing real passwords, private Firebase records, or other secrets in screenshots.
-
+  
 ## Portfolio and access note
 
 This is an archived event project presented for demonstration and code review. The original application included role-specific event controls and Firebase-backed state. **A public URL does not mean that admin operations or database writes are intended for visitors.** Before advertising any interactive demo as safe for unrestricted public use, verify Firestore and Storage rules and restrict legacy credential-based access.
 
 ## Potential future improvements
 
-- A standalone demo mode using sample team and station state without database writes.
+- Rate limiting for hundreds of users visiting the map.
 - Firebase Authentication and role-based authorization if organiser logins are needed again.
 - Automated tests for board validation and station-state changes.
-- Responsive layouts and improved accessibility for smaller screens.
+
+## 3D Campus Map — Adaptation and Integration
+
+The interactive campus map in APU Wild Escape was adapted from the [3D Mall Map repository](https://github.com/ZaLiTHkA/3d-mall-map), which is based on the original [Interactive 3D Mall Map by Codrops](https://github.com/codrops/Interactive3DMallMap).
+
+The original project provided the foundational layered 3D map interface and navigation functionality.
+
+For APU Wild Escape, the map was customised and integrated into the event management platform, including:
+
+- Adapting the original shopping mall layout to represent APU campus floors (L3–L8).
+- Replacing store-related information with numbered game stations and their campus locations.
+- Introducing station availability indicators: green for vacant, red for occupied and black for shut down.
+- Integrating station status updates from the Game Master and Administrator interfaces.
+- Adapting the sidebar to organise stations according to their game status.
+
+The original map's design and foundational implementation are credited to their respective creators. The adaptations and game-specific integrations were developed for APU Wild Escape.
+
+**Original sources:**
+- [3D Mall Map — GitHub](https://github.com/ZaLiTHkA/3d-mall-map)
+- [Interactive 3D Mall Map — Codrops](https://github.com/codrops/Interactive3DMallMap)
+- [Codrops Licensing](https://tympanus.net/codrops/licensing/)</
