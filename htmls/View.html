@@ -110,7 +110,7 @@
         }
 
         .btn-shutdown {
-            background-color: black !important;
+            background-color: rgb(0, 0, 0) !important;
             color: black !important;
         }
 
@@ -185,7 +185,8 @@
 
     <div class="container">
         <div class="title">
-            <h1 id="countdown">Loading Countdown...</h1>
+            <!-- <h1 id="countdown">Loading Countdown...</h1> -->
+            <h1></h1>
         </div>
         <div class="top">
             <div class="team1">
@@ -1009,9 +1010,9 @@
             const distance = countdownTarget - now;
             
             if (distance < 0) {
-                document.getElementById("countdown").style.visibility = "hidden";
-                overlay.style.visibility = "visible";
-                popup.style.visibility = "visible";
+                // document.getElementById("countdown").style.visibility = "hidden";
+                // overlay.style.visibility = "visible";
+                // popup.style.visibility = "visible";
 
                 clearInterval(countdownIntervalId);
 

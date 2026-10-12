@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submission History</title>
+
+    <!-- Firebase (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <style>
+      :root {
+        --bg: #0b0613;
+        --card: #151026;
+        --ink: #eae7ff;
+        --muted: #b7b1d6;
+        --line: rgba(255, 255, 255, 0.12);
+        --accent: #7cf2ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: radial-gradient(
+            900px 500px at 30% 0%,
+            rgba(124, 242, 255, 0.1),
+            transparent 60%
+          ),
+          radial-gradient(
+            700px 400px at 90% 20%,
+            rgba(180, 90, 255, 0.1),
+            transparent 60%
+          ),
+          var(--bg);
+        color: var(--ink);
+        padding: 22px;
+      }
+      .wrap {
+        max-width: 1050px;
+        margin: 0 auto;
+      }
+      .top {
+        display: flex;
+        gap: 12px;
+        align-items: end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0 0 2px 0;
+        letter-spacing: 0.2px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      select,
+      button {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        padding: 10px 12px;
+        border-radius: 12px;
+        outline: none;
+      }
+      button {
+        cursor: pointer;
+        transition: transform 0.06s ease, background 0.15s ease;
+      }
+      button:hover {
+        background: rgba(124, 242, 255, 0.1);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.03)
+        );
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+      }
+      .status {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .pill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 10px rgba(124, 242, 255, 0.6);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 14px;
+      }
+      thead th {
+        text-align: left;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+        padding: 12px 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.18);
+      }
+      tbody td {
+        padding: 12px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 14px;
+      }
+      tbody tr:hover {
+        background: rgba(124, 242, 255, 0.06);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .empty {
+        padding: 18px 10px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .small {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .err {
+        color: #ff9aa7;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <div>
+          <h1>Submission History</h1>
+          <p class="sub">
+            Firestore:
+            <span class="small">submissionHistory / stationX / entries</span>
+          </p>
+        </div>
+
+        <div class="controls">
+          <label class="small" for="stationSelect">Station</label>
+          <select id="stationSelect"></select>
+          <button id="refreshBtn" title="Re-attach listener">Refresh</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="status">
+          <div class="pill">
+            <span class="dot"></span><span id="liveText">Listening…</span>
+          </div>
+          <div class="small">Rows: <span id="rowCount">0</span></div>
+        </div>
+
+        <div style="overflow: auto">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width: 180px">Timestamp</th>
+                <th style="min-width: 120px">Team</th>
+                <th style="min-width: 140px">Pair</th>
+                <th style="min-width: 100px">Baby</th>
+                <th style="min-width: 140px">Entry ID</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <tr>
+                <td class="empty" colspan="5">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small muted" style="margin: 10px 2px 0">
+          Tip: If your station doc IDs are different (e.g. "station (1)" or
+          "station 1"), update <code>stationDocId()</code>.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // 1) ✅ Paste your Firebase config here
+      const firebaseConfig = {
+        apiKey: "AIzaSyBcWYGKCj42Oz41p3SJA2drBnU7FMs4MhU",
+        authDomain: "awe-db.firebaseapp.com",
+        projectId: "awe-db",
+        storageBucket: "awe-db.firebasestorage.app",
+        // storageBucket: "awe-db.appspot.com",
+        messagingSenderId: "70964725621",
+        appId: "1:70964725621:web:42cdec6e7b963eb3a2b53c",
+        measurementId: "G-9EH2X0QJHR",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // --- UI ---
+      const stationSelect = document.getElementById("stationSelect");
+      const tbody = document.getElementById("tbody");
+      const rowCount = document.getElementById("rowCount");
+      const liveText = document.getElementById("liveText");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      // Build station dropdown 1..25
+      for (let i = 1; i <= 25; i++) {
+        const opt = document.createElement("option");
+        opt.value = String(i);
+        opt.textContent = `Station ${i}`;
+        stationSelect.appendChild(opt);
+      }
+
+      // 2) ✅ If your doc ID naming is different, change here:
+      function stationDocId(stationNumber) {
+        // default: station1, station2, ... station25
+        return `station${stationNumber}`;
+
+        // examples (uncomment if needed):
+        // return `station ${stationNumber}`;     // "station 1"
+        // return `station (${stationNumber})`;  // "station (1)"
+      }
+
+      // ---- Firestore listener ----
+      let unsubscribe = null;
+
+      function setLoading(msg = "Loading…") {
+        tbody.innerHTML = `<tr><td class="empty" colspan="5">${msg}</td></tr>`;
+      }
+
+      function fmtTimestamp(ts) {
+        if (!ts) return "-";
+        // Firestore Timestamp -> JS Date
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleString(); // uses user's locale/timezone
+      }
+
+      function safe(v) {
+        return v === undefined || v === null || v === "" ? "-" : String(v);
+      }
+
+      function attachListener() {
+        if (unsubscribe) unsubscribe();
+
+        const stationNum = stationSelect.value;
+        const docId = stationDocId(stationNum);
+
+        liveText.textContent = `Listening: submissionHistory/${docId}/entries`;
+        setLoading();
+
+        // Read the entries subcollection, newest first
+        unsubscribe = db
+          .collection("submissionHistory")
+          .doc(docId)
+          .collection("entries")
+          .orderBy("timestamp", "desc")
+          .limit(300)
+          .onSnapshot(
+            (snap) => {
+              if (snap.empty) {
+                rowCount.textContent = "0";
+                setLoading("No history yet.");
+                return;
+              }
+
+              rowCount.textContent = String(snap.size);
+
+              const rows = [];
+              snap.forEach((doc) => {
+                const data = doc.data() || {};
+                rows.push(`
+                  <tr>
+                    <td>${fmtTimestamp(data.timestamp)}</td>
+                    <td>${safe(data.team)}</td>
+                    <td>${safe(data.pair)}</td>
+                    <td>${safe(data.baby)}</td>
+                    <td class="small muted">${doc.id}</td>
+                  </tr>
+                `);
+              });
+
+              tbody.innerHTML = rows.join("");
+            },
+            (err) => {
+              console.error(err);
+              rowCount.textContent = "0";
+              tbody.innerHTML = `
+                <tr>
+                  <td class="empty err" colspan="5">
+                    Error: ${safe(err.message)}<br/>
+                    <span class="small">Common reasons: missing index for orderBy(timestamp), permission denied (rules), wrong station doc id.</span>
+                  </td>
+                </tr>
+              `;
+            }
+          );
+      }
+
+      stationSelect.addEventListener("change", attachListener);
+      refreshBtn.addEventListener("click", attachListener);
+
+      // Start
+      attachListener();
+    </script>
+  </body>
+</html>
